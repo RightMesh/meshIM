@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 buildscript {
     ext {
-        artifactory_app_username = RightMeshUsername
-        artifactory_app_password = RightMeshPassword
+        artifactory_app_username = "$RightMeshUsername"
+        artifactory_app_password = "$RightMeshPassword"
         artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
     }
     repositories {
