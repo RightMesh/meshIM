@@ -4,7 +4,7 @@ buildscript {
     ext {
         artifactory_app_username = "$RightMeshUsername"
         artifactory_app_password = "$RightMeshPassword"
-        artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
+        artifactory_app_key = "0x9bc3ef6e8f1bd28787b8e8dbb2fea0ae2b3256fe"
     }
     repositories {
         maven {
