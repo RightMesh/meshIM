@@ -7,11 +7,11 @@ import android.os.Parcelable;
  * Created by Sachin Raturi on 2018-01-15.
  */
 
-public class MyUserData implements Parcelable {
+public class User implements Parcelable {
    private String userName;
    private int userAvatar;
 
-   public MyUserData(String userName,int userAvatar){
+   public User(String userName, int userAvatar){
        this.userAvatar = userAvatar;
        this.userName = userName;
    }
@@ -33,22 +33,22 @@ public class MyUserData implements Parcelable {
     }
 
 
-    protected MyUserData(Parcel in) {
+    protected User(Parcel in) {
         this.userName = in.readString();
         this.userAvatar = in.readInt();
     }
 
 
 
-    public static final Creator<MyUserData> CREATOR = new Creator<MyUserData>() {
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
-        public MyUserData createFromParcel(Parcel in) {
-            return new MyUserData(in);
+        public User createFromParcel(Parcel in) {
+            return new User(in);
         }
 
         @Override
-        public MyUserData[] newArray(int size) {
-            return new MyUserData[size];
+        public User[] newArray(int size) {
+            return new User[size];
         }
     };
 
