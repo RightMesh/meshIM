@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.HashSet;
 
+import io.left.meshenger.R;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
