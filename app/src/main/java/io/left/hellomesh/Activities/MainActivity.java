@@ -1,4 +1,4 @@
-package io.left.hellomesh;
+package io.left.hellomesh.Activities;
 
 import android.app.Activity;
 import android.media.Ringtone;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.HashSet;
 
+import io.left.hellomesh.R;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
