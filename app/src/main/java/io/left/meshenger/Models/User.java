@@ -1,4 +1,4 @@
-package io.left.hellomesh.Models;
+package io.left.meshenger.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

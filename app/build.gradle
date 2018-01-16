@@ -42,7 +42,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "io.left.hellomesh"
+        applicationId "io.left.meshenger"
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 1
