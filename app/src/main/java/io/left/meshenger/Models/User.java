@@ -3,12 +3,7 @@ package io.left.meshenger.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Sachin Raturi on 2018-01-15.
- *
- * the User class is used to store user data when new users are discovered
- *
- */
+
 
 public class User implements Parcelable {
    private String userName;
