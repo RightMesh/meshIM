@@ -6,9 +6,10 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.widget.Toast;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import io.left.meshenger.Activities.IMainActivity;
+import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
@@ -32,7 +33,7 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
     AndroidMeshManager mm = null;
 
     // Set to keep track of peers connected to the mesh.
-    HashSet<MeshID> users = new HashSet<>();
+    HashMap<MeshID, User> users = new HashMap<>();
 
     // Callback to communicate with the activity.
     IMainActivity mainActivityCallback = null;
@@ -87,7 +88,7 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
          */
         @Override
         public void sendHello() throws RemoteException {
-            for (MeshID receiver : users) {
+            for (MeshID receiver : users.keySet()) {
                 String msg = "Hello to: " + receiver + " from" + mm.getUuid();
                 MeshUtility.Log(this.getClass().getCanonicalName(), "MSG: " + msg);
                 byte[] testData = msg.getBytes();
@@ -194,8 +195,8 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
     private void handlePeerChanged(MeshManager.RightMeshEvent e) {
         // Update peer list.
         MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !users.contains(event.peerUuid)) {
-            users.add(event.peerUuid);
+        if (event.state != REMOVED && !users.keySet().contains(event.peerUuid)) {
+            users.put(event.peerUuid, null);
             echo(event.peerUuid.toString() + " added.");
         } else if (event.state == REMOVED) {
             users.remove(event.peerUuid);
