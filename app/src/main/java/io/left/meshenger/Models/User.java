@@ -8,7 +8,6 @@ import android.os.Parcelable;
 public class User implements Parcelable {
    private String userName;
    private int userAvatar;
-
     /**
      * Returns a User object that can be used to store users nearby
      * @param userName is the user name of the User
@@ -18,6 +17,7 @@ public class User implements Parcelable {
    public User(String userName, int userAvatar){
        this.userAvatar = userAvatar;
        this.userName = userName;
+
    }
 
     /**
@@ -25,6 +25,7 @@ public class User implements Parcelable {
      * @return an int
      */
     public int getUserAvatar() {
+
         return userAvatar;
     }
 

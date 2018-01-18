@@ -8,17 +8,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshConnectionManagerService;
 import io.left.meshenger.Services.MeshConnectionManagerService;
 
 
-import protobuf.MessageType;
+import io.left.meshenger.saveData.SharedPrefence;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
@@ -63,15 +63,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //protobuf sample
-        MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
-        byte [] protobyte = sample.toByteArray();
-        MessageType.createMessage sample2 =null;
-        try {
-            sample2 = MessageType.createMessage.parseFrom(protobyte);
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+        /*    MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
+            byte [] protobyte = sample.toByteArray();
+            MessageType.createMessage sample2 =null;
+            try {
+                sample2 = MessageType.createMessage.parseFrom(protobyte);
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+            */
 
         // Handles connecting to service. Registers `callback` with the service when the connection
         // is successful.
@@ -96,6 +97,35 @@ public class MainActivity extends Activity {
 
         Intent serviceIntent = new Intent(this, MeshConnectionManagerService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
+
+        //shared pref demo
+
+        User user;
+        //checking if we already have data
+        if(SharedPrefence.getUserData(this)!=null){
+            user= SharedPrefence.getUserData(this);
+            Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
+        }
+        //if we just installed the app
+        else{
+            user = new User("userName",0);
+            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
+            SharedPrefence.storeUserData(this,user);
+        }
+        appendToLog("username: "+user.getUserName()+"\n id: "+user.getUserAvatar() );
+        Button bt=findViewById(R.id.testbttn);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //changing data and saving it
+                user.setUserName("username");
+                user.setUserAvatar(user.getUserAvatar()+1);
+                appendToLog("userID changed to: "+user.getUserAvatar() );
+                SharedPrefence.storeUserData(MainActivity.this,user);
+            }
+        });
+
+
     }
 
     /**
