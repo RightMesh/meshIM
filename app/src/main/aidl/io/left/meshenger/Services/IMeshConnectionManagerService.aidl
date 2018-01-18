@@ -6,4 +6,8 @@ interface IMeshConnectionManagerService {
     void send(in String message);
 
     void registerMainActivityCallback(in IMainActivity callback);
+
+    void sendHello();
+
+    void configure();
 }
