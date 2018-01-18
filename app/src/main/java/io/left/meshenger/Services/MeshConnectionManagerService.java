@@ -150,8 +150,6 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
-                mm.setPattern("Meshenger-Frazer");
-
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 mm.bind(HELLO_PORT);
