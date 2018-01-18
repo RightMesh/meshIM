@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.util.HashSet;
 
 import io.left.meshenger.R;
@@ -25,6 +27,9 @@ import io.reactivex.functions.Consumer;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+
+import protobuf.MessageType;
+
 
 public class MainActivity extends Activity implements MeshStateListener {
     // Port to bind app to.
@@ -48,6 +53,18 @@ public class MainActivity extends Activity implements MeshStateListener {
         setContentView(R.layout.activity_main);
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
+
+       //protobuf sample
+      MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
+        byte [] protobyte = sample.toByteArray();
+        MessageType.createMessage sample2 =null;
+        try {
+            sample2 = MessageType.createMessage.parseFrom(protobyte);
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+
     }
 
     /**
