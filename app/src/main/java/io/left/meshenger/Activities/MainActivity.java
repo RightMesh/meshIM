@@ -28,7 +28,7 @@ import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 
-import protobuf.ProtoBuf;
+import protobuf.MessageType;
 
 
 public class MainActivity extends Activity implements MeshStateListener {
@@ -54,16 +54,17 @@ public class MainActivity extends Activity implements MeshStateListener {
 
         mm = AndroidMeshManager.getInstance(MainActivity.this, MainActivity.this);
 
-       //protobuf trial
-      ProtoBuf.createMessage sample =  ProtoBuf.createMessage.newBuilder().setMessage("hello protobuf works").build();
+       //protobuf sample
+      MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
         byte [] protobyte = sample.toByteArray();
-        ProtoBuf.createMessage sample2 =null;
+        MessageType.createMessage sample2 =null;
         try {
-            sample2 = ProtoBuf.createMessage.parseFrom(protobyte);
+            sample2 = MessageType.createMessage.parseFrom(protobyte);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
         Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+
     }
 
     /**

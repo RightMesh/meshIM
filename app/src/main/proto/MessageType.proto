@@ -7,4 +7,5 @@ message updatePeer{
 }
 message createMessage{
     string message =1;
+    int64 time=2;
 }
