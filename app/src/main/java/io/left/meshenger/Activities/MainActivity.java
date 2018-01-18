@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
          * @throws RemoteException If service disappears unexpectedly.
          */
         @Override
-        public void enableInterface() throws RemoteException {
+        public void updateInterface() throws RemoteException {
             runOnUiThread(() -> {
                 findViewById(R.id.btnHello).setEnabled(true);
                 findViewById(R.id.btnConfigure).setEnabled(true);

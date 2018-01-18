@@ -162,7 +162,7 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
                 // If connected to the main activity, tell it to enable its UI elements.
                 try {
                     if (mainActivityCallback != null) {
-                        mainActivityCallback.enableInterface();
+                        mainActivityCallback.updateInterface();
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
