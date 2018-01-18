@@ -1,0 +1,10 @@
+syntax = "proto3";
+package protobuf;
+
+message updatePeer{
+    string userName =1;
+    int32 avatarId =2;
+}
+message createMessage{
+    string message =1;
+}
