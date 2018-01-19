@@ -139,7 +139,6 @@ public class User implements Parcelable {
      * This functionn loads setting data if it exist
      * @param context context of the activity
      * @return true if function was able to load else false
-
      */
     public void save(Context context){
         User temp = new User(this.getUserName(),this.getUserAvatar());
