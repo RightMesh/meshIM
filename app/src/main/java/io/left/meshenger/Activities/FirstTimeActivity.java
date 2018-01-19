@@ -22,35 +22,21 @@ public class FirstTimeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time);
+
         finishButton();
     }
 
 
 
 
-
-    private String getUserName(){
-        EditText userName = findViewById(R.id.userNameEditText);
-        String user = userName.getText().toString();
-        return user;
-    }
-    private boolean getNotifications(){
-        Switch notification = findViewById(R.id.notificationSwitch);
-        if(notification.isChecked()){
-        return true;
-        }
-        else {
-        return false;
-        }
-    }
-
     private void finishButton(){
         Button button = findViewById(R.id.finishButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(StringUtils.isBlank(getUserName())){
-                    Toast.makeText(FirstTimeActivity.this,"Empty UserName",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FirstTimeActivity.this,"You Must Enter User Name!",Toast.LENGTH_SHORT).show();
                 }
                 else{
                     user = new User(getUserName(),1);
@@ -64,6 +50,23 @@ public class FirstTimeActivity extends Activity {
                 }
             }
         });
+    }
+
+
+    private String getUserName(){
+        EditText userName = findViewById(R.id.userNameEditText);
+        String user = userName.getText().toString();
+        return user;
+    }
+
+    private boolean getNotifications(){
+        Switch notification = findViewById(R.id.notificationSwitch);
+        if(notification.isChecked()){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
