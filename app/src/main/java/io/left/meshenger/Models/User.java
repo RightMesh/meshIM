@@ -10,7 +10,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
+import io.left.meshenger.BuildConfig;
+
 import static android.content.Context.MODE_PRIVATE;
+import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
 
 public class User implements Parcelable {
@@ -112,7 +115,7 @@ public class User implements Parcelable {
      * @return true if function was able to load else false
      */
     public boolean load(Context context){
-        SharedPreferences preferences = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         Gson gson = new Gson();
         String user = preferences.getString(saveVersion, null);
         Type type = new TypeToken<User>() {}.getType();
@@ -130,16 +133,12 @@ public class User implements Parcelable {
     /**
      * This functionn loads setting data if it exist
      * @param context context of the activity
-     * @return true if function was able to load else false
-
      */
     public void save(Context context){
-        User temp = new User(this.getUserName(),this.getUserAvatar());
-
-        SharedPreferences pref = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         Gson gsonModel = new Gson();
-        String savemodel = gsonModel.toJson(temp);
+        String savemodel = gsonModel.toJson(this);
         editor.putString(saveVersion, savemodel);
         editor.commit();
     }

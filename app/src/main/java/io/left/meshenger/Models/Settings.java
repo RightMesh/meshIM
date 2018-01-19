@@ -8,11 +8,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import static android.content.Context.MODE_PRIVATE;
+import io.left.meshenger.BuildConfig;
 
-/**
- * Created by sachin on 18/01/18.
- */
+import static android.content.Context.MODE_PRIVATE;
+import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
 public class Settings {
     private boolean showNotification;
@@ -38,7 +37,7 @@ public class Settings {
      * @return true if function was able to load else false
      */
     public boolean load(Context context){
-        SharedPreferences preferences = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         Gson gson = new Gson();
         String userSetting = preferences.getString(saveVersion, null);
         Type type = new TypeToken<Settings>() {}.getType();
@@ -57,11 +56,10 @@ public class Settings {
      * @param context context of the activity
      */
     public void save(Context context){
-        Settings temp = new Settings(this.isShowNotification());
-        SharedPreferences pref = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         Gson gsonModel = new Gson();
-        String savemodel = gsonModel.toJson(temp);
+        String savemodel = gsonModel.toJson(this);
         editor.putString(saveVersion, savemodel);
         editor.commit();
     }
