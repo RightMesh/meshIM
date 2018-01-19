@@ -4,47 +4,25 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.widget.Toast;
-
-import java.util.HashMap;
 
 import io.left.meshenger.Activities.IActivity;
-import io.left.meshenger.Models.User;
-import io.left.rightmesh.android.AndroidMeshManager;
-import io.left.rightmesh.android.MeshService;
-import io.left.rightmesh.id.MeshID;
-import io.left.rightmesh.mesh.MeshManager;
-import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.MeshUtility;
-import io.left.rightmesh.util.RightMeshException;
-
-import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
-import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
-import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import io.left.meshenger.RightMeshConnectionHandler;
 
 /**
- * Service responsible for handling the RightMesh communication and lifecycle for Meshenger.
+ * Handles service and lifecycle management. Defers RightMesh operations to
+ * {@link RightMeshConnectionHandler}.
  */
-public class MeshConnectionManagerService extends Service implements MeshStateListener {
-    // Port to bind app to.
-    private static final int HELLO_PORT = 9876;
-
-    // MeshManager instance - interface to the mesh network.
-    AndroidMeshManager mm = null;
-
-    // Set to keep track of peers connected to the mesh.
-    HashMap<MeshID, User> users = new HashMap<>();
-
-    // Callback to communicate with the activity.
-    IActivity mainActivityCallback = null;
+public class MeshConnectionManagerService extends Service {
+    private RightMeshConnectionHandler meshConnection;
 
     /**
      * Connects to RightMesh when service is started.
      */
     @Override
     public void onCreate() {
-        mm = AndroidMeshManager.getInstance(MeshConnectionManagerService.this,
-                MeshConnectionManagerService.this);
+        super.onCreate();
+        meshConnection = new RightMeshConnectionHandler();
+        meshConnection.connect(this);
     }
 
     /**
@@ -52,64 +30,34 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
      */
     @Override
     public void onDestroy() {
-        try {
-            super.onDestroy();
-            mm.stop();
-        } catch (MeshService.ServiceDisconnectedException e) {
-            e.printStackTrace();
-        }
+        super.onDestroy();
+        meshConnection.disconnect();
     }
 
-    // Implementation of AIDL interface.
+    /**
+     * Implementation of AIDL interface. As most of these calls are for mesh operations, most of
+     * them just call a method in {@link MeshConnectionManagerService#meshConnection}.
+     */
     private final IMeshConnectionManagerService.Stub mBinder
             = new IMeshConnectionManagerService.Stub() {
         @Override
-        public void send(String message) throws RemoteException {
+        public void send(String message) {
             // Nothing for now.
         }
 
-        /**
-         * Allows the activity that bound to the service to add a callback for two-way IPC.
-         *
-         * @param callback Callback to keep a reference to.
-         */
         @Override
         public void registerMainActivityCallback(IActivity callback) {
-            mainActivityCallback = callback;
-            try {
-                mainActivityCallback.echo("IPC Connection Established.");
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            meshConnection.setCallback(callback);
         }
 
-        /**
-         * Sends "hello" to all known peers.
-         */
         @Override
-        public void sendHello() throws RemoteException {
-            for (MeshID receiver : users.keySet()) {
-                String msg = "Hello to: " + receiver + " from" + mm.getUuid();
-                MeshUtility.Log(this.getClass().getCanonicalName(), "MSG: " + msg);
-                byte[] testData = msg.getBytes();
-                try {
-                    mm.sendDataReliable(receiver, HELLO_PORT, testData);
-                } catch (RightMeshException e) {
-                    echo(e.getMessage());
-                }
-            }
+        public void sendHello() {
+            meshConnection.sendHello();
         }
 
-        /**
-         * Open mesh settings screen.
-         */
         @Override
-        public void configure() throws RemoteException {
-            try {
-                mm.showSettingsActivity();
-            } catch (RightMeshException ex) {
-                echo(ex.getMessage());
-            }
+        public void configure() {
+            meshConnection.configure();
         }
     };
 
@@ -122,85 +70,5 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-    }
-
-    /**
-     * A helper method that handles the null checking and exception handling around the AIDL
-     * `echo` method.
-     *
-     * @param message Message to be forwarded to the activity.
-     */
-    private void echo(String message) {
-        if (mainActivityCallback != null) {
-            try {
-                mainActivityCallback.echo(message);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Called by the {@link MeshService} when the mesh state changes. Initializes mesh connection
-     * on first call.
-     *
-     * @param uuid  our own user id on first detecting
-     * @param state state which indicates SUCCESS or an error code
-     */
-    @Override
-    public void meshStateChanged(MeshID uuid, int state) {
-        if (state == MeshStateListener.SUCCESS) {
-            try {
-                // Binds this app to MESH_PORT.
-                // This app will now receive all events generated on that port.
-                mm.bind(HELLO_PORT);
-
-                // Subscribes handlers to receive events from the mesh.
-                mm.on(DATA_RECEIVED, this::handleDataReceived);
-                mm.on(PEER_CHANGED, this::handlePeerChanged);
-
-                // If connected to the main activity, tell it to enable its UI elements.
-                try {
-                    if (mainActivityCallback != null) {
-                        mainActivityCallback.updateInterface();
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            } catch (RightMeshException e) {
-                String status = "Error initializing the library" + e.toString();
-                Toast.makeText(getApplicationContext(), status, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * Handles incoming data events from the mesh - toasts the contents of the data.
-     *
-     * @param e event object from mesh
-     */
-    private void handleDataReceived(MeshManager.RightMeshEvent e) {
-        final MeshManager.DataReceivedEvent event = (MeshManager.DataReceivedEvent) e;
-
-        // Echo.
-        String message = new String(event.data);
-        echo(message);
-    }
-
-    /**
-     * Handles peer update events from the mesh - maintains a list of peers and updates the display.
-     *
-     * @param e event object from mesh
-     */
-    private void handlePeerChanged(MeshManager.RightMeshEvent e) {
-        // Update peer list.
-        MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !users.keySet().contains(event.peerUuid)) {
-            users.put(event.peerUuid, null);
-            echo(event.peerUuid.toString() + " added.");
-        } else if (event.state == REMOVED) {
-            users.remove(event.peerUuid);
-            echo(event.peerUuid.toString() + " removed.");
-        }
     }
 }
