@@ -15,15 +15,15 @@ import android.widget.Toast;
 import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-import io.left.meshenger.Services.IMeshConnectionManagerService;
-import io.left.meshenger.Services.MeshConnectionManagerService;
+import io.left.meshenger.Services.IMeshIMService;
+import io.left.meshenger.Services.MeshIMService;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
-    private IMeshConnectionManagerService mIMeshConnectionManagerService = null;
+    private IMeshIMService mIMeshIMService = null;
 
     // Implementation of AIDL interface.
-    private IMainActivity.Stub callback = new IMainActivity.Stub() {
+    private IActivity.Stub callback = new IActivity.Stub() {
         /**
          * A lazy helper method that dumps text to the log TextView on the screen.
          *
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
          * @throws RemoteException If service disappears unexpectedly.
          */
         @Override
-        public void enableInterface() throws RemoteException {
+        public void updateInterface() throws RemoteException {
             runOnUiThread(() -> {
                 findViewById(R.id.btnHello).setEnabled(true);
                 findViewById(R.id.btnConfigure).setEnabled(true);
@@ -77,10 +77,10 @@ public class MainActivity extends Activity {
         ServiceConnection connection = new ServiceConnection() {
             // Called when the connection with the service is established
             public void onServiceConnected(ComponentName className, IBinder service) {
-                mIMeshConnectionManagerService
-                        = IMeshConnectionManagerService.Stub.asInterface(service);
+                mIMeshIMService
+                        = IMeshIMService.Stub.asInterface(service);
                 try {
-                    mIMeshConnectionManagerService.registerMainActivityCallback(callback);
+                    mIMeshIMService.registerMainActivityCallback(callback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -89,35 +89,28 @@ public class MainActivity extends Activity {
             // Called when the connection with the service disconnects unexpectedly
             public void onServiceDisconnected(ComponentName className) {
                 appendToLog("Service has unexpectedly disconnected");
-                mIMeshConnectionManagerService = null;
+                mIMeshIMService = null;
             }
         };
 
-        Intent serviceIntent = new Intent(this, MeshConnectionManagerService.class);
+        Intent serviceIntent = new Intent(this, MeshIMService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 
-        //shared pref demo
-
-
-        User user = new User("dunny",4);
-        Settings settings = new Settings(true);
-
-        //checking if we already have data
-        if(user.load(this) && settings.load(this)){
-
-            Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
+        Settings settings = Settings.fromDisk(this);
+        if (settings == null) {
+            // Initialize settings without UI.
+            settings = new Settings();
+            settings.save(this);
         }
 
-        //if we just installed the app
-        else{
-            //load onboarding fragment?
+        //shared pref demo
+        User user = User.fromDisk(this);
+        if (user == null) {
+            //load onboarding fragment.
             //this is dummy data
-            user = new User("userName",0);
+            user = new User();
             Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
             user.save(this);
-
-            settings = new Settings(true);
-            settings.save(this);
         }
 
         appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
@@ -166,8 +159,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void sendHello(View v) throws RemoteException {
-        if (mIMeshConnectionManagerService != null) {
-            mIMeshConnectionManagerService.sendHello();
+        if (mIMeshIMService != null) {
+            mIMeshIMService.sendHello();
         }
     }
 
@@ -178,8 +171,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void configure(View v) throws RemoteException {
-        if (mIMeshConnectionManagerService != null) {
-            mIMeshConnectionManagerService.configure();
+        if (mIMeshIMService != null) {
+            mIMeshIMService.configure();
         }
     }
 }

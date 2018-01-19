@@ -9,17 +9,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 import static android.content.Context.MODE_PRIVATE;
-
-/**
- * Created by sachin on 18/01/18.
- */
+import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
 public class Settings {
     private boolean showNotification;
 
     // Used in shared preference to store / load data
     private final String saveVersion = "SettingSaveVersion_v1";
-
 
     public void setShowNotification(boolean showNotification) {
         this.showNotification = showNotification;
@@ -28,17 +24,36 @@ public class Settings {
     public boolean isShowNotification() {
         return showNotification;
     }
+
+    public Settings() {
+        this(true);
+    }
+
     public Settings(boolean showNotification){
         this.showNotification = showNotification;
     }
 
     /**
-     * This functionn loads setting data if it exist
+     * Attempts to load the stored {@link Settings} from {@link SharedPreferences}.
+     *
+     * @param context to load {@link SharedPreferences} from.
+     * @return instance loaded from disk, or null
+     */
+    public static Settings fromDisk(Context context) {
+        Settings temp = new Settings();
+        if (!temp.load(context)) {
+            return null;
+        }
+        return temp;
+    }
+
+    /**
+     * This function loads setting data if it exist
      * @param context context of the activity
      * @return true if function was able to load else false
      */
     public boolean load(Context context){
-        SharedPreferences preferences = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         Gson gson = new Gson();
         String userSetting = preferences.getString(saveVersion, null);
         Type type = new TypeToken<Settings>() {}.getType();
@@ -57,11 +72,10 @@ public class Settings {
      * @param context context of the activity
      */
     public void save(Context context){
-        Settings temp = new Settings(this.isShowNotification());
-        SharedPreferences pref = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         Gson gsonModel = new Gson();
-        String savemodel = gsonModel.toJson(temp);
+        String savemodel = gsonModel.toJson(this);
         editor.putString(saveVersion, savemodel);
         editor.commit();
     }

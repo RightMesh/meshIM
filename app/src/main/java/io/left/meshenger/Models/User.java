@@ -11,26 +11,45 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 import static android.content.Context.MODE_PRIVATE;
+import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
 
 public class User implements Parcelable {
-   private String userName;
-   private int userAvatar;
+    private String userName;
+    private int userAvatar;
 
-   //used in share preference to save or load data
-   private final String saveVersion = "UserDataSaveVersion_v1";
+    //used in share preference to save or load data
+    private final String saveVersion = "UserDataSaveVersion_v1";
 
-   /**
+    public User() {
+        this(null, -1);
+    }
+
+    /**
      * Returns a User object that can be used to store users nearby
      * @param userName is the user name of the User
      *                 does not need to be unique
      * @param userAvatar is the Avatar chosen by the user
      */
-   public User(String userName, int userAvatar){
+    public User(String userName, int userAvatar){
        this.userAvatar = userAvatar;
        this.userName = userName;
 
    }
+
+    /**
+     * Attempts to load the stored {@link User} from {@link SharedPreferences}.
+     *
+     * @param context to load {@link SharedPreferences} from.
+     * @return instance loaded from disk, or null
+     */
+    public static User fromDisk(Context context) {
+        User temp = new User();
+        if (!temp.load(context)) {
+            return null;
+        }
+        return temp;
+    }
 
     /**
      * get the id of the user's avatar
@@ -77,7 +96,6 @@ public class User implements Parcelable {
     }
 
 
-
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -112,7 +130,7 @@ public class User implements Parcelable {
      * @return true if function was able to load else false
      */
     public boolean load(Context context){
-        SharedPreferences preferences = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         Gson gson = new Gson();
         String user = preferences.getString(saveVersion, null);
         Type type = new TypeToken<User>() {}.getType();
@@ -130,16 +148,12 @@ public class User implements Parcelable {
     /**
      * This functionn loads setting data if it exist
      * @param context context of the activity
-     * @return true if function was able to load else false
-
      */
     public void save(Context context){
-        User temp = new User(this.getUserName(),this.getUserAvatar());
-
-        SharedPreferences pref = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         Gson gsonModel = new Gson();
-        String savemodel = gsonModel.toJson(temp);
+        String savemodel = gsonModel.toJson(this);
         editor.putString(saveVersion, savemodel);
         editor.commit();
     }
