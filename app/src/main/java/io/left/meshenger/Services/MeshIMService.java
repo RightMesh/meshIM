@@ -3,7 +3,6 @@ package io.left.meshenger.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.RemoteException;
 
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.RightMeshConnectionHandler;
@@ -12,7 +11,7 @@ import io.left.meshenger.RightMeshConnectionHandler;
  * Handles service and lifecycle management. Defers RightMesh operations to
  * {@link RightMeshConnectionHandler}.
  */
-public class MeshConnectionManagerService extends Service {
+public class MeshIMService extends Service {
     private RightMeshConnectionHandler meshConnection;
 
     /**
@@ -36,10 +35,10 @@ public class MeshConnectionManagerService extends Service {
 
     /**
      * Implementation of AIDL interface. As most of these calls are for mesh operations, most of
-     * them just call a method in {@link MeshConnectionManagerService#meshConnection}.
+     * them just call a method in {@link MeshIMService#meshConnection}.
      */
-    private final IMeshConnectionManagerService.Stub mBinder
-            = new IMeshConnectionManagerService.Stub() {
+    private final IMeshIMService.Stub mBinder
+            = new IMeshIMService.Stub() {
         @Override
         public void send(String message) {
             // Nothing for now.

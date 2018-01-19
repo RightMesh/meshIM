@@ -2,7 +2,6 @@ package io.left.meshenger;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -14,7 +13,6 @@ import io.left.rightmesh.id.MeshID;
 import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
