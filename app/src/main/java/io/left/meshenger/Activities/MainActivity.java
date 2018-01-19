@@ -98,13 +98,11 @@ public class MainActivity extends Activity {
 
         //shared pref demo
 
-
-        User user = new User("dunny",4);
-        Settings settings = new Settings(true);
+        User user = User.fromDisk(this);
+        Settings settings = Settings.fromDisk(this);
 
         //checking if we already have data
-        if(user.load(this) && settings.load(this)){
-
+        if(user != null && settings != null){
             Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
         }
 
@@ -112,11 +110,11 @@ public class MainActivity extends Activity {
         else{
             //load onboarding fragment?
             //this is dummy data
-            user = new User("userName",0);
+            user = new User();
             Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
             user.save(this);
 
-            settings = new Settings(true);
+            settings = new Settings();
             settings.save(this);
         }
 

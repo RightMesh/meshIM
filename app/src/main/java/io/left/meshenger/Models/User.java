@@ -10,30 +10,46 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import io.left.meshenger.BuildConfig;
-
 import static android.content.Context.MODE_PRIVATE;
 import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
 
 public class User implements Parcelable {
-   private String userName;
-   private int userAvatar;
+    private String userName;
+    private int userAvatar;
 
-   //used in share preference to save or load data
-   private final String saveVersion = "UserDataSaveVersion_v1";
+    //used in share preference to save or load data
+    private final String saveVersion = "UserDataSaveVersion_v1";
 
-   /**
+    public User() {
+        this(null, -1);
+    }
+
+    /**
      * Returns a User object that can be used to store users nearby
      * @param userName is the user name of the User
      *                 does not need to be unique
      * @param userAvatar is the Avatar chosen by the user
      */
-   public User(String userName, int userAvatar){
+    public User(String userName, int userAvatar){
        this.userAvatar = userAvatar;
        this.userName = userName;
 
    }
+
+    /**
+     * Attempts to load the stored {@link User} from {@link SharedPreferences}.
+     *
+     * @param context to load {@link SharedPreferences} from.
+     * @return instance loaded from disk, or null
+     */
+    public static User fromDisk(Context context) {
+        User temp = new User();
+        if (!temp.load(context)) {
+            return null;
+        }
+        return temp;
+    }
 
     /**
      * get the id of the user's avatar
@@ -78,7 +94,6 @@ public class User implements Parcelable {
         this.userName = in.readString();
         this.userAvatar = in.readInt();
     }
-
 
 
     public static final Creator<User> CREATOR = new Creator<User>() {

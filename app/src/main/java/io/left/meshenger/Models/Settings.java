@@ -8,8 +8,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import io.left.meshenger.BuildConfig;
-
 import static android.content.Context.MODE_PRIVATE;
 import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
@@ -19,7 +17,6 @@ public class Settings {
     // Used in shared preference to store / load data
     private final String saveVersion = "SettingSaveVersion_v1";
 
-
     public void setShowNotification(boolean showNotification) {
         this.showNotification = showNotification;
     }
@@ -27,12 +24,31 @@ public class Settings {
     public boolean isShowNotification() {
         return showNotification;
     }
+
+    public Settings() {
+        this(true);
+    }
+
     public Settings(boolean showNotification){
         this.showNotification = showNotification;
     }
 
     /**
-     * This functionn loads setting data if it exist
+     * Attempts to load the stored {@link Settings} from {@link SharedPreferences}.
+     *
+     * @param context to load {@link SharedPreferences} from.
+     * @return instance loaded from disk, or null
+     */
+    public static Settings fromDisk(Context context) {
+        Settings temp = new Settings();
+        if (!temp.load(context)) {
+            return null;
+        }
+        return temp;
+    }
+
+    /**
+     * This function loads setting data if it exist
      * @param context context of the activity
      * @return true if function was able to load else false
      */
