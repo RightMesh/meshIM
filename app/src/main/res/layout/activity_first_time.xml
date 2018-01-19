@@ -20,17 +20,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Switch
+        android:id="@+id/notificationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginTop="64dp"
+        android:showText="true"
+        android:text="Notification"
+        app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
+        tools:layout_editor_absoluteX="16dp" />
+
     <Button
         android:id="@+id/finishButton"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="200dp"
         android:clickable="false"
         android:text="Finish"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-        app:layout_constraintVertical_bias="0.006" />
+        app:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
 
 </android.support.constraint.ConstraintLayout>
