@@ -44,6 +44,10 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         this.mUser = user;
     }
 
+    public RightMeshConnectionHandler(User user) {
+        this.user = user;
+    }
+
     /**
      * Setter for {@link RightMeshConnectionHandler#mCallback}. Notifies the connected activity that
      * the connection is successful.
@@ -117,6 +121,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
+                mm.setPattern("FRAZER");
+
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 mMeshManager.bind(HELLO_PORT);
