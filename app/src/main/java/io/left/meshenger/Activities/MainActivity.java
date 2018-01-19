@@ -115,7 +115,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //changing data and saving it
-                finalUser.setUserName("username");
                 finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
                 finalUser.save(MainActivity.this);
 

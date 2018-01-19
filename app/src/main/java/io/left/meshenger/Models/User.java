@@ -36,8 +36,8 @@ public class User implements Parcelable {
      * Default constructor
      */
    public User(){
-       this.userName= "UserName";
-       this.userAvatar = 1;
+       this.userName=null;
+       this.userAvatar=1;
    }
 
     /**

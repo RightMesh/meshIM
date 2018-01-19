@@ -11,7 +11,7 @@ import io.left.meshenger.R;
 
 public class WelcomeActivity extends Activity {
 
-    private final int splashScreenTime = 4000;
+    private final int splashScreenTime = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class WelcomeActivity extends Activity {
         @Override
         public void run() {
 
-            User user = new User("dunny",4);
+            User user = new User();
             Settings settings = new Settings(true);
 
             //checking if we already have data

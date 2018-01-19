@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="io.left.meshenger.Activities.WelcomeActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/rm_launcher"
+        tools:layout_editor_absoluteX="136dp"
+        tools:layout_editor_absoluteY="91dp" />
 </android.support.constraint.ConstraintLayout>
