@@ -1,20 +1,26 @@
 package io.left.meshenger.Models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Sachin Raturi on 2018-01-15.
- *
- * the User class is used to store user data when new users are discovered
- *
- */
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class User implements Parcelable {
    private String userName;
    private int userAvatar;
 
-    /**
+   //used in share preference to save or load data
+   private final String saveVersion = "UserDataSaveVersion_v1";
+
+   /**
      * Returns a User object that can be used to store users nearby
      * @param userName is the user name of the User
      *                 does not need to be unique
@@ -23,6 +29,7 @@ public class User implements Parcelable {
    public User(String userName, int userAvatar){
        this.userAvatar = userAvatar;
        this.userName = userName;
+
    }
 
     /**
@@ -30,6 +37,7 @@ public class User implements Parcelable {
      * @return an int
      */
     public int getUserAvatar() {
+
         return userAvatar;
     }
 
@@ -96,5 +104,43 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.getUserName());
         dest.writeInt(this.userAvatar);
+    }
+
+    /**
+     * This functionn loads setting data if it exist
+     * @param context context of the activity
+     * @return true if function was able to load else false
+     */
+    public boolean load(Context context){
+        SharedPreferences preferences = context.getSharedPreferences("app", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String user = preferences.getString(saveVersion, null);
+        Type type = new TypeToken<User>() {}.getType();
+        User temp = gson.fromJson(user, type);
+        if(temp == null){
+            return false;
+        }
+        else {
+            this.setUserAvatar(temp.getUserAvatar());
+            this.setUserName(temp.getUserName());
+        }
+        return true;
+    }
+
+    /**
+     * This functionn loads setting data if it exist
+     * @param context context of the activity
+     * @return true if function was able to load else false
+
+     */
+    public void save(Context context){
+        User temp = new User(this.getUserName(),this.getUserAvatar());
+
+        SharedPreferences pref = context.getSharedPreferences("app", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        Gson gsonModel = new Gson();
+        String savemodel = gsonModel.toJson(temp);
+        editor.putString(saveVersion, savemodel);
+        editor.commit();
     }
 }

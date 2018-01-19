@@ -91,6 +91,8 @@ dependencies {
     compile ('io.left.rightmesh:rightmesh-library:0.4.0')
     compile 'com.android.support:appcompat-v7:27.0.0'
 
+    //needed for sharedpref
+    compile 'com.google.code.gson:gson:2.8.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

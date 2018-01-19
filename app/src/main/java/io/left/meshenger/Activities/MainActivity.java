@@ -8,17 +8,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import io.left.meshenger.Models.Settings;
+import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshConnectionManagerService;
 import io.left.meshenger.Services.MeshConnectionManagerService;
-
-
-import protobuf.MessageType;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
@@ -63,15 +61,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //protobuf sample
-        MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
-        byte [] protobyte = sample.toByteArray();
-        MessageType.createMessage sample2 =null;
-        try {
-            sample2 = MessageType.createMessage.parseFrom(protobyte);
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+        /*    MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
+            byte [] protobyte = sample.toByteArray();
+            MessageType.createMessage sample2 =null;
+            try {
+                sample2 = MessageType.createMessage.parseFrom(protobyte);
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
+            */
 
         // Handles connecting to service. Registers `callback` with the service when the connection
         // is successful.
@@ -96,6 +95,56 @@ public class MainActivity extends Activity {
 
         Intent serviceIntent = new Intent(this, MeshConnectionManagerService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
+
+        //shared pref demo
+
+
+        User user = new User("dunny",4);
+        Settings settings = new Settings(true);
+
+        //checking if we already have data
+        if(user.load(this) && settings.load(this)){
+
+            Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
+        }
+
+        //if we just installed the app
+        else{
+            //load onboarding fragment?
+            //this is dummy data
+            user = new User("userName",0);
+            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
+            user.save(this);
+
+            settings = new Settings(true);
+            settings.save(this);
+        }
+
+        appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
+
+        // dummy button to test sharedpref
+        Button bt=findViewById(R.id.testbttn);
+
+        User finalUser = new User(user.getUserName(),user.getUserAvatar());
+        Settings finalSettings = settings;
+
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //changing data and saving it
+                finalUser.setUserName("username");
+                finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
+                finalUser.save(MainActivity.this);
+
+                finalSettings.setShowNotification(!finalSettings.isShowNotification());
+                finalSettings.save(MainActivity.this);
+
+                appendToLog("userID changed to: "+ finalUser.getUserAvatar()+"\n show notif changed to: "+finalSettings.isShowNotification() );
+            }
+
+        });
+
+
     }
 
     /**
