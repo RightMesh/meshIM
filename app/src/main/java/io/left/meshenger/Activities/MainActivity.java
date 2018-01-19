@@ -12,13 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshConnectionManagerService;
 import io.left.meshenger.Services.MeshConnectionManagerService;
-
-
-import io.left.meshenger.saveData.SharedPrefence;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
@@ -100,29 +98,50 @@ public class MainActivity extends Activity {
 
         //shared pref demo
 
-        User user;
+
+        User user = new User("dunny",4);
+        Settings settings = new Settings(true);
+
         //checking if we already have data
-        if(SharedPrefence.getUserData(this)!=null){
-            user= SharedPrefence.getUserData(this);
+        if(user.load(this) && settings.load(this)){
+
             Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
         }
+
         //if we just installed the app
         else{
+            //load onboarding fragment?
+            //this is dummy data
             user = new User("userName",0);
             Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
-            SharedPrefence.storeUserData(this,user);
+            user.save(this);
+
+            settings = new Settings(true);
+            settings.save(this);
         }
-        appendToLog("username: "+user.getUserName()+"\n id: "+user.getUserAvatar() );
+
+        appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
+
+        // dummy button to test sharedpref
         Button bt=findViewById(R.id.testbttn);
+
+        User finalUser = new User(user.getUserName(),user.getUserAvatar());
+        Settings finalSettings = settings;
+
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //changing data and saving it
-                user.setUserName("username");
-                user.setUserAvatar(user.getUserAvatar()+1);
-                appendToLog("userID changed to: "+user.getUserAvatar() );
-                SharedPrefence.storeUserData(MainActivity.this,user);
+                finalUser.setUserName("username");
+                finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
+                finalUser.save(MainActivity.this);
+
+                finalSettings.setShowNotification(!finalSettings.isShowNotification());
+                finalSettings.save(MainActivity.this);
+
+                appendToLog("userID changed to: "+ finalUser.getUserAvatar()+"\n show notif changed to: "+finalSettings.isShowNotification() );
             }
+
         });
 
 
