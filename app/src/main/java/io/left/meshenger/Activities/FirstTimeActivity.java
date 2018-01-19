@@ -17,7 +17,6 @@ import io.left.meshenger.R;
 
 public class FirstTimeActivity extends Activity {
     private User user = null;
-    private Settings settings = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +26,9 @@ public class FirstTimeActivity extends Activity {
     }
 
 
-
+    /**
+     * Creates a user profile
+     */
 
     private void finishButton(){
         Button button = findViewById(R.id.finishButton);
@@ -41,9 +42,6 @@ public class FirstTimeActivity extends Activity {
                 else{
                     user = new User(getUserName(),1);
                     user.save(FirstTimeActivity.this);
-                    settings =new Settings(getNotifications());
-                    settings.save(FirstTimeActivity.this);
-
                     Intent intent = new Intent(FirstTimeActivity.this,MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -52,21 +50,14 @@ public class FirstTimeActivity extends Activity {
         });
     }
 
-
+    /**
+     * The function returns username entered by the user
+     * @return a string
+     */
     private String getUserName(){
         EditText userName = findViewById(R.id.userNameEditText);
         String user = userName.getText().toString();
         return user;
-    }
-
-    private boolean getNotifications(){
-        Switch notification = findViewById(R.id.notificationSwitch);
-        if(notification.isChecked()){
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
 }

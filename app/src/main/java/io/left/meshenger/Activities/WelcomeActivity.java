@@ -11,7 +11,7 @@ import io.left.meshenger.R;
 
 public class WelcomeActivity extends Activity {
 
-    private final int splashScreenTime = 2000;
+    private final int splashScreenTime = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,14 +23,13 @@ public class WelcomeActivity extends Activity {
             User user = new User();
             Settings settings = new Settings(true);
 
-            //checking if we already have data
+            //checking if we already have a user profile
             if(user.load(WelcomeActivity.this) && settings.load(WelcomeActivity.this)){
                 Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
             }
-
-            //if we just installed the app
+            // create a new profile
             else{
                 Intent intent = new Intent(WelcomeActivity.this,FirstTimeActivity.class);
                 startActivity(intent);
