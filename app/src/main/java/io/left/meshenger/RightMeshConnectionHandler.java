@@ -28,9 +28,14 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
     // Set to keep track of peers connected to the mesh.
     private HashMap<MeshID, User> users = new HashMap<>();
+    private User user = null;
 
     // Link to current activity.
     private IActivity callback = null;
+
+    public RightMeshConnectionHandler(User user) {
+        this.user = user;
+    }
 
     /**
      * Setter for {@link RightMeshConnectionHandler#callback}. Notifies the connected activity that
@@ -105,6 +110,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
+                mm.setPattern("FRAZER");
+
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 mm.bind(HELLO_PORT);

@@ -48,8 +48,10 @@ public class FirstTimeCreateUsernameActivity extends Activity {
                     Toast.makeText(FirstTimeCreateUsernameActivity.this,
                             "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
                 } else {
-                    mUser = new User(userName, R.mipmap.avatar_00);
-                    mUser.save(FirstTimeCreateUsernameActivity.this);
+                    mUser = new User(FirstTimeCreateUsernameActivity.this);
+                    mUser.setUserName(userName);
+                    mUser.setUserAvatar(1);
+                    mUser.save();
                     Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
                             ChooseAvatarActivity.class);
                     startActivity(intent);

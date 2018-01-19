@@ -14,14 +14,10 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        User user = new User();
-        Settings settings = new Settings(true);
 
         Intent intent;
-        //checking if we already have a mUser profile
-        if (user.load(WelcomeActivity.this) && settings.load(WelcomeActivity.this)) {
+        if (User.fromDisk(this) != null && Settings.fromDisk(this) != null) {
             intent = new Intent(WelcomeActivity.this, MainTabActivity.class);
-
         }
         // Launch first time activity to create a new profile
         else {

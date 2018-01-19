@@ -72,6 +72,24 @@ public class MainActivity extends Activity {
             Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
             */
 
+        // Load settings, or initialize them before starting service.
+        Settings settings = Settings.fromDisk(this);
+        if (settings == null) {
+            // Initialize settings without UI.
+            settings = new Settings();
+            settings.save(this);
+        }
+
+        // Load user, or launch onboarding activity to initialize before starting service.
+        User user = User.fromDisk(this);
+        if (user == null) {
+            //load onboarding fragment.
+            //this is dummy data
+            user = new User();
+            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
+            user.save();
+        }
+
         // Handles connecting to service. Registers `callback` with the service when the connection
         // is successful.
         ServiceConnection connection = new ServiceConnection() {
@@ -96,47 +114,23 @@ public class MainActivity extends Activity {
         Intent serviceIntent = new Intent(this, MeshIMService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 
-        Settings settings = Settings.fromDisk(this);
-        if (settings == null) {
-            // Initialize settings without UI.
-            settings = new Settings();
-            settings.save(this);
-        }
-
-        //shared pref demo
-        User user = User.fromDisk(this);
-        if (user == null) {
-            //load onboarding fragment.
-            //this is dummy data
-            user = new User();
-            Toast.makeText(this, "Making new mUser", Toast.LENGTH_SHORT).show();
-            user.save(this);
-        }
-
-        appendToLog("userID: " + user.getUserAvatar() + "\n show notif: " + settings.isShowNotification());
 
         // dummy button to test sharedpref
-        Button bt = findViewById(R.id.testbttn);
-
-        User finalUser = new User(user.getUserName(), user.getUserAvatar());
+        Button bt=findViewById(R.id.testbttn);
+        User finalUser = new User(user.getUserName(),user.getUserAvatar());
         Settings finalSettings = settings;
+        bt.setOnClickListener(v -> {
+            //changing data and saving it
+            finalUser.setUserName("username");
+            finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
+            finalUser.save();
 
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //changing data and saving it
-                finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
-                finalUser.save(MainActivity.this);
+            finalSettings.setShowNotification(!finalSettings.isShowNotification());
+            finalSettings.save(MainActivity.this);
 
-                finalSettings.setShowNotification(!finalSettings.isShowNotification());
-                finalSettings.save(MainActivity.this);
-
-                appendToLog("userID changed to: " + finalUser.getUserAvatar() + "\n show notif changed to: " + finalSettings.isShowNotification());
-            }
-
+            appendToLog("userID changed to: " + finalUser.getUserAvatar()
+                    + "\n show notif changed to: " + finalSettings.isShowNotification());
         });
-
-
     }
 
     /**

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Models.User;
 import io.left.meshenger.RightMeshConnectionHandler;
 
 /**
@@ -20,7 +21,9 @@ public class MeshIMService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        meshConnection = new RightMeshConnectionHandler();
+        User user = User.fromDisk(this);
+
+        meshConnection = new RightMeshConnectionHandler(user);
         meshConnection.connect(this);
     }
 

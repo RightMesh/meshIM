@@ -18,6 +18,9 @@ public class User implements Parcelable {
     private String userName;
     private int userAvatar;
 
+    private SharedPreferences preferences;
+
+
     //used in share preference to save or load data
     private final String saveVersion = "UserDataSaveVersion_v1";
 
@@ -37,6 +40,11 @@ public class User implements Parcelable {
 
    }
 
+    public User(Context context) {
+        this();
+        preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
+    }
+
     /**
      * Attempts to load the stored {@link User} from {@link SharedPreferences}.
      *
@@ -44,8 +52,8 @@ public class User implements Parcelable {
      * @return instance loaded from disk, or null
      */
     public static User fromDisk(Context context) {
-        User temp = new User();
-        if (!temp.load(context)) {
+        User temp = new User(context);
+        if (!temp.load()) {
             return null;
         }
         return temp;
@@ -125,36 +133,41 @@ public class User implements Parcelable {
     }
 
     /**
-     * This functionn loads setting data if it exist
-     * @param context context of the activity
+     * This function loads setting data if it exist
      * @return true if function was able to load else false
      */
-    public boolean load(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String user = preferences.getString(saveVersion, null);
-        Type type = new TypeToken<User>() {}.getType();
-        User temp = gson.fromJson(user, type);
-        if(temp == null){
+    public boolean load(){
+        try {
+            Gson gson = new Gson();
+            String user = preferences.getString(saveVersion, null);
+            Type type = new TypeToken<User>() {
+            }.getType();
+            User temp = gson.fromJson(user, type);
+            if (temp == null) {
+                return false;
+            } else {
+                this.setUserAvatar(temp.getUserAvatar());
+                this.setUserName(temp.getUserName());
+            }
+            return true;
+        } catch (NullPointerException npe) {
+            // If preferences is null, we can't load anything.
             return false;
         }
-        else {
-            this.setUserAvatar(temp.getUserAvatar());
-            this.setUserName(temp.getUserName());
-        }
-        return true;
     }
 
     /**
      * This functionn loads setting data if it exist
-     * @param context context of the activity
      */
-    public void save(Context context){
-        SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        Gson gsonModel = new Gson();
-        String savemodel = gsonModel.toJson(this);
-        editor.putString(saveVersion, savemodel);
-        editor.commit();
+    public void save() {
+        try {
+            SharedPreferences.Editor editor = preferences.edit();
+            Gson gsonModel = new Gson();
+            String savemodel = gsonModel.toJson(this);
+            editor.putString(saveVersion, savemodel);
+            editor.commit();
+        } catch (NullPointerException ignored) {
+            // In case preferences is null.
+        }
     }
 }

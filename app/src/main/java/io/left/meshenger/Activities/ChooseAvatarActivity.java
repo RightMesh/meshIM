@@ -15,7 +15,7 @@ import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 
 public class ChooseAvatarActivity extends Activity {
-    User mUser = new User();
+    User mUser;
     //used for the table layout
     private final int ROWS = 10;
     private final int COLUMNS = 3;
@@ -26,7 +26,7 @@ public class ChooseAvatarActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_avatar);
-        mUser.load(this);
+        mUser = User.fromDisk(this);
         setupAvatars();
         userAvatarID = R.mipmap.avatar_00;
         saveAvatar(userAvatarID);
@@ -38,7 +38,7 @@ public class ChooseAvatarActivity extends Activity {
      * table layout of avatars user can choose from.
      */
     private void setupAvatars() {
-        mUser.load(this);
+        mUser = User.fromDisk(this);
         ScrollView scrollView = findViewById(R.id.avatarScrollView);
         TableLayout tableLayout = new TableLayout(this);
 
@@ -86,7 +86,7 @@ public class ChooseAvatarActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mUser.setUserAvatar(id);
-                mUser.save(ChooseAvatarActivity.this);
+                mUser.save();
                 Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
                 startActivity(intent);
             }
