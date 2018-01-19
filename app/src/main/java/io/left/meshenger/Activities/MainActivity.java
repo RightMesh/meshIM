@@ -96,26 +96,21 @@ public class MainActivity extends Activity {
         Intent serviceIntent = new Intent(this, MeshIMService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 
-        //shared pref demo
-
-        User user = User.fromDisk(this);
         Settings settings = Settings.fromDisk(this);
-
-        //checking if we already have data
-        if(user != null && settings != null){
-            Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
+        if (settings == null) {
+            // Initialize settings without UI.
+            settings = new Settings();
+            settings.save(this);
         }
 
-        //if we just installed the app
-        else{
-            //load onboarding fragment?
+        //shared pref demo
+        User user = User.fromDisk(this);
+        if (user == null) {
+            //load onboarding fragment.
             //this is dummy data
             user = new User();
             Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
             user.save(this);
-
-            settings = new Settings();
-            settings.save(this);
         }
 
         appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
