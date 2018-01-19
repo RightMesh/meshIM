@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
     private IMeshConnectionManagerService mIMeshConnectionManagerService = null;
 
     // Implementation of AIDL interface.
-    private IMainActivity.Stub callback = new IMainActivity.Stub() {
+    private IActivity.Stub callback = new IActivity.Stub() {
         /**
          * A lazy helper method that dumps text to the log TextView on the screen.
          *

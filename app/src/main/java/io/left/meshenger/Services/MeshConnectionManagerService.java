@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
-import io.left.meshenger.Activities.IMainActivity;
+import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -36,7 +36,7 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
     HashMap<MeshID, User> users = new HashMap<>();
 
     // Callback to communicate with the activity.
-    IMainActivity mainActivityCallback = null;
+    IActivity mainActivityCallback = null;
 
     /**
      * Connects to RightMesh when service is started.
@@ -74,7 +74,7 @@ public class MeshConnectionManagerService extends Service implements MeshStateLi
          * @param callback Callback to keep a reference to.
          */
         @Override
-        public void registerMainActivityCallback(IMainActivity callback) {
+        public void registerMainActivityCallback(IActivity callback) {
             mainActivityCallback = callback;
             try {
                 mainActivityCallback.echo("IPC Connection Established.");

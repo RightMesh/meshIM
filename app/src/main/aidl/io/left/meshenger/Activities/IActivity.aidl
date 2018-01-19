@@ -1,6 +1,6 @@
 package io.left.meshenger.Activities;
 
-interface IMainActivity {
+interface IActivity {
     void echo(in String message);
 
     void updateInterface();
