@@ -1,11 +1,11 @@
 syntax = "proto3";
 package protobuf;
 
-message updatePeer{
+message PeerUpdate{
     string userName =1;
     int32 avatarId =2;
 }
-message createMessage{
+message Message{
     string message =1;
     int64 time=2;
 }
