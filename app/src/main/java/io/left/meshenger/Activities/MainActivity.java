@@ -100,27 +100,10 @@ public class MainActivity extends Activity {
 
 
         User user = new User("dunny",4);
+        user.load(this);
         Settings settings = new Settings(true);
-
-        //checking if we already have data
-        if(user.load(this) && settings.load(this)){
-
-            Toast.makeText(this,"getting user from memory",Toast.LENGTH_SHORT).show();
-        }
-
-        //if we just installed the app
-        else{
-            //load onboarding fragment?
-            //this is dummy data
-            user = new User("userName",0);
-            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
-            user.save(this);
-
-            settings = new Settings(true);
-            settings.save(this);
-        }
-
-        appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
+        settings.load(this);
+        appendToLog("userName: "+user.getUserName()+"\nuserID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
 
         // dummy button to test sharedpref
         Button bt=findViewById(R.id.testbttn);

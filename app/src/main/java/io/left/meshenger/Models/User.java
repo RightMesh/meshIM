@@ -33,6 +33,14 @@ public class User implements Parcelable {
    }
 
     /**
+     * Default constructor
+     */
+   public User(){
+       this.userName= "UserName";
+       this.userAvatar = 1;
+   }
+
+    /**
      * get the id of the user's avatar
      * @return an int
      */
