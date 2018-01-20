@@ -29,7 +29,7 @@ public class WelcomeActivity extends Activity {
                 startActivity(intent);
                 finish();
             }
-            // create a new profile
+            // Launch first time activity to create a new profile
             else{
                 Intent intent = new Intent(WelcomeActivity.this,FirstTimeActivity.class);
                 startActivity(intent);
