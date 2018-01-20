@@ -60,18 +60,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //protobuf sample
-        /*    MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
-            byte [] protobyte = sample.toByteArray();
-            MessageType.createMessage sample2 =null;
-            try {
-                sample2 = MessageType.createMessage.parseFrom(protobyte);
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
-            */
-
         // Load settings, or initialize them before starting service.
         Settings settings = Settings.fromDisk(this);
         if (settings == null) {
@@ -85,7 +73,7 @@ public class MainActivity extends Activity {
         if (user == null) {
             //load onboarding fragment.
             //this is dummy data
-            user = new User();
+            user = new User(this);
             Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
             user.save();
         }

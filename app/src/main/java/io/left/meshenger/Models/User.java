@@ -18,14 +18,17 @@ public class User implements Parcelable {
     private String userName;
     private int userAvatar;
 
-    private SharedPreferences preferences;
+    // SharedPreferences is a singleton - the same reference is always returned. It also updates
+    // itself in a threadsafe way, so might as well keep one version of it open.
+    // The transient qualifier makes Gson ignore it for serialization.
+    private transient SharedPreferences preferences;
 
 
     //used in share preference to save or load data
     private final String saveVersion = "UserDataSaveVersion_v1";
 
     public User() {
-        this(null, -1);
+        this("Anonymous", -1);
     }
 
     /**

@@ -3,6 +3,8 @@ package io.left.meshenger;
 import android.content.Context;
 import android.os.RemoteException;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.util.HashMap;
 
 import io.left.meshenger.Activities.IActivity;
@@ -10,14 +12,20 @@ import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
-import io.left.rightmesh.mesh.MeshManager;
+import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
+import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
+import protobuf.MeshIMMessages.MeshIMMessage;
+import protobuf.MeshIMMessages.PeerUpdate;
 
+import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static io.left.rightmesh.mesh.MeshManager.UPDATED;
+import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 public class RightMeshConnectionHandler implements MeshStateListener {
     // Port to bind app to.
@@ -156,11 +164,24 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param e event object from mesh
      */
     private void handleDataReceived(RightMeshEvent e) {
-        final MeshManager.DataReceivedEvent event = (MeshManager.DataReceivedEvent) e;
+        DataReceivedEvent event = (DataReceivedEvent) e;
 
-        // Echo.
-        String message = new String(event.data);
-        echo(message);
+        try {
+            MeshIMMessage message = MeshIMMessage.parseFrom(event.data);
+
+            if (message.getMessageType() == PEER_UPDATE) {
+                PeerUpdate peerUpdate = message.getPeerUpdate();
+                User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId());
+                if (!users.keySet().contains(e.peerUuid)) {
+                    echo("Found a new peer!");
+                }
+                users.put(e.peerUuid, peer);
+            }
+        } catch (InvalidProtocolBufferException ignored) {
+            /* Ignore malformed messages. */
+            // but for now...
+            echo(new String(event.data));
+        }
     }
 
     /**
@@ -170,13 +191,37 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     private void handlePeerChanged(RightMeshEvent e) {
         // Update peer list.
-        MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-        if (event.state != REMOVED && !users.keySet().contains(event.peerUuid)) {
-            users.put(event.peerUuid, null);
-            echo(event.peerUuid.toString() + " added.");
+        PeerChangedEvent event = (PeerChangedEvent) e;
+
+        // Ignore ourselves.
+        if (event.peerUuid == mm.getUuid()) {
+            return;
+        }
+
+        if (event.state == ADDED || event.state == UPDATED) {
+            // Send our information to a new or rejoining peer.
+            byte[] message = createPeerUpdatePayloadFromUser(user);
+            try {
+                mm.sendDataReliable(event.peerUuid, HELLO_PORT, message);
+            } catch (RightMeshException rme) {
+                rme.printStackTrace();
+            }
         } else if (event.state == REMOVED) {
             users.remove(event.peerUuid);
-            echo(event.peerUuid.toString() + " removed.");
         }
+    }
+
+    private byte[] createPeerUpdatePayloadFromUser(User user) {
+        PeerUpdate peerUpdate = PeerUpdate.newBuilder()
+                .setUserName(user.getUserName())
+                .setAvatarId(user.getUserAvatar())
+                .build();
+
+        MeshIMMessage message = MeshIMMessage.newBuilder()
+                .setMessageType(PEER_UPDATE)
+                .setPeerUpdate(peerUpdate)
+                .build();
+
+        return message.toByteArray();
     }
 }
