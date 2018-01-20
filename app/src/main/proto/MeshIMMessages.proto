@@ -1,6 +1,17 @@
 syntax = "proto3";
 package protobuf;
 
+enum MessageType {
+    PEER_UPDATE = 0;
+    MESSAGE = 1;
+}
+
+message MeshIMMessage {
+    MessageType messageType = 1;
+    PeerUpdate peerUpdate = 2;
+    Message message = 3;
+}
+
 message PeerUpdate{
     string userName =1;
     int32 avatarId =2;
