@@ -109,30 +109,29 @@ public class MainActivity extends Activity {
             //load onboarding fragment.
             //this is dummy data
             user = new User();
-            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Making new user", Toast.LENGTH_SHORT).show();
             user.save(this);
         }
 
-        appendToLog("userID: "+ user.getUserAvatar()+"\n show notif: "+settings.isShowNotification() );
+        appendToLog("userID: " + user.getUserAvatar() + "\n show notif: " + settings.isShowNotification());
 
         // dummy button to test sharedpref
-        Button bt=findViewById(R.id.testbttn);
+        Button bt = findViewById(R.id.testbttn);
 
-        User finalUser = new User(user.getUserName(),user.getUserAvatar());
+        User finalUser = new User(user.getUserName(), user.getUserAvatar());
         Settings finalSettings = settings;
 
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //changing data and saving it
-                finalUser.setUserName("username");
-                finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
+                finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
                 finalUser.save(MainActivity.this);
 
                 finalSettings.setShowNotification(!finalSettings.isShowNotification());
                 finalSettings.save(MainActivity.this);
 
-                appendToLog("userID changed to: "+ finalUser.getUserAvatar()+"\n show notif changed to: "+finalSettings.isShowNotification() );
+                appendToLog("userID changed to: " + finalUser.getUserAvatar() + "\n show notif changed to: " + finalSettings.isShowNotification());
             }
 
         });
