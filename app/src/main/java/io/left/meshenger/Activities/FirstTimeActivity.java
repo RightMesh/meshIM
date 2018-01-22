@@ -33,14 +33,12 @@ public class FirstTimeActivity extends Activity {
 
     private void finishButton() {
 
-        EditText userText = findViewById(R.id.userNameEditText);
-        String userName = userText.getText().toString();
-
         Button button = findViewById(R.id.finishButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                EditText userText = findViewById(R.id.userNameEditText);
+                String userName = userText.getText().toString();
                 if (StringUtils.isBlank(userName)) {
                     Toast.makeText(FirstTimeActivity.this, "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
                 } else {
