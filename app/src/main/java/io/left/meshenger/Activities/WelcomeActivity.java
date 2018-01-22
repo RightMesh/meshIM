@@ -19,18 +19,19 @@ public class WelcomeActivity extends Activity {
         User user = new User();
         Settings settings = new Settings(true);
 
+        Intent intent;
         //checking if we already have a user profile
         if (user.load(WelcomeActivity.this) && settings.load(WelcomeActivity.this)) {
-            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+             intent = new Intent(WelcomeActivity.this, MainActivity.class);
+
         }
         // Launch first time activity to create a new profile
         else {
-            Intent intent = new Intent(WelcomeActivity.this, FirstTimeActivity.class);
-            startActivity(intent);
-            finish();
+            intent = new Intent(WelcomeActivity.this, FirstTimeActivity.class);
+
         }
+        startActivity(intent);
+        finish();
     }
 
 }
