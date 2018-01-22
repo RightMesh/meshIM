@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.left.meshenger">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -22,13 +18,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Services.MeshConnectionManagerService" />
+        <service android:name=".Services.MeshIMService" />
 
         <activity android:name=".Activities.MainActivity" />
 
         <activity
             android:name=".Activities.FirstTimeActivity"
-            android:label="@string/title_activity_main2"></activity>
+            android:label="@string/title_FirstTimeActivity"></activity>
     </application>
 
 </manifest>

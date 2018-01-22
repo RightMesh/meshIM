@@ -17,6 +17,7 @@ import io.left.meshenger.R;
 
 public class FirstTimeActivity extends Activity {
     private User user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,34 +31,27 @@ public class FirstTimeActivity extends Activity {
      * Creates a user profile
      */
 
-    private void finishButton(){
+    private void finishButton() {
+
+        EditText userText = findViewById(R.id.userNameEditText);
+        String userName = userText.getText().toString();
+
         Button button = findViewById(R.id.finishButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(StringUtils.isBlank(getUserName())){
-                    Toast.makeText(FirstTimeActivity.this,"You Must Enter User Name!",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    user = new User(getUserName(),1);
+                if (StringUtils.isBlank(userName)) {
+                    Toast.makeText(FirstTimeActivity.this, "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
+                } else {
+                    user = new User(userName, 1);
                     user.save(FirstTimeActivity.this);
-                    Intent intent = new Intent(FirstTimeActivity.this,MainActivity.class);
+                    Intent intent = new Intent(FirstTimeActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
             }
         });
-    }
-
-    /**
-     * The function returns username entered by the user
-     * @return a string
-     */
-    private String getUserName(){
-        EditText userName = findViewById(R.id.userNameEditText);
-        String user = userName.getText().toString();
-        return user;
     }
 
 }
