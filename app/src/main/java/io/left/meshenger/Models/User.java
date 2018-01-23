@@ -46,11 +46,6 @@ public class User implements Parcelable {
         mPreferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
     }
 
-    public User(Context context) {
-        this();
-        preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
-    }
-
     /**
      * Attempts to load the stored {@link User} from {@link SharedPreferences}.
      *
