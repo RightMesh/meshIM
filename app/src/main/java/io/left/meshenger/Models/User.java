@@ -1,5 +1,8 @@
 package io.left.meshenger.Models;
 
+import static android.content.Context.MODE_PRIVATE;
+import static io.left.meshenger.BuildConfig.APPLICATION_ID;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
@@ -10,42 +13,37 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import static android.content.Context.MODE_PRIVATE;
-import static io.left.meshenger.BuildConfig.APPLICATION_ID;
-
 
 public class User implements Parcelable {
-    private String userName;
-    private int userAvatar;
+    //used in share preference to save or load data
+    private final String SAVE_VERSION = "UserDataSaveVersion_v1";
+
+    private String mUserName;
+    private int mUserAvatar;
 
     // SharedPreferences is a singleton - the same reference is always returned. It also updates
     // itself in a threadsafe way, so might as well keep one version of it open.
     // The transient qualifier makes Gson ignore it for serialization.
-    private transient SharedPreferences preferences;
-
-
-    //used in share preference to save or load data
-    private final String saveVersion = "UserDataSaveVersion_v1";
+    private transient SharedPreferences mPreferences;
 
     public User() {
         this("Anonymous", -1);
     }
 
     /**
-     * Returns a User object that can be used to store users nearby
+     * Returns a User object that can be used to store users nearby.
      * @param userName is the user name of the User
      *                 does not need to be unique
      * @param userAvatar is the Avatar chosen by the user
      */
-    public User(String userName, int userAvatar){
-       this.userAvatar = userAvatar;
-       this.userName = userName;
-
-   }
+    public User(String userName, int userAvatar) {
+        this.mUserAvatar = userAvatar;
+        this.mUserName = userName;
+    }
 
     public User(Context context) {
         this();
-        preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
+        mPreferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
     }
 
     /**
@@ -62,48 +60,34 @@ public class User implements Parcelable {
         return temp;
     }
 
-    /**
-     * get the id of the user's avatar
-     * @return an int
-     */
     public int getUserAvatar() {
 
-        return userAvatar;
+        return mUserAvatar;
     }
 
-    /**
-     * get the username of the user
-     * @return username in a string format
-     */
     public String getUserName() {
-        return userName;
+        return mUserName;
     }
 
-    /**
-     * Takes in the id for userAvatar in the int format
-     * sets the user avatar to the new avatar
-     * @param userAvatar
-     */
     public void setUserAvatar(int userAvatar) {
-        this.userAvatar = userAvatar;
+        this.mUserAvatar = userAvatar;
     }
 
-    /**
-     * set the username of the User to the paramter
-     * @param userName
-     */
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.mUserName = userName;
     }
 
     /**
-     * A constructor for the parcel data type
-     * @param in
-     * extracts username and uyserAvatar from parcel data type
+     * A constructor for the parcel data type.
+     *
+     * <p>
+     *     Extracts username and uyserAvatar from parcel data type
+     * </p>
+     * @param in parel to parse
      */
-    protected User(Parcel in) {
-        this.userName = in.readString();
-        this.userAvatar = in.readInt();
+    private User(Parcel in) {
+        this.mUserName = in.readString();
+        this.mUserAvatar = in.readInt();
     }
 
 
@@ -125,24 +109,24 @@ public class User implements Parcelable {
     }
 
     /**
-     * flatten the object in parcel
-     * @param dest
-     * @param flags
+     * flatten the object in parcel.
+     * @param dest needed by Parcelable
+     * @param flags needed by Parcelable
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.getUserName());
-        dest.writeInt(this.userAvatar);
+        dest.writeInt(this.mUserAvatar);
     }
 
     /**
-     * This function loads setting data if it exist
+     * This function loads setting data if it exist.
      * @return true if function was able to load else false
      */
-    public boolean load(){
+    public boolean load() {
         try {
             Gson gson = new Gson();
-            String user = preferences.getString(saveVersion, null);
+            String user = mPreferences.getString(SAVE_VERSION, null);
             Type type = new TypeToken<User>() {
             }.getType();
             User temp = gson.fromJson(user, type);
@@ -154,23 +138,23 @@ public class User implements Parcelable {
             }
             return true;
         } catch (NullPointerException npe) {
-            // If preferences is null, we can't load anything.
+            // If mPreferences is null, we can't load anything.
             return false;
         }
     }
 
     /**
-     * This functionn loads setting data if it exist
+     * This function loads setting data if it exist.
      */
     public void save() {
         try {
-            SharedPreferences.Editor editor = preferences.edit();
+            SharedPreferences.Editor editor = mPreferences.edit();
             Gson gsonModel = new Gson();
             String savemodel = gsonModel.toJson(this);
-            editor.putString(saveVersion, savemodel);
+            editor.putString(SAVE_VERSION, savemodel);
             editor.commit();
         } catch (NullPointerException ignored) {
-            // In case preferences is null.
+            // In case mPreferences is null.
         }
     }
 }

@@ -1,11 +1,15 @@
 package io.left.meshenger;
 
+import static io.left.rightmesh.mesh.MeshManager.ADDED;
+import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
+import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
+import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
+
 import android.content.Context;
 import android.os.RemoteException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-
-import java.util.HashMap;
 
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Models.User;
@@ -17,14 +21,10 @@ import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
+
+import java.util.HashMap;
 import protobuf.MeshIMMessages.MeshIMMessage;
 import protobuf.MeshIMMessages.PeerUpdate;
-
-import static io.left.rightmesh.mesh.MeshManager.ADDED;
-import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
-import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
-import static io.left.rightmesh.mesh.MeshManager.REMOVED;
-import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 public class RightMeshConnectionHandler implements MeshStateListener {
     // Port to bind app to.

@@ -20,10 +20,10 @@ import io.left.meshenger.Services.MeshIMService;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
-    private IMeshIMService mIMeshIMService = null;
+    private IMeshIMService mService = null;
 
     // Implementation of AIDL interface.
-    private IActivity.Stub callback = new IActivity.Stub() {
+    private IActivity.Stub mCallback = new IActivity.Stub() {
         /**
          * A lazy helper method that dumps text to the log TextView on the screen.
          *
@@ -78,15 +78,15 @@ public class MainActivity extends Activity {
             user.save();
         }
 
-        // Handles connecting to service. Registers `callback` with the service when the connection
+        // Handles connecting to service. Registers `mCallback` with the service when the connection
         // is successful.
         ServiceConnection connection = new ServiceConnection() {
             // Called when the connection with the service is established
             public void onServiceConnected(ComponentName className, IBinder service) {
-                mIMeshIMService
+                mService
                         = IMeshIMService.Stub.asInterface(service);
                 try {
-                    mIMeshIMService.registerMainActivityCallback(callback);
+                    mService.registerMainActivityCallback(mCallback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
             // Called when the connection with the service disconnects unexpectedly
             public void onServiceDisconnected(ComponentName className) {
                 appendToLog("Service has unexpectedly disconnected");
-                mIMeshIMService = null;
+                mService = null;
             }
         };
 
@@ -104,20 +104,20 @@ public class MainActivity extends Activity {
 
 
         // dummy button to test sharedpref
-        Button bt=findViewById(R.id.testbttn);
+        Button bt = findViewById(R.id.testbttn);
         User finalUser = new User(user.getUserName(),user.getUserAvatar());
         Settings finalSettings = settings;
         bt.setOnClickListener(v -> {
             //changing data and saving it
             finalUser.setUserName("username");
-            finalUser.setUserAvatar(finalUser.getUserAvatar()+1);
+            finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
             finalUser.save();
 
-            finalSettings.setShowNotification(!finalSettings.isShowNotification());
+            finalSettings.setmShowNotification(!finalSettings.ismShowNotification());
             finalSettings.save(MainActivity.this);
 
             appendToLog("userID changed to: " + finalUser.getUserAvatar()
-                    + "\n show notif changed to: " + finalSettings.isShowNotification());
+                    + "\n show notif changed to: " + finalSettings.ismShowNotification());
         });
     }
 
@@ -140,8 +140,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void sendHello(View v) throws RemoteException {
-        if (mIMeshIMService != null) {
-            mIMeshIMService.sendHello();
+        if (mService != null) {
+            mService.sendHello();
         }
     }
 
@@ -152,8 +152,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void configure(View v) throws RemoteException {
-        if (mIMeshIMService != null) {
-            mIMeshIMService.configure();
+        if (mService != null) {
+            mService.configure();
         }
     }
 }
