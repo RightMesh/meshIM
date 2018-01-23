@@ -117,8 +117,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
-                mm.setPattern("FRAZER");
-
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 mMeshManager.bind(HELLO_PORT);
