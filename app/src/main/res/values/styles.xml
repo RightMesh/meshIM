@@ -12,4 +12,7 @@
         </item>
 
     </style>
+    <style name="Text" parent="AlertDialog.AppCompat.Light"/>
+
+
 </resources>

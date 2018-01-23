@@ -2,12 +2,10 @@ package io.left.meshenger.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.Bundle;
 
 import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
-import io.left.meshenger.R;
 
 public class WelcomeActivity extends Activity {
 
@@ -27,7 +25,7 @@ public class WelcomeActivity extends Activity {
         }
         // Launch first time activity to create a new profile
         else {
-            intent = new Intent(WelcomeActivity.this, FirstTimeActivity.class);
+            intent = new Intent(WelcomeActivity.this, ChooseAvatarActivity.class);
 
         }
         startActivity(intent);
