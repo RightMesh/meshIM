@@ -113,11 +113,11 @@ public class MainActivity extends Activity {
             finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
             finalUser.save();
 
-            finalSettings.setmShowNotification(!finalSettings.ismShowNotification());
+            finalSettings.setShowNotifications(!finalSettings.isShowNotifications());
             finalSettings.save(MainActivity.this);
 
             appendToLog("userID changed to: " + finalUser.getUserAvatar()
-                    + "\n show notif changed to: " + finalSettings.ismShowNotification());
+                    + "\n show notif changed to: " + finalSettings.isShowNotifications());
         });
     }
 

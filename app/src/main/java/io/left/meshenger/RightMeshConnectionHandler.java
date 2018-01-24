@@ -31,31 +31,27 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     private static final int HELLO_PORT = 9876;
 
     // MeshManager instance - interface to the mesh network.
-    private AndroidMeshManager mMeshManager = null;
+    private AndroidMeshManager meshManager = null;
 
     // Set to keep track of peers connected to the mesh.
-    private HashMap<MeshID, User> mUsers = new HashMap<>();
-    private User mUser = null;
+    private HashMap<MeshID, User> users = new HashMap<>();
+    private User user = null;
 
     // Link to current activity.
-    private IActivity mCallback = null;
-
-    public RightMeshConnectionHandler(User user) {
-        this.mUser = user;
-    }
+    private IActivity callback = null;
 
     public RightMeshConnectionHandler(User user) {
         this.user = user;
     }
 
     /**
-     * Setter for {@link RightMeshConnectionHandler#mCallback}. Notifies the connected activity that
+     * Setter for {@link RightMeshConnectionHandler#callback}. Notifies the connected activity that
      * the connection is successful.
      *
      * @param callback new value
      */
     public void setCallback(IActivity callback) {
-        this.mCallback = callback;
+        this.callback = callback;
         try {
             callback.echo("IPC Connection Established.");
         } catch (RemoteException e) {
@@ -69,7 +65,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     public void configure() {
         try {
-            mMeshManager.showSettingsActivity();
+            meshManager.showSettingsActivity();
         } catch (RightMeshException ex) {
             echo(ex.getMessage());
         }
@@ -81,7 +77,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        mMeshManager = AndroidMeshManager.getInstance(context, RightMeshConnectionHandler.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshConnectionHandler.this);
     }
 
     /**
@@ -89,7 +85,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     public void disconnect() {
         try {
-            mMeshManager.stop();
+            meshManager.stop();
         } catch (MeshService.ServiceDisconnectedException e) {
             e.printStackTrace();
         }
@@ -99,11 +95,11 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * HelloMesh function, not much longer for this world.
      */
     public void sendHello() {
-        for (MeshID receiver : mUsers.keySet()) {
-            String msg = "Hello to: " + receiver + " from" + mMeshManager.getUuid();
+        for (MeshID receiver : users.keySet()) {
+            String msg = "Hello to: " + receiver + " from" + meshManager.getUuid();
             byte[] testData = msg.getBytes();
             try {
-                mMeshManager.sendDataReliable(receiver, HELLO_PORT, testData);
+                meshManager.sendDataReliable(receiver, HELLO_PORT, testData);
             } catch (RightMeshException e) {
                 echo(e.getMessage());
             }
@@ -121,20 +117,20 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
-                mm.setPattern("FRAZER");
+                meshManager.setPattern("FRAZER");
 
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
-                mMeshManager.bind(HELLO_PORT);
+                meshManager.bind(HELLO_PORT);
 
                 // Subscribes handlers to receive events from the mesh.
-                mMeshManager.on(DATA_RECEIVED, this::handleDataReceived);
-                mMeshManager.on(PEER_CHANGED, this::handlePeerChanged);
+                meshManager.on(DATA_RECEIVED, this::handleDataReceived);
+                meshManager.on(PEER_CHANGED, this::handlePeerChanged);
 
                 // If connected to the main activity, tell it to enable its UI elements.
                 try {
-                    if (mCallback != null) {
-                        mCallback.updateInterface();
+                    if (callback != null) {
+                        callback.updateInterface();
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -152,9 +148,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param message Message to be forwarded to the activity.
      */
     private void echo(String message) {
-        if (mCallback != null) {
+        if (callback != null) {
             try {
-                mCallback.echo(message);
+                callback.echo(message);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -175,10 +171,10 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             if (message.getMessageType() == PEER_UPDATE) {
                 PeerUpdate peerUpdate = message.getPeerUpdate();
                 User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId());
-                if (!mUsers.keySet().contains(e.peerUuid)) {
+                if (!users.keySet().contains(e.peerUuid)) {
                     echo("Found a new peer!");
                 }
-                mUsers.put(e.peerUuid, peer);
+                users.put(e.peerUuid, peer);
             }
         } catch (InvalidProtocolBufferException ignored) {
             /* Ignore malformed messages. */
@@ -197,20 +193,20 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         PeerChangedEvent event = (PeerChangedEvent) e;
 
         // Ignore ourselves.
-        if (event.peerUuid == mMeshManager.getUuid()) {
+        if (event.peerUuid == meshManager.getUuid()) {
             return;
         }
 
         if (event.state == ADDED) {
             // Send our information to a new or rejoining peer.
-            byte[] message = createPeerUpdatePayloadFromUser(mUser);
+            byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
-                mMeshManager.sendDataReliable(event.peerUuid, HELLO_PORT, message);
+                meshManager.sendDataReliable(event.peerUuid, HELLO_PORT, message);
             } catch (RightMeshException rme) {
                 rme.printStackTrace();
             }
         } else if (event.state == REMOVED) {
-            mUsers.remove(event.peerUuid);
+            users.remove(event.peerUuid);
         }
     }
 

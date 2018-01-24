@@ -13,16 +13,16 @@ import java.lang.reflect.Type;
 
 public class Settings {
     // Used in shared preference to store / load data
-    private final String SAVE_VERSION = "SettingSaveVersion_v1";
+    private final String SAVE_VERSION = "SettingSaveVersion_v1"; // SUPPRESS MemberNameCheck
 
-    private boolean mShowNotification;
+    private boolean showNotifications;
 
-    public void setmShowNotification(boolean showNotification) {
-        this.mShowNotification = showNotification;
+    public void setShowNotifications(boolean showNotifications) {
+        this.showNotifications = showNotifications;
     }
 
-    public boolean ismShowNotification() {
-        return mShowNotification;
+    public boolean isShowNotifications() {
+        return showNotifications;
     }
 
     public Settings() {
@@ -30,7 +30,7 @@ public class Settings {
     }
 
     public Settings(boolean showNotification) {
-        this.mShowNotification = showNotification;
+        this.showNotifications = showNotification;
     }
 
     /**
@@ -63,7 +63,7 @@ public class Settings {
         if (temp == null) {
             return false;
         } else {
-            this.setmShowNotification(temp.ismShowNotification());
+            this.setShowNotifications(temp.isShowNotifications());
         }
         return true;
     }
