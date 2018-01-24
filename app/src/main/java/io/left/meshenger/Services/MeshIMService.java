@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Models.User;
 import io.left.meshenger.RightMeshConnectionHandler;
 
 /**
@@ -12,7 +13,7 @@ import io.left.meshenger.RightMeshConnectionHandler;
  * {@link RightMeshConnectionHandler}.
  */
 public class MeshIMService extends Service {
-    private RightMeshConnectionHandler meshConnection;
+    private RightMeshConnectionHandler mMeshConnection;
 
     /**
      * Connects to RightMesh when service is started.
@@ -20,8 +21,10 @@ public class MeshIMService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        meshConnection = new RightMeshConnectionHandler();
-        meshConnection.connect(this);
+        User user = User.fromDisk(this);
+
+        mMeshConnection = new RightMeshConnectionHandler(user);
+        mMeshConnection.connect(this);
     }
 
     /**
@@ -30,15 +33,14 @@ public class MeshIMService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        meshConnection.disconnect();
+        mMeshConnection.disconnect();
     }
 
     /**
      * Implementation of AIDL interface. As most of these calls are for mesh operations, most of
-     * them just call a method in {@link MeshIMService#meshConnection}.
+     * them just call a method in {@link MeshIMService#mMeshConnection}.
      */
-    private final IMeshIMService.Stub mBinder
-            = new IMeshIMService.Stub() {
+    private final IMeshIMService.Stub mBinder = new IMeshIMService.Stub() {
         @Override
         public void send(String message) {
             // Nothing for now.
@@ -46,17 +48,17 @@ public class MeshIMService extends Service {
 
         @Override
         public void registerMainActivityCallback(IActivity callback) {
-            meshConnection.setCallback(callback);
+            mMeshConnection.setCallback(callback);
         }
 
         @Override
         public void sendHello() {
-            meshConnection.sendHello();
+            mMeshConnection.sendHello();
         }
 
         @Override
         public void configure() {
-            meshConnection.configure();
+            mMeshConnection.configure();
         }
     };
 

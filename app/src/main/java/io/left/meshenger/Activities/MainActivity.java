@@ -20,10 +20,10 @@ import io.left.meshenger.Services.MeshIMService;
 
 public class MainActivity extends Activity {
     // Reference to AIDL interface of app service.
-    private IMeshIMService mIMeshIMService = null;
+    private IMeshIMService mService = null;
 
     // Implementation of AIDL interface.
-    private IActivity.Stub callback = new IActivity.Stub() {
+    private IActivity.Stub mCallback = new IActivity.Stub() {
         /**
          * A lazy helper method that dumps text to the log TextView on the screen.
          *
@@ -60,27 +60,33 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //protobuf sample
-        /*    MessageType.createMessage sample =  MessageType.createMessage.newBuilder().setMessage("hello protobuf works").build();
-            byte [] protobyte = sample.toByteArray();
-            MessageType.createMessage sample2 =null;
-            try {
-                sample2 = MessageType.createMessage.parseFrom(protobyte);
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(this,sample2.getMessage().toString(),Toast.LENGTH_SHORT).show();
-            */
+        // Load settings, or initialize them before starting service.
+        Settings settings = Settings.fromDisk(this);
+        if (settings == null) {
+            // Initialize settings without UI.
+            settings = new Settings();
+            settings.save(this);
+        }
 
-        // Handles connecting to service. Registers `callback` with the service when the connection
+        // Load user, or launch onboarding activity to initialize before starting service.
+        User user = User.fromDisk(this);
+        if (user == null) {
+            //load onboarding fragment.
+            //this is dummy data
+            user = new User(this);
+            Toast.makeText(this,"Making new user",Toast.LENGTH_SHORT).show();
+            user.save();
+        }
+
+        // Handles connecting to service. Registers `mCallback` with the service when the connection
         // is successful.
         ServiceConnection connection = new ServiceConnection() {
             // Called when the connection with the service is established
             public void onServiceConnected(ComponentName className, IBinder service) {
-                mIMeshIMService
+                mService
                         = IMeshIMService.Stub.asInterface(service);
                 try {
-                    mIMeshIMService.registerMainActivityCallback(callback);
+                    mService.registerMainActivityCallback(mCallback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -89,54 +95,30 @@ public class MainActivity extends Activity {
             // Called when the connection with the service disconnects unexpectedly
             public void onServiceDisconnected(ComponentName className) {
                 appendToLog("Service has unexpectedly disconnected");
-                mIMeshIMService = null;
+                mService = null;
             }
         };
 
         Intent serviceIntent = new Intent(this, MeshIMService.class);
         bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 
-        Settings settings = Settings.fromDisk(this);
-        if (settings == null) {
-            // Initialize settings without UI.
-            settings = new Settings();
-            settings.save(this);
-        }
-
-        //shared pref demo
-        User user = User.fromDisk(this);
-        if (user == null) {
-            //load onboarding fragment.
-            //this is dummy data
-            user = new User();
-            Toast.makeText(this, "Making new mUser", Toast.LENGTH_SHORT).show();
-            user.save(this);
-        }
-
-        appendToLog("userID: " + user.getUserAvatar() + "\n show notif: " + settings.isShowNotification());
 
         // dummy button to test sharedpref
         Button bt = findViewById(R.id.testbttn);
-
-        User finalUser = new User(user.getUserName(), user.getUserAvatar());
+        User finalUser = new User(user.getUserName(),user.getUserAvatar());
         Settings finalSettings = settings;
+        bt.setOnClickListener(v -> {
+            //changing data and saving it
+            finalUser.setUserName("username");
+            finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
+            finalUser.save();
 
-        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //changing data and saving it
-                finalUser.setUserAvatar(finalUser.getUserAvatar() + 1);
-                finalUser.save(MainActivity.this);
+            finalSettings.setmShowNotification(!finalSettings.ismShowNotification());
+            finalSettings.save(MainActivity.this);
 
-                finalSettings.setShowNotification(!finalSettings.isShowNotification());
-                finalSettings.save(MainActivity.this);
-
-                appendToLog("userID changed to: " + finalUser.getUserAvatar() + "\n show notif changed to: " + finalSettings.isShowNotification());
-            }
-
+            appendToLog("userID changed to: " + finalUser.getUserAvatar()
+                    + "\n show notif changed to: " + finalSettings.ismShowNotification());
         });
-
-
     }
 
     /**
@@ -158,8 +140,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void sendHello(View v) throws RemoteException {
-        if (mIMeshIMService != null) {
-            mIMeshIMService.sendHello();
+        if (mService != null) {
+            mService.sendHello();
         }
     }
 
@@ -170,8 +152,8 @@ public class MainActivity extends Activity {
      * @throws RemoteException If service disappears unexpectedly.
      */
     public void configure(View v) throws RemoteException {
-        if (mIMeshIMService != null) {
-            mIMeshIMService.configure();
+        if (mService != null) {
+            mService.configure();
         }
     }
 }
