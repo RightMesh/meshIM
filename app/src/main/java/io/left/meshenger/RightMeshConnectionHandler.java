@@ -48,6 +48,11 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     // Link to current activity.
     private IActivity callback = null;
 
+    /**
+     * Constructor.
+     * @param user user info for this device
+     * @param database open connection to database
+     */
     public RightMeshConnectionHandler(User user, MeshIMDatabase database) {
         this.user = user;
         this.database = database;
