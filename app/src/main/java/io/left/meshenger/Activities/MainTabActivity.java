@@ -2,7 +2,6 @@ package io.left.meshenger.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,21 +9,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainTabActivity extends Activity {
 
     UserListAdapter userListAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
+        //setting up tabs
         TabHost host = (TabHost) findViewById(R.id.tabHost);
         host.setup();
 
@@ -45,61 +44,46 @@ public class MainTabActivity extends Activity {
         spec.setContent(R.id.tab3);
         spec.setIndicator("Account");
         host.addTab(spec);
+
         sampleUserList();
         onListClick();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_screen, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void sampleUserList(){
+    /**
+     * Dummy function to fill the userList view with data
+     */
+    private void sampleUserList() {
         ListView listView = findViewById(R.id.userListView);
         List<User> userList = new ArrayList<>();
-        for(int i =0;i<15;i++){
+        for (int i = 0; i < 15; i++) {
             User user;
-            if(i%2==0){
-                user = new User("user "+i,R.mipmap.avatar_00);
-            }
-            else {
-                user = new User("user "+i,R.mipmap.avatar_01);
+            if (i % 2 == 0) {
+                user = new User("mUser " + i, R.mipmap.avatar_00);
+            } else {
+                user = new User("mUser " + i, R.mipmap.avatar_01);
 
             }
             userList.add(user);
         }
-        userListAdapter = new UserListAdapter(this,userList);
+        userListAdapter = new UserListAdapter(this, userList);
         listView.setAdapter(userListAdapter);
 
     }
-    private void onListClick(){
+
+    /**
+     * starts a new chat activity when user clicks on any other user in the userlist.
+     */
+    private void onListClick() {
         ListView listView = findViewById(R.id.userListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
+                Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
                 startActivity(intent);
             }
         });
     }
-
 
 
 }

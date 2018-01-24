@@ -16,16 +16,30 @@ public class UserListAdapter extends BaseAdapter {
     private Context myContex;
     private List<User> userList;
 
+    /**
+     * constructor for the userlistAdapter
+     * @param context context of the activity
+     * @param userList list of all the users nearby
+     */
     public UserListAdapter(Context context, List userList) {
         this.myContex = context;
         this.userList = userList;
     }
 
+    /**
+     * returns the size of the user list.
+     * @return
+     */
     @Override
     public int getCount() {
         return userList.size();
     }
 
+    /**
+     * returns a User on the list.
+     * @param i position of the user on the list.
+     * @return
+     */
     @Override
     public Object getItem(int i) {
         return userList.get(i);

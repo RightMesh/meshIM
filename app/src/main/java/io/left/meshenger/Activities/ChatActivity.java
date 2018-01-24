@@ -4,76 +4,61 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
+import io.left.meshenger.Adapters.MessageAdapter;
+import io.left.meshenger.Models.Message;
+import io.left.meshenger.Models.User;
+import io.left.meshenger.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.left.meshenger.Adapters.MessageAdapter;
-import io.left.meshenger.Models.Message;
-import io.left.meshenger.R;
-import io.left.rightmesh.id.MeshID;
-
 public class ChatActivity extends Activity {
     //things needed to work with the list view
-    private RecyclerView chat;
-    private MessageAdapter messageListAdapter;
-    List<Message> messages = new ArrayList<>();
+    private RecyclerView mChatrecyclerview;
+    private MessageAdapter mMessageAdapter;
+    List<Message> mMessagelist = new ArrayList<>();
     private static final int HELLO_PORT = 9876;
-    //MeshID userID;
-
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        //userID = (MeshID) getIntent().getExtras().getSerializable("meshID");
-      //  Toast.makeText(ChatActivity.this, userID.toString(), Toast.LENGTH_SHORT).show();
+       user = new User("Bruce Lee",R.mipmap.avatar_00);
+        mChatrecyclerview = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+        mChatrecyclerview.setNestedScrollingEnabled(false);
+        Message message = new Message("Adapt what is useful, reject what is useless, "
+                + "and add what is specifically your own.", user, true);
+        Message message1 = new Message("Always be yourself, express yourself, have faith"
+                + " in yourself, do not go out and look for a successful "
+                + "personality and duplicate it.",
+                user, false);
+        Message message2 = new Message("If you love life, don't waste time, for time is what"
+                + " life is made up of.", user, true);
+        Message message3 = new Message("The key to immortality is first living a life"
+                + " worth remembering", user, false);
+        mMessagelist.add(message);
+        mMessagelist.add(message1);
+        mMessagelist.add(message2);
+        mMessagelist.add(message3);
+        mMessagelist.add(message);
+        mMessagelist.add(message1);
+        mMessagelist.add(message2);
+        mMessagelist.add(message3);
+        mMessagelist.add(message);
+        mMessagelist.add(message1);
+        mMessagelist.add(message2);
+        mMessagelist.add(message3);
 
-        chat = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        chat.setNestedScrollingEnabled(false);
-        Message message = new Message("Adapt what is useful, reject what is useless, " +
-                "and add what is specifically your own.", "Bruce Lee", true);
-        Message message1 = new Message("Always be yourself, express yourself, have faith" +
-                " in yourself, do not go out and look for a successful personality and duplicate it.",
-                "Bruce Lee", false);
-        Message message2 = new Message("If you love life, don't waste time, for time is what" +
-                " life is made up of.", "Bruce Lee", true);
-        Message message3 = new Message("The key to immortality is first living a life" +
-                " worth remembering", "Bruce Lee", false);
-        messages.add(message);
-        messages.add(message1);
-        messages.add(message2);
-        messages.add(message3);
-        messages.add(message);
-        messages.add(message1);
-        messages.add(message2);
-        messages.add(message3);
-        messages.add(message);
-        messages.add(message1);
-        messages.add(message2);
-        messages.add(message3);
-        messages.add(message);
-        messages.add(message1);
-        messages.add(message2);
-        messages.add(message3);
-        messages.add(message);
-        messages.add(message1);
-        messages.add(message2);
-        messages.add(message3);
-        messageListAdapter = new MessageAdapter(this, messages);
+        mMessageAdapter = new MessageAdapter(this, mMessagelist);
 
-        chat.setLayoutManager(new LinearLayoutManager(this));
-        chat.setAdapter(messageListAdapter);
+        mChatrecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        mChatrecyclerview.setAdapter(mMessageAdapter);
+        mChatrecyclerview.smoothScrollToPosition(mChatrecyclerview.getAdapter().getItemCount()-1);
+        mMessageAdapter.notifyDataSetChanged();
 
-
-      //  sendButton();
+        //  sendButton();
 
     }
-
-
-
-
-
 
 
 }

@@ -1,32 +1,39 @@
 package io.left.meshenger.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.commons.lang3.StringUtils;
-
+import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
+import org.apache.commons.lang3.StringUtils;
+
+
 
 public class FirstTimeCreateUsernameActivity extends Activity {
-    private User user = null;
+    private User mUser = null;
+    private Settings settings = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_username);
 
+        //saving dummy settings
+        settings = new Settings(true);
+        settings.save(this);
         finishButton();
     }
 
 
     /**
-     * Creates a user profile
+     * Creates a User profile.
+     *
      */
 
     private void finishButton() {
@@ -38,11 +45,13 @@ public class FirstTimeCreateUsernameActivity extends Activity {
                 EditText userText = findViewById(R.id.userNameEditText);
                 String userName = userText.getText().toString();
                 if (StringUtils.isBlank(userName)) {
-                    Toast.makeText(FirstTimeCreateUsernameActivity.this, "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FirstTimeCreateUsernameActivity.this,
+                            "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
                 } else {
-                    user = new User(userName, R.mipmap.avatar_00);
-                    user.save(FirstTimeCreateUsernameActivity.this);
-                    Intent intent = new Intent(FirstTimeCreateUsernameActivity.this, ChooseAvatarActivity.class);
+                    mUser = new User(userName, R.mipmap.avatar_00);
+                    mUser.save(FirstTimeCreateUsernameActivity.this);
+                    Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
+                            ChooseAvatarActivity.class);
                     startActivity(intent);
                     finish();
                 }
