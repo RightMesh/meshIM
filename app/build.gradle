@@ -49,6 +49,11 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/src/main/schemas".toString()]
+            }
+        }
     }
     dexOptions {
         javaMaxHeapSize "4g"
