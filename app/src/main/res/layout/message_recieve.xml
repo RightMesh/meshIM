@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+
+    >
+
+    <ImageView
+        android:id="@+id/image_message_profile"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/text_message_body"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+    <TextView
+        android:id="@+id/text_message_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/chat_bubble_rec"
+        android:maxWidth="240dp"
+        android:padding="0dp"
+        android:text="hi man, how are you?"
+        android:textAlignment="center"
+        android:textColor="#000"
+        app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
+        tools:layout_editor_absoluteY="8dp" />
+
+    <TextView
+        android:id="@+id/text_message_time_recieved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11:40"
+        android:textSize="10sp"
+        app:layout_constraintLeft_toRightOf="@+id/text_message_body"
+        app:layout_constraintStart_toStartOf="@+id/text_message_body"
+        app:layout_constraintTop_toBottomOf="@+id/text_message_body" />
+
+</android.support.constraint.ConstraintLayout>

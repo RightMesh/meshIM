@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
             //load onboarding fragment.
             //this is dummy data
             user = new User();
-            Toast.makeText(this, "Making new user", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Making new mUser", Toast.LENGTH_SHORT).show();
             user.save(this);
         }
 
