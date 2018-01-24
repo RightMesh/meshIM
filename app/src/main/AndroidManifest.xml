@@ -21,7 +21,6 @@
 
         <service android:name="io.left.meshenger.Services.MeshIMService" />
 
-        <activity android:name="io.left.meshenger.Activities.MainActivity" />
         <activity
             android:name="io.left.meshenger.Activities.FirstTimeCreateUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />

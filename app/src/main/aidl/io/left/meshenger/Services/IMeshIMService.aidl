@@ -6,8 +6,4 @@ interface IMeshIMService {
     void send(in String message);
 
     void registerMainActivityCallback(in IActivity callback);
-
-    void sendHello();
-
-    void configure();
 }

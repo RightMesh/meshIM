@@ -56,16 +56,6 @@ public class MeshIMService extends Service {
         public void registerMainActivityCallback(IActivity callback) {
             mMeshConnection.setCallback(callback);
         }
-
-        @Override
-        public void sendHello() {
-            mMeshConnection.sendHello();
-        }
-
-        @Override
-        public void configure() {
-            mMeshConnection.configure();
-        }
     };
 
     /**

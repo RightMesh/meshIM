@@ -23,6 +23,7 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
+import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.HashMap;
@@ -61,23 +62,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     public void setCallback(IActivity callback) {
         this.callback = callback;
-        try {
-            callback.echo("IPC Connection Established.");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Launch the RightMesh settings activity.
-     */
-    public void configure() {
-        try {
-            meshManager.showSettingsActivity();
-        } catch (RightMeshException ex) {
-            echo(ex.getMessage());
-        }
     }
 
     /**
@@ -101,21 +85,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
-     * HelloMesh function, not much longer for this world.
-     */
-    public void sendHello() {
-        for (MeshID receiver : users.keySet()) {
-            String msg = "Hello to: " + receiver + " from" + meshManager.getUuid();
-            byte[] testData = msg.getBytes();
-            try {
-                meshManager.sendDataReliable(receiver, HELLO_PORT, testData);
-            } catch (RightMeshException e) {
-                echo(e.getMessage());
-            }
-        }
-    }
-
-    /**
      * Called by the {@link MeshService} when the mesh state changes. Initializes mesh connection
      * on first call.
      *
@@ -126,8 +95,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
             try {
-                meshManager.setPattern("FRAZER");
-
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(HELLO_PORT);
@@ -157,13 +124,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param message Message to be forwarded to the activity.
      */
     private void echo(String message) {
-        if (callback != null) {
-            try {
-                callback.echo(message);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
+        MeshUtility.Log("MeshIM", message);
     }
 
     /**

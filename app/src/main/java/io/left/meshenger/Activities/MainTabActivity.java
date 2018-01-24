@@ -1,8 +1,12 @@
 package io.left.meshenger.Activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,10 +16,23 @@ import android.widget.TabHost;
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
+import io.left.meshenger.Services.IMeshIMService;
+import io.left.meshenger.Services.MeshIMService;
+import io.left.rightmesh.util.MeshUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainTabActivity extends Activity {
+    // Reference to AIDL interface of app service.
+    private IMeshIMService mService = null;
+
+    // Implementation of AIDL interface.
+    private IActivity.Stub mCallback = new IActivity.Stub() {
+        @Override
+        public void updateInterface() throws RemoteException {
+        }
+    };
 
     UserListAdapter userListAdapter = null;
 
@@ -47,6 +64,28 @@ public class MainTabActivity extends Activity {
 
         sampleUserList();
         onListClick();
+
+        // Handles connecting to service. Registers `mCallback` with the service when the connection
+        // is successful.
+        ServiceConnection connection = new ServiceConnection() {
+            // Called when the connection with the service is established
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                mService = IMeshIMService.Stub.asInterface(service);
+                try {
+                    mService.registerMainActivityCallback(mCallback);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Called when the connection with the service disconnects unexpectedly
+            public void onServiceDisconnected(ComponentName className) {
+                mService = null;
+            }
+        };
+
+        Intent serviceIntent = new Intent(this, MeshIMService.class);
+        bindService(serviceIntent, connection, BIND_AUTO_CREATE);
     }
 
 
