@@ -6,12 +6,15 @@ import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.RemoteException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Database.MeshIMDao;
+import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -37,11 +40,17 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
+    // Database reference.
+    private MeshIMDatabase database;
+    private MeshIMDao dao;
+
     // Link to current activity.
     private IActivity callback = null;
 
-    public RightMeshConnectionHandler(User user) {
+    public RightMeshConnectionHandler(User user, MeshIMDatabase database) {
         this.user = user;
+        this.database = database;
+        this.dao = database.meshIMDao();
     }
 
     /**

@@ -1,10 +1,12 @@
 package io.left.meshenger.Services;
 
 import android.app.Service;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.IBinder;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.RightMeshConnectionHandler;
 
@@ -13,6 +15,7 @@ import io.left.meshenger.RightMeshConnectionHandler;
  * {@link RightMeshConnectionHandler}.
  */
 public class MeshIMService extends Service {
+    private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
 
     /**
@@ -23,7 +26,10 @@ public class MeshIMService extends Service {
         super.onCreate();
         User user = User.fromDisk(this);
 
-        mMeshConnection = new RightMeshConnectionHandler(user);
+        mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "MeshIM")
+                .build();
+
+        mMeshConnection = new RightMeshConnectionHandler(user, mDatabase);
         mMeshConnection.connect(this);
     }
 
