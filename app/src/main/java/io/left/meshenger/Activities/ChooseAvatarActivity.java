@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -50,8 +51,6 @@ public class ChooseAvatarActivity extends Activity {
             for (int c = 0; c < COLUMNS; c++) {
                 int curCol = c;
                 final ImageButton imageButton = new ImageButton(this);
-                imageButton.setBackgroundResource(
-                        R.drawable.avatar);
                 int id = getResources().getIdentifier("avatar_"
                         + curRow + curCol, "mipmap", getPackageName());
                 imageButton.setImageResource(id);

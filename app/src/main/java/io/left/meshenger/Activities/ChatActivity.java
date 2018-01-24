@@ -12,11 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatActivity extends Activity {
-    //things needed to work with the list view
     private RecyclerView mChatrecyclerview;
     private MessageAdapter mMessageAdapter;
     List<Message> mMessagelist = new ArrayList<>();
-    private static final int HELLO_PORT = 9876;
     User user;
 
     @Override
@@ -26,6 +24,19 @@ public class ChatActivity extends Activity {
        user = new User("Bruce Lee",R.mipmap.avatar_00);
         mChatrecyclerview = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         mChatrecyclerview.setNestedScrollingEnabled(false);
+
+        MessageTest();
+
+        mMessageAdapter = new MessageAdapter(this, mMessagelist);
+        mChatrecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        mChatrecyclerview.setAdapter(mMessageAdapter);
+        mChatrecyclerview.smoothScrollToPosition(mChatrecyclerview.getAdapter().getItemCount()-1);
+        mMessageAdapter.notifyDataSetChanged();
+
+
+    }
+
+    private void MessageTest() {
         Message message = new Message("Adapt what is useful, reject what is useless, "
                 + "and add what is specifically your own.", user, true);
         Message message1 = new Message("Always be yourself, express yourself, have faith"
@@ -48,16 +59,6 @@ public class ChatActivity extends Activity {
         mMessagelist.add(message1);
         mMessagelist.add(message2);
         mMessagelist.add(message3);
-
-        mMessageAdapter = new MessageAdapter(this, mMessagelist);
-
-        mChatrecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mChatrecyclerview.setAdapter(mMessageAdapter);
-        mChatrecyclerview.smoothScrollToPosition(mChatrecyclerview.getAdapter().getItemCount()-1);
-        mMessageAdapter.notifyDataSetChanged();
-
-        //  sendButton();
-
     }
 
 

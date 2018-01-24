@@ -3,9 +3,6 @@ package io.left.meshenger.Models;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Sachin on 2018-01-13.
- */
 
 public class Message {
     private String message;
