@@ -3,6 +3,11 @@ package io.left.meshenger.Models;
 import static android.content.Context.MODE_PRIVATE;
 import static io.left.meshenger.BuildConfig.APPLICATION_ID;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
@@ -11,19 +16,35 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import io.left.rightmesh.id.MeshID;
+
 import java.lang.reflect.Type;
 
 
+@Entity(tableName = "Users",
+        indices = {@Index(value = {"UserID", "UserMeshID"}, unique = true)})
 public class User implements Parcelable {
     //used in share preference to save or load data
+    @Ignore
     private final String SAVE_VERSION = "UserDataSaveVersion_v1";
 
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "UserID")
+    public int id;
+
+    @ColumnInfo(name = "UserMeshID")
+    private MeshID meshId = null;
+
+    @ColumnInfo(name = "UserName")
     private String userName;
+
+    @ColumnInfo(name = "UserAvatar")
     private int userAvatar;
 
     // SharedPreferences is a singleton - the same reference is always returned. It also updates
     // itself in a threadsafe way, so might as well keep one version of it open.
     // The transient qualifier makes Gson ignore it for serialization.
+    @Ignore
     private transient SharedPreferences preferences;
 
     public User() {
@@ -36,11 +57,13 @@ public class User implements Parcelable {
      *                 does not need to be unique
      * @param userAvatar is the Avatar chosen by the user
      */
+    @Ignore
     public User(String userName, int userAvatar) {
         this.userAvatar = userAvatar;
         this.userName = userName;
     }
 
+    @Ignore
     public User(Context context) {
         this();
         preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
@@ -58,6 +81,14 @@ public class User implements Parcelable {
             return null;
         }
         return temp;
+    }
+
+    public MeshID getMeshId() {
+        return meshId;
+    }
+
+    public void setMeshId(MeshID meshId) {
+        this.meshId = meshId;
     }
 
     public int getUserAvatar() {
