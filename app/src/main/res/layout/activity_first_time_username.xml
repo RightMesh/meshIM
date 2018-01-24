@@ -8,12 +8,12 @@
 
     <EditText
         android:id="@+id/userNameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/greenFade"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="124dp"
+        android:backgroundTint="@color/greenFade"
         android:ems="10"
         android:hint="UserName"
         android:inputType="textNoSuggestions|textPersonName"
@@ -37,40 +37,30 @@
         android:layout_marginLeft="44dp" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="113dp"
-        android:layout_height="19dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Update it anytime!"
-        android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-        app:layout_constraintEnd_toStartOf="@+id/textView4"
-        app:layout_constraintHorizontal_bias="0.19"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userNameEditText" />
-
-    <TextView
         android:id="@+id/textView4"
-        android:layout_width="35dp"
-        android:layout_height="20dp"
+        android:layout_width="36dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:width="26dp"
         android:height="14dp"
         android:lineSpacingMultiplier="1.17"
         android:text="0/20"
+        app:layout_constraintBottom_toTopOf="@+id/saveUserNameButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintHorizontal_bias="0.927"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/saveUserNameButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="100dp"
-        android:background="#FF01A076"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:background="@color/greenFade"
         android:clickable="false"
         android:elevation="0dp"
         android:fontFamily="sans-serif"
@@ -79,11 +69,22 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:typeface="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/userNameEditText"
-        app:layout_constraintVertical_bias="0.168" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameEditText" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="8dp"
+        android:text="Change it anytime"
+        app:layout_constraintBottom_toTopOf="@+id/saveUserNameButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

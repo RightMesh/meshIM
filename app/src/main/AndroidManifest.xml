@@ -25,7 +25,9 @@
         <activity
             android:name=".Activities.FirstTimeCreateUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />
-        <activity android:name=".Activities.ChooseAvatarActivity"></activity>
+        <activity android:name=".Activities.ChooseAvatarActivity" />
+        <activity android:name=".Activities.MainTabActivity" />
+        <activity android:name=".Activities.ChatActivity"></activity>
     </application>
 
 </manifest>
