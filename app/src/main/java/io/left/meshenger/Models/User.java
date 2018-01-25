@@ -192,7 +192,7 @@ public class User implements Parcelable {
             if (temp == null) {
                 return false;
             } else {
-                this.id = 1;
+                this.id = 1; // This device's user is always the first in the database, so id of 1.
                 this.setUserAvatar(temp.getUserAvatar());
                 this.setUserName(temp.getUserName());
             }
