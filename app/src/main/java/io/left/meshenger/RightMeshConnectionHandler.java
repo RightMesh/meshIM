@@ -27,7 +27,11 @@ import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+
 import protobuf.MeshIMMessages.MeshIMMessage;
 import protobuf.MeshIMMessages.PeerUpdate;
 
@@ -73,14 +77,16 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         }).start();
     }
 
-    /**
-     * Setter for {@link RightMeshConnectionHandler#callback}. Notifies the connected activity that
-     * the connection is successful.
-     *
-     * @param callback new value
-     */
     public void setCallback(IActivity callback) {
         this.callback = callback;
+    }
+
+    /**
+     * Returns a list of online users.
+     * @return online users
+     */
+    public List<User> getUserList() {
+        return new ArrayList<>(users.values());
     }
 
     /**
