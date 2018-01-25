@@ -15,6 +15,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDao;
 import io.left.meshenger.Database.MeshIMDatabase;
+import io.left.meshenger.Models.MeshIDTuple;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -158,11 +159,22 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
             if (message.getMessageType() == PEER_UPDATE) {
                 PeerUpdate peerUpdate = message.getPeerUpdate();
-                User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId());
-                if (!users.keySet().contains(e.peerUuid)) {
-                    echo("Found a new peer!");
+                MeshID peerId = e.peerUuid;
+
+                // Initialize peer with info from update packet.
+                User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId(), peerId);
+
+                // Create or update user in database.
+                MeshIDTuple dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
+                if (dietPeer == null) {
+                    dao.insertUsers(peer);
+                } else {
+                    peer.id = dietPeer.id;
+                    dao.updateUsers(peer);
                 }
-                users.put(e.peerUuid, peer);
+
+                // Store user in list of online users.
+                users.put(peerId, peer);
             }
         } catch (InvalidProtocolBufferException ignored) {
             /* Ignore malformed messages. */
