@@ -6,6 +6,7 @@
     
 <suppressions>
     <suppress checks="PackageNameCheck" files=".*"/>
+    <suppress checks="AbbreviationAsWordInNameCheck" files=".*"/>
 
     <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Activities/"/>
     <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Services/"/>
