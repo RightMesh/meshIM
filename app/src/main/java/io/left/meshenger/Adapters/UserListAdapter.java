@@ -1,50 +1,55 @@
 package io.left.meshenger.Adapters;
 
 import android.content.Context;
+import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.List;
 
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
+import io.left.meshenger.Services.IMeshIMService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserListAdapter extends BaseAdapter {
-    private Context myContex;
-    private List<User> userList;
+    private Context mContext;
+    private List<User> mUserList = new ArrayList<>();
 
-    /**
-     * constructor for the userlistAdapter
-     * @param context context of the activity
-     * @param userList list of all the users nearby
-     */
-    public UserListAdapter(Context context, List userList) {
-        this.myContex = context;
-        this.userList = userList;
+    public UserListAdapter(Context context) {
+        this.mContext = context;
+    }
+
+    public void updateList(IMeshIMService service) {
+        try {
+            this.mUserList =  service.getOnlineUsers();
+        } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
     }
 
     /**
-     * returns the size of the user list.
-     * @return
+     * {@inheritDoc}.
      */
     @Override
     public int getCount() {
-        return userList.size();
+        return mUserList.size();
     }
 
+
     /**
-     * returns a User on the list.
-     * @param i position of the user on the list.
-     * @return
+     * {@inheritDoc}.
      */
     @Override
     public Object getItem(int i) {
-        return userList.get(i);
+        return mUserList.get(i);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public long getItemId(int i) {
         return 0;
@@ -52,11 +57,11 @@ public class UserListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = View.inflate(myContex, R.layout.user_list, null);
-        ImageView userAvatar = (ImageView) v.findViewById(R.id.user_Avatar);
+        View v = View.inflate(mContext, R.layout.user_list, null);
+        ImageView userAvatar = v.findViewById(R.id.user_Avatar);
         userAvatar.setImageResource(R.mipmap.avatar_00);
-        TextView userName = (TextView) v.findViewById(R.id.userNameText);
-        userName.setText(userList.get(i).getUserName());
+        TextView userName = v.findViewById(R.id.userNameText);
+        userName.setText(mUserList.get(i).getUserName());
         return v;
     }
 }
