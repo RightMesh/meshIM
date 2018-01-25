@@ -10,10 +10,14 @@
 
     <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Activities/"/>
     <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Services/"/>
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Adapters/"/>
 
     <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshenger/Models/"/>
     <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshenger/Models/"/>
     <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshenger/Models/"/>
+    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshenger/Database/"/>
+    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshenger/Database/"/>
+    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshenger/Database/"/>
     <suppress id="AndroidNaming1of3" files="RightMeshConnectionHandler.java"/>
     <suppress id="AndroidNaming2of3" files="RightMeshConnectionHandler.java"/>
     <suppress id="AndroidNaming3of3" files="RightMeshConnectionHandler.java"/>
