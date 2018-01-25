@@ -14,6 +14,10 @@ import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 import io.left.meshenger.Services.MeshIMService;
 
+/**
+ * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
+ * user's account.
+ */
 public class MainTabActivity extends Activity {
     // Reference to AIDL interface of app service.
     private IMeshIMService mService = null;
@@ -48,8 +52,13 @@ public class MainTabActivity extends Activity {
         }
     };
 
+    // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
 
+    /**
+     * Binds to service and initializes UI elements.
+     * @param savedInstanceState passed by Android
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +71,9 @@ public class MainTabActivity extends Activity {
         configureUserList();
     }
 
+    /**
+     * Configure the content and UI of the tabs.
+     */
     private void configureTabs() {
         TabHost host = findViewById(R.id.tabHost);
         host.setup();
@@ -85,6 +97,9 @@ public class MainTabActivity extends Activity {
         host.addTab(spec);
     }
 
+    /**
+     * Configure the user list adapter and click event.
+     */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
         mUserListAdapter = new UserListAdapter(this);
