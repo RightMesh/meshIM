@@ -60,6 +60,16 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         this.user = user;
         this.database = database;
         this.dao = database.meshIMDao();
+
+        new Thread(() -> {
+            if (dao.fetchAllUsers().length == 0) {
+                // Insert this device's user as the first user on first run.
+                this.dao.insertUsers(user);
+            } else {
+                // Otherwise make sure the database is up to date with SharedPreferences.
+                this.dao.updateUsers(user);
+            }
+        }).start();
     }
 
     /**

@@ -180,6 +180,7 @@ public class User implements Parcelable {
             if (temp == null) {
                 return false;
             } else {
+                this.id = 1;
                 this.setUserAvatar(temp.getUserAvatar());
                 this.setUserName(temp.getUserName());
             }
