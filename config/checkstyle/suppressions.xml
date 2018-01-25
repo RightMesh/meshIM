@@ -5,5 +5,16 @@
     "http://checkstyle.sourceforge.net/dtds/suppressions_1_2.dtd">
     
 <suppressions>
-    <suppress id="JavaNaming" files=".*"/>
+    <suppress checks="PackageNameCheck" files=".*"/>
+    <suppress checks="AbbreviationAsWordInNameCheck" files=".*"/>
+
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Activities/"/>
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Services/"/>
+
+    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshenger/Models/"/>
+    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshenger/Models/"/>
+    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshenger/Models/"/>
+    <suppress id="AndroidNaming1of3" files="RightMeshConnectionHandler.java"/>
+    <suppress id="AndroidNaming2of3" files="RightMeshConnectionHandler.java"/>
+    <suppress id="AndroidNaming3of3" files="RightMeshConnectionHandler.java"/>
 </suppressions>
