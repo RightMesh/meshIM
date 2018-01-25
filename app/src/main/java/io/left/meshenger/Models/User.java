@@ -43,7 +43,7 @@ public class User implements Parcelable {
     public int id;
 
     @ColumnInfo(name = "UserMeshID")
-    private MeshID meshId = null;
+    private MeshID meshId = new MeshID();
 
     @ColumnInfo(name = "UserName")
     private String userName;
