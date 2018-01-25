@@ -7,14 +7,14 @@ import io.left.rightmesh.id.MeshID;
 /**
  * A collection of {@link TypeConverter}s for use in {@link MeshIMDatabase}.
  */
-class Converters {
+public class Converters {
     /**
      * Initializes a {@link MeshID} from bytes stored in SQLite.
      * @param bytes representing a UUID
      * @return MeshID with UUID specified in parameters
      */
     @TypeConverter
-    MeshID meshIdFromBytes(byte[] bytes) {
+    public MeshID meshIdFromBytes(byte[] bytes) {
         return new MeshID(bytes);
     }
 
@@ -24,7 +24,7 @@ class Converters {
      * @return converted UUID of provided MeshID
      */
     @TypeConverter
-    byte[] bytesFromMeshId(MeshID id) {
+    public byte[] bytesFromMeshId(MeshID id) {
         return id.getRawUuid();
     }
 }
