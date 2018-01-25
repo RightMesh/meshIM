@@ -153,6 +153,17 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
+     * Exception boilerplate around {@link IActivity#updateInterface()}.
+     */
+    private void updateInterface() {
+        try {
+            callback.updateInterface();
+        } catch (RemoteException | NullPointerException ignored) {
+            // Just keep swimming.
+        }
+    }
+
+    /**
      * Handles incoming data events from the mesh - toasts the contents of the data.
      *
      * @param e event object from mesh
@@ -181,6 +192,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
                 // Store user in list of online users.
                 users.put(peerId, peer);
+                updateInterface();
             }
         } catch (InvalidProtocolBufferException ignored) {
             /* Ignore malformed messages. */
@@ -213,6 +225,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             }
         } else if (event.state == REMOVED) {
             users.remove(event.peerUuid);
+            updateInterface();
         }
     }
 
