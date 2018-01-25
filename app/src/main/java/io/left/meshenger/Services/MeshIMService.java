@@ -1,19 +1,11 @@
 package io.left.meshenger.Services;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Activities.MainTabActivity;
@@ -22,6 +14,9 @@ import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.RightMeshConnectionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Handles service and lifecycle management. Defers RightMesh operations to
  * {@link RightMeshConnectionHandler}.
@@ -29,7 +24,8 @@ import io.left.meshenger.RightMeshConnectionHandler;
 public class MeshIMService extends Service {
     private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
-
+    private Notification serviceNotification;
+    final int notifID = 1;
     /**
      * Connects to RightMesh when service is started.
      */
@@ -86,37 +82,42 @@ public class MeshIMService extends Service {
         return mBinder;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.getAction().equals(Constant.ACTION.STARTFOREGROUND_ACTION)){
-            Toast.makeText(this,"Start Service",Toast.LENGTH_SHORT).show();
-
-            Intent notificationIntent = new Intent(this, MainTabActivity.class);
-            notificationIntent.setAction(Constant.ACTION.MAIN_ACTION);
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0);
-
-            RemoteViews notificationView = new RemoteViews(this.getPackageName(), R.layout.notification);
-
-
-            Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                    R.mipmap.rm_launcher);
-            Notification notification = new NotificationCompat.Builder(this)
-                    .setContentTitle("nkDroid Music Player")
-                    .setTicker("nkDroid Music Player")
-                    .setContentText("nkDroid Music")
-                    .setSmallIcon(R.mipmap.rm_launcher)
-                    .setLargeIcon(
-                            Bitmap.createScaledBitmap(icon, 128, 128, false))
-                    .setContent(notificationView)
-                    .setOngoing(true).build();
-            startForeground(Constant.NOTIFICATION_ID.FOREGROUND_SERVICE,notification);
-
+        if (intent.getAction().equals(Constant.ACTION.STOPFOREGROUND_ACTION)) {
+            Toast.makeText(this,"Service Stopped !",Toast.LENGTH_SHORT).show();
+            stopForeground(true);
+            stopSelf();
         }
-
-
-
-        return super.onStartCommand(intent, flags, startId);
+        else  if (intent.getAction().equals(Constant.ACTION.STARTFOREGROUND_ACTION)) {
+            startinForeground();
+            Toast.makeText(this,"Service Started !",Toast.LENGTH_SHORT).show();
+        }
+        return START_STICKY;
     }
+
+    /**
+     * creates a notification bar for foreground service and starts the service.
+     */
+    private void startinForeground(){
+        Intent myActivity = new Intent(this,MainTabActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,myActivity,0);
+        Notification.Builder builder = new Notification.Builder(this);
+
+        builder.setAutoCancel(false);
+        builder.setTicker("");
+        builder.setContentTitle("Mesh IM is Running");
+        builder.setContentText("Tap to open the App");
+        builder.setSmallIcon(R.mipmap.rm_launcher);
+        builder.setContentIntent(pendingIntent);
+        builder.setOngoing(true);
+        builder.setNumber(100);
+        builder.build();
+        serviceNotification = builder.getNotification();
+        startForeground(notifID, serviceNotification);
+    }
+
+
 }
+

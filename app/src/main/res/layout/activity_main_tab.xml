@@ -29,22 +29,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/stopnotificationbutton"
-                    android:layout_width="match_parent"
+                <Switch
+                    android:id="@+id/serviceSwitch"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="THIS IS THE USER LIST"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+                    android:text="Service"
+                    android:checked="true"/>
 
                 <ListView
                     android:id="@+id/userListView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
+
+                </ListView>
 
             </LinearLayout>
 
@@ -75,4 +72,5 @@
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
+
 </TabHost>

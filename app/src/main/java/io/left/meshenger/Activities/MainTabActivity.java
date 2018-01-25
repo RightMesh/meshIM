@@ -10,14 +10,13 @@ import android.os.RemoteException;
 import android.widget.ListView;
 import android.widget.TabHost;
 
+import java.util.ArrayList;
+
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-import io.left.meshenger.Services.Constant;
 import io.left.meshenger.Services.IMeshIMService;
 import io.left.meshenger.Services.MeshIMService;
-
-import java.util.ArrayList;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 public class MainTabActivity extends Activity {
     // Reference to AIDL interface of app service.
     private IMeshIMService mService = null;
-
+    ServiceConnection connection;
     // Implementation of AIDL interface.
     private IActivity.Stub mCallback = new IActivity.Stub() {
         @Override
