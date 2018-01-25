@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
 public class User implements Parcelable {
     //used in share preference to save or load data
     @Ignore
-    private final String SAVE_VERSION = "UserDataSaveVersion_v1";
+    private static final String SAVE_VERSION = "UserDataSaveVersion_v1";
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "UserID")

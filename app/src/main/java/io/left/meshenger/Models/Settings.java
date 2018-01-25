@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 
 public class Settings {
     // Used in shared preference to store / load data
-    private final String SAVE_VERSION = "SettingSaveVersion_v1"; // SUPPRESS MemberNameCheck
+    private static final String SAVE_VERSION = "SettingSaveVersion_v1";
 
     private boolean showNotifications;
 
