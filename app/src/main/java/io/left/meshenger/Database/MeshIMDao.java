@@ -7,6 +7,9 @@ import android.arch.persistence.room.Update;
 
 import io.left.meshenger.Models.User;
 
+/**
+ * A collection of queries for accessing data types for MeshIM.
+ */
 @Dao
 public interface MeshIMDao {
     @Insert()

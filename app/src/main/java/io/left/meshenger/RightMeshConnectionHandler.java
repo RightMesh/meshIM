@@ -30,6 +30,9 @@ import java.util.HashMap;
 import protobuf.MeshIMMessages.MeshIMMessage;
 import protobuf.MeshIMMessages.PeerUpdate;
 
+/**
+ * All RightMesh logic abstracted into one class to keep it separate from Android logic.
+ */
 public class RightMeshConnectionHandler implements MeshStateListener {
     // Port to bind app to.
     private static final int HELLO_PORT = 9876;
@@ -185,6 +188,11 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         }
     }
 
+    /**
+     * Creates a byte array representing a {@link User}, to be broadcast over the mesh.
+     * @param user user to be represented in bytes
+     * @return payload to be broadcast
+     */
     private byte[] createPeerUpdatePayloadFromUser(User user) {
         PeerUpdate peerUpdate = PeerUpdate.newBuilder()
                 .setUserName(user.getUserName())

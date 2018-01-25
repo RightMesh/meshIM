@@ -21,6 +21,16 @@ import io.left.rightmesh.id.MeshID;
 import java.lang.reflect.Type;
 
 
+/**
+ * This class represents a user of the app, both the user on the device the code is running on and
+ * other users on the mesh. It is decorated as a Room entity, and Parcelable for passing back and
+ * forth between services.
+ *
+ * <p>
+ *     Also of note is that one instance of this class is stored in SharedPreferences, representing
+ *     the user of this device.
+ * </p>
+ */
 @Entity(tableName = "Users",
         indices = {@Index(value = {"UserID", "UserMeshID"}, unique = true)})
 public class User implements Parcelable {
@@ -63,6 +73,12 @@ public class User implements Parcelable {
         this.userName = userName;
     }
 
+    /**
+     * Creating a user with a Context class means it can store a link to SharedPreferences, meaning
+     * {@link User#load()} and {@link User#save()} work.
+     *
+     * @param context to load SharedPreferences from
+     */
     @Ignore
     public User(Context context) {
         this();
@@ -151,7 +167,7 @@ public class User implements Parcelable {
     }
 
     /**
-     * This function loads setting data if it exist.
+     * This function loads data from SharedPreferences if it exists.
      * @return true if function was able to load else false
      */
     public boolean load() {
@@ -175,7 +191,7 @@ public class User implements Parcelable {
     }
 
     /**
-     * This function loads setting data if it exist.
+     * This function saves data to SharedPreferences.
      */
     public void save() {
         try {
