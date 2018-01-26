@@ -17,7 +17,7 @@ import io.left.meshenger.R;
 public class ChooseAvatarActivity extends Activity {
     User mUser;
     //used for the table layout
-    private final int ROWS = 10;
+    private final int ROWS = 9;
     private final int COLUMNS = 3;
 
     private int userAvatarID=-1;
@@ -28,7 +28,7 @@ public class ChooseAvatarActivity extends Activity {
         setContentView(R.layout.activity_choose_avatar);
         mUser = User.fromDisk(this);
         setupAvatars();
-        userAvatarID = R.mipmap.avatar_00;
+        userAvatarID = R.mipmap.account_default;
         saveAvatar(userAvatarID);
 
     }
@@ -38,6 +38,7 @@ public class ChooseAvatarActivity extends Activity {
      * table layout of avatars user can choose from.
      */
     private void setupAvatars() {
+        int avatarNum = 1;
         mUser = User.fromDisk(this);
         ScrollView scrollView = findViewById(R.id.avatarScrollView);
         TableLayout tableLayout = new TableLayout(this);
@@ -51,24 +52,27 @@ public class ChooseAvatarActivity extends Activity {
             for (int c = 0; c < COLUMNS; c++) {
                 int curCol = c;
                 final ImageButton imageButton = new ImageButton(this);
-                int id = getResources().getIdentifier("avatar_"
-                        + curRow + curCol, "mipmap", getPackageName());
+                int id = getResources().getIdentifier("avatar"+avatarNum
+                       , "mipmap", getPackageName());
                 imageButton.setImageResource(id);
+                imageButton.setBackgroundResource(R.color.white);
                 imageButton.setLayoutParams(
                         new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT, 1.0f));
                 imageButton.setPadding(0, 0, 0, 0);
                 tableRow.addView(imageButton);
+                int finalAvatarNum = avatarNum;
                 imageButton.setOnClickListener(
                         new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         userAvatarID = getResources().getIdentifier(
-                                "avatar_" + curRow + curCol, "mipmap", getPackageName());
+                                "avatar"+ finalAvatarNum, "mipmap", getPackageName());
                         ImageButton button = findViewById(R.id.selectedAvatar);
                         button.setImageResource(userAvatarID);
                     }
                 });
+                avatarNum++;
             }
             tableLayout.addView(tableRow);
         }
