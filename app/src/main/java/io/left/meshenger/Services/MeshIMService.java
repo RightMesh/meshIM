@@ -82,8 +82,8 @@ public class MeshIMService extends Service {
      */
     private final IMeshIMService.Stub mBinder = new IMeshIMService.Stub() {
         @Override
-        public void send(String message) {
-            // Nothing for now.
+        public void sendTextMessage(User recipient, String message) {
+            mMeshConnection.sendTextMessage(recipient, message);
         }
 
         @Override

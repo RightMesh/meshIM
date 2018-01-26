@@ -90,6 +90,10 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         return new ArrayList<>(users.values());
     }
 
+    public void sendTextMessage(User recipient, String message) {
+
+    }
+
     /**
      * Get a {@link AndroidMeshManager} instance, starting RightMesh if it isn't already running.
      *
