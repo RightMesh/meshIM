@@ -102,7 +102,7 @@ public class MeshIMService extends Service {
 
         @Override
         public List<User> getOnlineUsers() {
-            return new ArrayList<>(mMeshConnection.getUserList());
+            return mMeshConnection.getUserList();
         }
     };
 
