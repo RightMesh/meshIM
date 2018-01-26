@@ -43,7 +43,7 @@ public class User implements Parcelable {
     public int id;
 
     @ColumnInfo(name = "UserMeshID")
-    private MeshID meshId = null;
+    private MeshID meshId = new MeshID();
 
     @ColumnInfo(name = "UserName")
     private String userName;
@@ -62,10 +62,22 @@ public class User implements Parcelable {
     }
 
     /**
-     * Returns a User object that can be used to store users nearby.
-     * @param userName is the user name of the User
-     *                 does not need to be unique
-     * @param userAvatar is the Avatar chosen by the user
+     * Constructor with {@link MeshID} option. Used in
+     * {@link io.left.meshenger.RightMeshConnectionHandler} where we care about mesh logic.
+     * @param userName displayed username for the user
+     * @param userAvatar avatar chosen by the user
+     * @param meshId ID of the user on the mesh
+     */
+    public User(String userName, int userAvatar, MeshID meshId) {
+        this(userName, userAvatar);
+        this.meshId = meshId;
+    }
+
+    /**
+     * Constructor with only username and avatar. Used in the UI layer where we don't care about
+     * mesh logic.
+     * @param userName displayed username for the user
+     * @param userAvatar avatar chosen by the user
      */
     @Ignore
     public User(String userName, int userAvatar) {
@@ -180,6 +192,7 @@ public class User implements Parcelable {
             if (temp == null) {
                 return false;
             } else {
+                this.id = 1; // This device's user is always the first in the database, so id of 1.
                 this.setUserAvatar(temp.getUserAvatar());
                 this.setUserName(temp.getUserName());
             }
