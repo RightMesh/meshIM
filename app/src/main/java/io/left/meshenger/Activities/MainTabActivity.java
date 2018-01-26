@@ -7,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
@@ -17,6 +19,7 @@ import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 import io.left.meshenger.Services.MeshIMService;
+import io.left.meshenger.Services.ServiceConstants;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -69,8 +72,31 @@ public class MainTabActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
+        // Handles connecting to service. Registers `mCallback` with the service when the connection
+        // is successful.
+        connection = new ServiceConnection() {
+            // Called when the connection with the service is established
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                mService = IMeshIMService.Stub.asInterface(service);
+                try {
+                    mService.registerMainActivityCallback(mCallback);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Called when the connection with the service disconnects unexpectedly
+            public void onServiceDisconnected(ComponentName className) {
+                mService = null;
+            }
+        };
+
         Intent serviceIntent = new Intent(this, MeshIMService.class);
-        bindService(serviceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        serviceIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
+        bindService(serviceIntent, connection, BIND_AUTO_CREATE);
+        startService(serviceIntent);
+        //function to manually toggle foreground service
+        toggleForegroundServices();
 
         configureTabs();
         configureUserList();
@@ -112,6 +138,47 @@ public class MainTabActivity extends Activity {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
             startActivity(intent);
+    }
+
+    /**
+     * starts a new chat activity when user clicks on any other user in the userlist.
+     */
+    private void onListClick() {
+        ListView listView = findViewById(R.id.userListView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+    }
+
+    /**
+     * A switch to toggle Foreground service notification on/off.
+     */
+    private void toggleForegroundServices(){
+        Switch serviceSwitch = findViewById(R.id.serviceSwitch);
+        serviceSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(serviceSwitch.isChecked()){
+                    Intent startIntent = new Intent(MainTabActivity.this,MeshIMService.class);
+                    startIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
+                    startService(startIntent);
+                }
+                else {
+                    Intent stopIntent = new Intent(MainTabActivity.this, MeshIMService.class);
+                    stopIntent.setAction(ServiceConstants.ACTION.STOPFOREGROUND_ACTION);
+                    startService(stopIntent);
+                }
+                }
         });
     }
 }
