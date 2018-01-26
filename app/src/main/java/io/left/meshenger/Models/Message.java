@@ -11,13 +11,14 @@ public class Message {
     private User recipient;
     private boolean isMyMessage;
 
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
+
     /**
      * rDefault constructor.
      */
     public Message() {
         message = "Hello";
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
         this.date = dateFormat.format(date);
         sender = new User();
         isMyMessage = true;
@@ -33,7 +34,6 @@ public class Message {
         this.message = message;
 
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a dd-MMM-yyyy");
         this.date = dateFormat.format(date);
 
         this.sender = user;
@@ -73,8 +73,7 @@ public class Message {
     }
 
     public void setDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a dd-MMM-yyyy");
-        this.date = dateFormat.format(date).toString();
+        this.date = dateFormat.format(date);
     }
 
     public void setMessage(String message) {
