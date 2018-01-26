@@ -7,7 +7,8 @@ import java.util.Date;
 public class Message {
     private String message;
     private String date;
-    private User user;
+    private User sender;
+    private User recipient;
     private boolean isMyMessage;
 
     /**
@@ -17,15 +18,15 @@ public class Message {
         message = "Hello";
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
-        this.date = dateFormat.format(date).toString();
-        user = new User();
+        this.date = dateFormat.format(date);
+        sender = new User();
         isMyMessage = true;
     }
 
     /**
      * Constructor.
-     * @param message message user want to send
-     * @param user User data of the user
+     * @param message message sender want to send
+     * @param user User data of the sender
      * @param isMyMessage boolean
      */
     public Message(String message, User user, boolean isMyMessage) {
@@ -33,9 +34,9 @@ public class Message {
 
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a dd-MMM-yyyy");
-        this.date = dateFormat.format(date).toString();
+        this.date = dateFormat.format(date);
 
-        this.user = user;
+        this.sender = user;
         this.isMyMessage = isMyMessage;
     }
 
@@ -47,8 +48,12 @@ public class Message {
         return isMyMessage;
     }
 
-    public User getUser() {
-        return user;
+    public User getSender() {
+        return sender;
+    }
+
+    public User getRecipient() {
+        return recipient;
     }
 
     public String getDate() {
@@ -59,8 +64,12 @@ public class Message {
         return message;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public void setRecipient(User recipient) {
+        this.recipient = recipient;
     }
 
     public void setDate(Date date) {

@@ -84,7 +84,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         if (!(message.isMyMessage())) {
             holder.messageBody.setText(message.getMessage());
             holder.time.setText(message.getDate().toString());
-            holder.userImage.setImageResource(message.getUser().getUserAvatar());
+            holder.userImage.setImageResource(message.getSender().getUserAvatar());
         } else {
             holder.messageBody.setText(message.getMessage());
             holder.time.setText(message.getDate().toString());
