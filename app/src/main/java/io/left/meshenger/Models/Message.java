@@ -13,15 +13,44 @@ public class Message {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
 
-    /**
-     * rDefault constructor.
-     */
-    public Message() {
-        message = "Hello";
-        Date date = new Date();
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
         this.date = dateFormat.format(date);
-        sender = new User();
-        isMyMessage = true;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(User recipient) {
+        this.recipient = recipient;
+    }
+
+    public boolean isMyMessage() {
+        return isMyMessage;
+    }
+
+    public void setIsMyMessage(boolean isMyMessage) {
+        this.isMyMessage = isMyMessage;
     }
 
     /**
@@ -39,45 +68,4 @@ public class Message {
         this.sender = user;
         this.isMyMessage = isMyMessage;
     }
-
-    public void setMyMessage(boolean myMessage) {
-        this.isMyMessage = myMessage;
-    }
-
-    public boolean isMyMessage() {
-        return isMyMessage;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public User getRecipient() {
-        return recipient;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public void setRecipient(User recipient) {
-        this.recipient = recipient;
-    }
-
-    public void setDate(Date date) {
-        this.date = dateFormat.format(date);
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
-
