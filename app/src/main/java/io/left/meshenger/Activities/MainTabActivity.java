@@ -9,10 +9,14 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.widget.ListView;
 import android.widget.TabHost;
+
 import io.left.meshenger.Adapters.UserListAdapter;
+import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 import io.left.meshenger.Services.MeshIMService;
+
+import java.util.ArrayList;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -54,6 +58,7 @@ public class MainTabActivity extends Activity {
 
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
+    ArrayList<User> mUsers = new ArrayList<User>();
 
     /**
      * Binds to service and initializes UI elements.
@@ -102,7 +107,7 @@ public class MainTabActivity extends Activity {
      */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
-        mUserListAdapter = new UserListAdapter(this);
+        mUserListAdapter = new UserListAdapter(this, mUsers);
         listView.setAdapter(mUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
