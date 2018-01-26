@@ -1,63 +1,73 @@
 package io.left.meshenger.Adapters;
 
 import android.content.Context;
+import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.List;
 
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
+import io.left.meshenger.Services.IMeshIMService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class UserListAdapter extends BaseAdapter {
-    private Context myContex;
-    private List<User> userList;
+/**
+ * Adapter that fetches online users from the app service to populat the list of online users in
+ * {@link io.left.meshenger.Activities.MainTabActivity}.
+ */
+public class UserListAdapter extends ArrayAdapter<User> {
+    // Used to inflate views for the list.
+    private Context mContext;
 
-    /**
-     * constructor for the userlistAdapter
-     * @param context context of the activity
-     * @param userList list of all the users nearby
-     */
-    public UserListAdapter(Context context, List userList) {
-        this.myContex = context;
-        this.userList = userList;
-    }
-
-    /**
-     * returns the size of the user list.
-     * @return
-     */
-    @Override
-    public int getCount() {
-        return userList.size();
-    }
+    // Reference to user list. Used for updating from service.
+    private ArrayList<User> mUserList;
 
     /**
-     * returns a User on the list.
-     * @param i position of the user on the list.
-     * @return
+     * Stores context so we can inflate views.
+     * @param context context of activity
+     * @param userList list to manage
+     */
+    public UserListAdapter(Context context, ArrayList<User> userList) {
+        super(context, R.layout.user_list, userList);
+        this.mContext = context;
+        this.mUserList = userList;
+    }
+
+    /**
+     * Updates the list of users.
+     * @param service service connection to fetch users from
+     */
+    public void updateList(IMeshIMService service) {
+        try {
+            this.clear();
+            this.addAll(service.getOnlineUsers());
+        } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
+    }
+
+    /**
+     * {@inheritDoc}.
      */
     @Override
-    public Object getItem(int i) {
-        return userList.get(i);
-    }
+    @NonNull
+    public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
+        View v = View.inflate(mContext, R.layout.user_list, null);
 
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
+        // Null-check the user at this position.
+        User user = this.getItem(position);
+        if (user != null) {
+            ImageView userAvatar = v.findViewById(R.id.user_Avatar);
+            userAvatar.setImageResource(R.mipmap.avatar_00);
+            TextView userName = v.findViewById(R.id.userNameText);
+            userName.setText(user.getUserName());
+        }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = View.inflate(myContex, R.layout.user_list, null);
-        ImageView userAvatar = (ImageView) v.findViewById(R.id.user_Avatar);
-        userAvatar.setImageResource(R.mipmap.avatar_00);
-        TextView userName = (TextView) v.findViewById(R.id.userNameText);
-        userName.setText(userList.get(i).getUserName());
         return v;
     }
 }
-

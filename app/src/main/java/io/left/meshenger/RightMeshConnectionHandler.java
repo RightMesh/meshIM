@@ -27,7 +27,11 @@ import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+
 import protobuf.MeshIMMessages.MeshIMMessage;
 import protobuf.MeshIMMessages.PeerUpdate;
 
@@ -73,14 +77,16 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         }).start();
     }
 
-    /**
-     * Setter for {@link RightMeshConnectionHandler#callback}. Notifies the connected activity that
-     * the connection is successful.
-     *
-     * @param callback new value
-     */
     public void setCallback(IActivity callback) {
         this.callback = callback;
+    }
+
+    /**
+     * Returns a list of online users.
+     * @return online users
+     */
+    public List<User> getUserList() {
+        return new ArrayList<>(users.values());
     }
 
     /**
@@ -147,6 +153,17 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
+     * Exception boilerplate around {@link IActivity#updateInterface()}.
+     */
+    private void updateInterface() {
+        try {
+            callback.updateInterface();
+        } catch (RemoteException | NullPointerException ignored) {
+            // Just keep swimming.
+        }
+    }
+
+    /**
      * Handles incoming data events from the mesh - toasts the contents of the data.
      *
      * @param e event object from mesh
@@ -175,6 +192,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
                 // Store user in list of online users.
                 users.put(peerId, peer);
+                updateInterface();
             }
         } catch (InvalidProtocolBufferException ignored) {
             /* Ignore malformed messages. */
@@ -207,6 +225,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             }
         } else if (event.state == REMOVED) {
             users.remove(event.peerUuid);
+            updateInterface();
         }
     }
 

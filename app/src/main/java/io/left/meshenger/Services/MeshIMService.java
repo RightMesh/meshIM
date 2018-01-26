@@ -5,6 +5,9 @@ import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.IBinder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.User;
@@ -55,6 +58,11 @@ public class MeshIMService extends Service {
         @Override
         public void registerMainActivityCallback(IActivity callback) {
             mMeshConnection.setCallback(callback);
+        }
+
+        @Override
+        public List<User> getOnlineUsers() {
+            return new ArrayList<>(mMeshConnection.getUserList());
         }
     };
 
