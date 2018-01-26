@@ -28,7 +28,7 @@ import io.left.meshenger.Services.ServiceConstants;
 public class MainTabActivity extends Activity {
     // Reference to AIDL interface of app service.
     private IMeshIMService mService = null;
-    ServiceConnection connection;
+    ServiceConnection mConnection;
     // Implementation of AIDL interface.
     private IActivity.Stub mCallback = new IActivity.Stub() {
         @Override
@@ -72,10 +72,10 @@ public class MainTabActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
-        // Handles connecting to service. Registers `mCallback` with the service when the connection
+        // Handles connecting to service. Registers `mCallback` with the service when the mConnection
         // is successful.
-        connection = new ServiceConnection() {
-            // Called when the connection with the service is established
+         mConnection = new ServiceConnection() {
+            // Called when the mConnection with the service is established
             public void onServiceConnected(ComponentName className, IBinder service) {
                 mService = IMeshIMService.Stub.asInterface(service);
                 try {
@@ -85,7 +85,7 @@ public class MainTabActivity extends Activity {
                 }
             }
 
-            // Called when the connection with the service disconnects unexpectedly
+            // Called when the mConnection with the service disconnects unexpectedly
             public void onServiceDisconnected(ComponentName className) {
                 mService = null;
             }
@@ -93,7 +93,7 @@ public class MainTabActivity extends Activity {
 
         Intent serviceIntent = new Intent(this, MeshIMService.class);
         serviceIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
-        bindService(serviceIntent, connection, BIND_AUTO_CREATE);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
         startService(serviceIntent);
         //function to manually toggle foreground service
         toggleForegroundServices();
@@ -138,42 +138,28 @@ public class MainTabActivity extends Activity {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
             startActivity(intent);
-    }
-
-    /**
-     * starts a new chat activity when user clicks on any other user in the userlist.
-     */
-    private void onListClick() {
-        ListView listView = findViewById(R.id.userListView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
-                startActivity(intent);
-            }
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(connection);
+        unbindService(mConnection);
     }
 
     /**
      * A switch to toggle Foreground service notification on/off.
      */
-    private void toggleForegroundServices(){
+    private void toggleForegroundServices() {
         Switch serviceSwitch = findViewById(R.id.serviceSwitch);
         serviceSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(serviceSwitch.isChecked()){
+                if (serviceSwitch.isChecked()) {
                     Intent startIntent = new Intent(MainTabActivity.this,MeshIMService.class);
                     startIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
                     startService(startIntent);
-                }
-                else {
+                } else {
                     Intent stopIntent = new Intent(MainTabActivity.this, MeshIMService.class);
                     stopIntent.setAction(ServiceConstants.ACTION.STOPFOREGROUND_ACTION);
                     startService(stopIntent);

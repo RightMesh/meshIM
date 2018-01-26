@@ -24,10 +24,11 @@ import java.util.List;
 public class MeshIMService extends Service {
     private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
-    private Notification serviceNotification;
+    private Notification mServiceNotification;
     /**
      * Connects to RightMesh when service is started.
      */
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,8 +84,8 @@ public class MeshIMService extends Service {
 
     /**
      * Helps turn the foreground service on and off.
-     * @param intent
-     * @param flags
+     * @param intent service intent.
+     * @param flags extra flags
      * @param startId
      * @return
      */
@@ -94,8 +95,7 @@ public class MeshIMService extends Service {
             Toast.makeText(this,"Service Stopped !",Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
-        }
-        else  if (intent.getAction().equals(ServiceConstants.ACTION.STARTFOREGROUND_ACTION)) {
+        } else  if (intent.getAction().equals(ServiceConstants.ACTION.STARTFOREGROUND_ACTION)) {
             startinForeground();
             Toast.makeText(this,"Service Started !",Toast.LENGTH_SHORT).show();
         }
@@ -105,7 +105,7 @@ public class MeshIMService extends Service {
     /**
      * creates a notification bar for foreground service and starts the service.
      */
-    private void startinForeground(){
+    private void startinForeground() {
         Intent myActivity = new Intent(this,MainTabActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,myActivity,0);
         Notification.Builder builder = new Notification.Builder(this);
@@ -119,8 +119,8 @@ public class MeshIMService extends Service {
         builder.setOngoing(true);
         builder.setNumber(100);
         builder.build();
-        serviceNotification = builder.getNotification();
-        startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, serviceNotification);
+        mServiceNotification = builder.getNotification();
+        startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, mServiceNotification);
     }
 
 
