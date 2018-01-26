@@ -1,14 +1,17 @@
 package io.left.meshenger.Services;
+
+import static io.left.meshenger.Services.ServiceConstants.ACTION.STARTFOREGROUND_ACTION;
+import static io.left.meshenger.Services.ServiceConstants.ACTION.STOPFOREGROUND_ACTION;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
+import android.support.v4.app.NotificationCompat;
 
 import io.left.meshenger.Activities.IActivity;
-import io.left.meshenger.Activities.MainTabActivity;
 import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
@@ -25,18 +28,35 @@ public class MeshIMService extends Service {
     private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
     private Notification mServiceNotification;
+    private boolean mIsBound = false;
+
     /**
      * Connects to RightMesh when service is started.
      */
-
     @Override
     public void onCreate() {
         super.onCreate();
-        User user = User.fromDisk(this);
+
+        Intent stopForegroundIntent = new Intent(this, MeshIMService.class);
+        stopForegroundIntent.setAction(STOPFOREGROUND_ACTION);
+        PendingIntent pendingIntent
+                = PendingIntent.getService(this,0,stopForegroundIntent,0);
+
+        mServiceNotification = new NotificationCompat.Builder(this)
+                .setAutoCancel(false)
+                .setTicker("Mesh IM")
+                .setContentTitle("Mesh IM is Running")
+                .setContentText("Tap to go offline.")
+                .setSmallIcon(R.mipmap.rm_launcher)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .setNumber(100)
+                .build();
 
         mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "MeshIM")
                 .build();
 
+        User user = User.fromDisk(this);
         mMeshConnection = new RightMeshConnectionHandler(user, mDatabase);
         mMeshConnection.connect(this);
     }
@@ -48,6 +68,12 @@ public class MeshIMService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mMeshConnection.disconnect();
+        mDatabase.close();
+
+        // We need to ensure the service is recreated every time we think it is dead.
+        // If this doesn't happen, RightMesh doesn't always start up again.
+        // We aren't _thrilled_ with this solution, and are investigating it further.
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     /**
@@ -58,6 +84,15 @@ public class MeshIMService extends Service {
         @Override
         public void send(String message) {
             // Nothing for now.
+        }
+
+        @Override
+        public void setForeground(boolean value) {
+            if (value) {
+                startinForeground();
+            } else {
+                stopForeground(true);
+            }
         }
 
         @Override
@@ -79,25 +114,46 @@ public class MeshIMService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
+        mIsBound = true;
         return mBinder;
     }
 
     /**
-     * Helps turn the foreground service on and off.
+     * Keeps track of if this is actively bound.
+     *
+     * @param intent Intent that bound to the service
+     * @return false (don't call onRebind())
+     */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        mIsBound = false;
+        return false;
+    }
+
+    /**
+     * Responds to events sent by the notification. Used to toggle foreground mode on/off.
+     *
      * @param intent service intent.
      * @param flags extra flags
-     * @param startId
-     * @return
+     * @param startId id to start with
+     * @return {@link Service#START_STICKY}
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction().equals(ServiceConstants.ACTION.STOPFOREGROUND_ACTION)) {
-            Toast.makeText(this,"Service Stopped !",Toast.LENGTH_SHORT).show();
-            stopForeground(true);
-            stopSelf();
-        } else  if (intent.getAction().equals(ServiceConstants.ACTION.STARTFOREGROUND_ACTION)) {
+        super.onStartCommand(intent, flags, startId);
+
+        String action = null;
+        if (intent != null) {
+            action = intent.getAction();
+        }
+        if (action != null && action.equals(STOPFOREGROUND_ACTION)) {
+            if (mIsBound) {
+                stopForeground(true);
+            } else {
+                stopSelf();
+            }
+        } else if (action != null && action.equals(STARTFOREGROUND_ACTION)) {
             startinForeground();
-            Toast.makeText(this,"Service Started !",Toast.LENGTH_SHORT).show();
         }
         return START_STICKY;
     }
@@ -106,23 +162,6 @@ public class MeshIMService extends Service {
      * creates a notification bar for foreground service and starts the service.
      */
     private void startinForeground() {
-        Intent myActivity = new Intent(this,MainTabActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,myActivity,0);
-        Notification.Builder builder = new Notification.Builder(this);
-
-        builder.setAutoCancel(false);
-        builder.setTicker("");
-        builder.setContentTitle("Mesh IM is Running");
-        builder.setContentText("Tap to open the App");
-        builder.setSmallIcon(R.mipmap.rm_launcher);
-        builder.setContentIntent(pendingIntent);
-        builder.setOngoing(true);
-        builder.setNumber(100);
-        builder.build();
-        mServiceNotification = builder.getNotification();
         startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, mServiceNotification);
     }
-
-
 }
-

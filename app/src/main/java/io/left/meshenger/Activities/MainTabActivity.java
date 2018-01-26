@@ -7,19 +7,16 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
-
-import java.util.ArrayList;
 
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 import io.left.meshenger.Services.MeshIMService;
-import io.left.meshenger.Services.ServiceConstants;
+
+import java.util.ArrayList;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -28,7 +25,27 @@ import io.left.meshenger.Services.ServiceConstants;
 public class MainTabActivity extends Activity {
     // Reference to AIDL interface of app service.
     private IMeshIMService mService = null;
-    ServiceConnection mConnection;
+
+    // Handles connecting to service. Registers `mCallback` with the service when the
+    // mConnection is successful.
+    ServiceConnection mConnection = new ServiceConnection() {
+        // Called when the mConnection with the service is established
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = IMeshIMService.Stub.asInterface(service);
+            try {
+                mService.registerMainActivityCallback(mCallback);
+                mService.setForeground(false);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Called when the mConnection with the service disconnects unexpectedly
+        public void onServiceDisconnected(ComponentName className) {
+            mService = null;
+        }
+    };
+
     // Implementation of AIDL interface.
     private IActivity.Stub mCallback = new IActivity.Stub() {
         @Override
@@ -37,25 +54,6 @@ public class MainTabActivity extends Activity {
                 mUserListAdapter.updateList(mService);
                 mUserListAdapter.notifyDataSetChanged();
             });
-        }
-    };
-
-    // Handles connecting to service. Registers `mCallback` with the service when the connection
-    // is successful.
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        // Called when the connection with the service is established
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = IMeshIMService.Stub.asInterface(service);
-            try {
-                mService.registerMainActivityCallback(mCallback);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Called when the connection with the service disconnects unexpectedly
-        public void onServiceDisconnected(ComponentName className) {
-            mService = null;
         }
     };
 
@@ -72,34 +70,9 @@ public class MainTabActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
-        // Handles connecting to service. Registers `mCallback` with the service when the mConnection
-        // is successful.
-         mConnection = new ServiceConnection() {
-            // Called when the mConnection with the service is established
-            public void onServiceConnected(ComponentName className, IBinder service) {
-                mService = IMeshIMService.Stub.asInterface(service);
-                try {
-                    mService.registerMainActivityCallback(mCallback);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Called when the mConnection with the service disconnects unexpectedly
-            public void onServiceDisconnected(ComponentName className) {
-                mService = null;
-            }
-        };
-
-        Intent serviceIntent = new Intent(this, MeshIMService.class);
-        serviceIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
-        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
-        startService(serviceIntent);
-        //function to manually toggle foreground service
-        toggleForegroundServices();
-
         configureTabs();
         configureUserList();
+        connectToService();
     }
 
     /**
@@ -141,30 +114,54 @@ public class MainTabActivity extends Activity {
         });
     }
 
+    /**
+     * Disconnect from service when activity stops.
+     */
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mConnection);
+    protected void onStop() {
+        super.onStop();
+        disconnectFromService();
     }
 
     /**
-     * A switch to toggle Foreground service notification on/off.
+     * Reconnect to service when activity resumes.
      */
-    private void toggleForegroundServices() {
-        Switch serviceSwitch = findViewById(R.id.serviceSwitch);
-        serviceSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (serviceSwitch.isChecked()) {
-                    Intent startIntent = new Intent(MainTabActivity.this,MeshIMService.class);
-                    startIntent.setAction(ServiceConstants.ACTION.STARTFOREGROUND_ACTION);
-                    startService(startIntent);
-                } else {
-                    Intent stopIntent = new Intent(MainTabActivity.this, MeshIMService.class);
-                    stopIntent.setAction(ServiceConstants.ACTION.STOPFOREGROUND_ACTION);
-                    startService(stopIntent);
-                }
-                }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connectToService();
+    }
+
+    /**
+     * Disconnect from service when activity isn't active on screen.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disconnectFromService();
+    }
+
+    /**
+     * Handle creating the service intent and binding to it in a reusable function.
+     */
+    private void connectToService() {
+        Intent serviceIntent = new Intent(this, MeshIMService.class);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
+        startService(serviceIntent);
+    }
+
+    /**
+     * Unbinds from app service and sets {@link this#mService} to null.
+     */
+    private void disconnectFromService() {
+        if (mService != null) {
+            try {
+                mService.setForeground(true);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            unbindService(mConnection);
+            mService = null;
+        }
     }
 }
