@@ -25,7 +25,6 @@ public class MeshIMService extends Service {
     private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
     private Notification serviceNotification;
-    final int notifID = 1;
     /**
      * Connects to RightMesh when service is started.
      */
@@ -82,15 +81,21 @@ public class MeshIMService extends Service {
         return mBinder;
     }
 
-
+    /**
+     * Helps turn the foreground service on and off.
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction().equals(Constant.ACTION.STOPFOREGROUND_ACTION)) {
+        if (intent.getAction().equals(ServiceConstants.ACTION.STOPFOREGROUND_ACTION)) {
             Toast.makeText(this,"Service Stopped !",Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
-        else  if (intent.getAction().equals(Constant.ACTION.STARTFOREGROUND_ACTION)) {
+        else  if (intent.getAction().equals(ServiceConstants.ACTION.STARTFOREGROUND_ACTION)) {
             startinForeground();
             Toast.makeText(this,"Service Started !",Toast.LENGTH_SHORT).show();
         }
@@ -115,7 +120,7 @@ public class MeshIMService extends Service {
         builder.setNumber(100);
         builder.build();
         serviceNotification = builder.getNotification();
-        startForeground(notifID, serviceNotification);
+        startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, serviceNotification);
     }
 
 
