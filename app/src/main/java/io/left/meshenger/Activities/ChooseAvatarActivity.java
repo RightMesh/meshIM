@@ -38,7 +38,9 @@ public class ChooseAvatarActivity extends Activity {
      * table layout of avatars user can choose from.
      */
     private void setupAvatars() {
+       //keep track of the avatar
         int avatarNum = 1;
+
         mUser = User.fromDisk(this);
         ScrollView scrollView = findViewById(R.id.avatarScrollView);
         TableLayout tableLayout = new TableLayout(this);
@@ -52,6 +54,8 @@ public class ChooseAvatarActivity extends Activity {
             for (int c = 0; c < COLUMNS; c++) {
                 int curCol = c;
                 final ImageButton imageButton = new ImageButton(this);
+
+                //setting the avatar
                 int id = getResources().getIdentifier("avatar"+avatarNum
                        , "mipmap", getPackageName());
                 imageButton.setImageResource(id);
