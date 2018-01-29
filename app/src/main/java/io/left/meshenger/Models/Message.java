@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class Message implements Parcelable {
     private String message;
-    private String date;
+    private Date date;
     private User sender;
     private User recipient;
     private boolean isMyMessage;
@@ -24,12 +24,12 @@ public class Message implements Parcelable {
         this.message = message;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
-        this.date = dateFormat.format(date);
+        this.date = date;
     }
 
     public User getSender() {
@@ -64,12 +64,18 @@ public class Message implements Parcelable {
      */
     public Message(String message, User user, boolean isMyMessage) {
         this.message = message;
-
-        Date date = new Date();
-        this.date = dateFormat.format(date);
-
         this.sender = user;
         this.isMyMessage = isMyMessage;
+        this.date = new Date();
+    }
+
+    /**
+     * Converts local {@link Date} to a String with {@link this#dateFormat}.
+     *
+     * @return formatted date string
+     */
+    public String getDateAsString() {
+        return dateFormat.format(date);
     }
 
     /**
@@ -81,7 +87,7 @@ public class Message implements Parcelable {
      */
     protected Message(Parcel in) {
         message = in.readString();
-        date = in.readString();
+        date = new Date(in.readLong());
         sender = in.readParcelable(User.class.getClassLoader());
         recipient = in.readParcelable(User.class.getClassLoader());
         isMyMessage = in.readByte() != 0;
@@ -126,7 +132,7 @@ public class Message implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(message);
-        dest.writeString(date);
+        dest.writeLong(date.getTime());
         dest.writeParcelable(sender, flags);
         dest.writeParcelable(recipient, flags);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
