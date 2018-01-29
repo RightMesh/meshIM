@@ -106,4 +106,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:design:27.0.2'
 }
