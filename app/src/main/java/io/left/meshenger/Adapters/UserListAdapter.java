@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +14,6 @@ import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Adapter that fetches online users from the app service to populat the list of online users in

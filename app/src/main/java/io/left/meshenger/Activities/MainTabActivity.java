@@ -51,15 +51,17 @@ public class MainTabActivity extends Activity {
         @Override
         public void updateInterface() throws RemoteException {
             runOnUiThread(() -> {
-                mUserListAdapter.updateList(mService);
-                mUserListAdapter.notifyDataSetChanged();
+                if (mService != null) {
+                    mUserListAdapter.updateList(mService);
+                    mUserListAdapter.notifyDataSetChanged();
+                }
             });
         }
     };
 
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
-    ArrayList<User> mUsers = new ArrayList<User>();
+    ArrayList<User> mUsers = new ArrayList<>();
 
     /**
      * Binds to service and initializes UI elements.

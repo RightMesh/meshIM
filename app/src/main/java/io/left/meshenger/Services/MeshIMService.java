@@ -127,6 +127,7 @@ public class MeshIMService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         mIsBound = false;
+        mMeshConnection.setCallback(null);
         return false;
     }
 
