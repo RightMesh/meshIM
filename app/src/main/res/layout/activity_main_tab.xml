@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabHost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -13,7 +14,8 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            >
 
         </TabWidget>
 
@@ -27,18 +29,22 @@
                 android:id="@+id/tab1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:theme="@style/SplashTheme">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:text="THIS IS THE USER LIST"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+                <Switch
+                    android:id="@+id/serviceSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Service" />
 
                 <ListView
                     android:id="@+id/userListView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
+
+                </ListView>
 
             </LinearLayout>
 
@@ -69,4 +75,5 @@
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
+
 </TabHost>

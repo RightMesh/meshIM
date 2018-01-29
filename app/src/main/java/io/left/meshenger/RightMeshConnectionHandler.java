@@ -79,6 +79,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
     public void setCallback(IActivity callback) {
         this.callback = callback;
+        updateInterface();
     }
 
     /**
@@ -157,7 +158,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     private void updateInterface() {
         try {
-            callback.updateInterface();
+            if (callback != null) {
+                callback.updateInterface();
+            }
         } catch (RemoteException | NullPointerException ignored) {
             // Just keep swimming.
         }

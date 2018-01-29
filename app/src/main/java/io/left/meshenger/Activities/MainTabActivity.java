@@ -26,39 +26,42 @@ public class MainTabActivity extends Activity {
     // Reference to AIDL interface of app service.
     private IMeshIMService mService = null;
 
-    // Implementation of AIDL interface.
-    private IActivity.Stub mCallback = new IActivity.Stub() {
-        @Override
-        public void updateInterface() throws RemoteException {
-            runOnUiThread(() -> {
-                mUserListAdapter.updateList(mService);
-                mUserListAdapter.notifyDataSetChanged();
-            });
-        }
-    };
-
-    // Handles connecting to service. Registers `mCallback` with the service when the connection
-    // is successful.
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        // Called when the connection with the service is established
+    // Handles connecting to service. Registers `mCallback` with the service when the
+    // mConnection is successful.
+    ServiceConnection mConnection = new ServiceConnection() {
+        // Called when the mConnection with the service is established
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = IMeshIMService.Stub.asInterface(service);
             try {
                 mService.registerMainActivityCallback(mCallback);
+                mService.setForeground(false);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
 
-        // Called when the connection with the service disconnects unexpectedly
+        // Called when the mConnection with the service disconnects unexpectedly
         public void onServiceDisconnected(ComponentName className) {
             mService = null;
         }
     };
 
+    // Implementation of AIDL interface.
+    private IActivity.Stub mCallback = new IActivity.Stub() {
+        @Override
+        public void updateInterface() throws RemoteException {
+            runOnUiThread(() -> {
+                if (mService != null) {
+                    mUserListAdapter.updateList(mService);
+                    mUserListAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    };
+
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
-    ArrayList<User> mUsers = new ArrayList<User>();
+    ArrayList<User> mUsers = new ArrayList<>();
 
     /**
      * Binds to service and initializes UI elements.
@@ -69,11 +72,9 @@ public class MainTabActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
-        Intent serviceIntent = new Intent(this, MeshIMService.class);
-        bindService(serviceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
         configureTabs();
         configureUserList();
+        connectToService();
     }
 
     /**
@@ -113,5 +114,56 @@ public class MainTabActivity extends Activity {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
             startActivity(intent);
         });
+    }
+
+    /**
+     * Disconnect from service when activity stops.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        disconnectFromService();
+    }
+
+    /**
+     * Reconnect to service when activity resumes.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connectToService();
+    }
+
+    /**
+     * Disconnect from service when activity isn't active on screen.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disconnectFromService();
+    }
+
+    /**
+     * Handle creating the service intent and binding to it in a reusable function.
+     */
+    private void connectToService() {
+        Intent serviceIntent = new Intent(this, MeshIMService.class);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
+        startService(serviceIntent);
+    }
+
+    /**
+     * Unbinds from app service and sets {@link this#mService} to null.
+     */
+    private void disconnectFromService() {
+        if (mService != null) {
+            try {
+                mService.setForeground(true);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            unbindService(mConnection);
+            mService = null;
+        }
     }
 }

@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name="io.left.meshenger.Services.MeshIMService" />
+        <service
+            android:name="io.left.meshenger.Services.MeshIMService"
+            android:process=":MeshIMService"/>
 
         <activity
             android:name="io.left.meshenger.Activities.FirstTimeCreateUsernameActivity"
