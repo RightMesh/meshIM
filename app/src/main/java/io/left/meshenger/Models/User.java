@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,7 +34,7 @@ import java.lang.reflect.Type;
  */
 @Entity(tableName = "Users",
         indices = {@Index(value = {"UserID", "UserMeshID"}, unique = true)})
-public class User implements Parcelable {
+public class User implements Parcelable, Comparable {
     //used in share preference to save or load data
     @Ignore
     private static final String SAVE_VERSION = "UserDataSaveVersion_v1";
@@ -216,5 +217,19 @@ public class User implements Parcelable {
         } catch (NullPointerException ignored) {
             // In case preferences is null.
         }
+    }
+
+    /**
+     * Compares {@link User}s by their database-generated {@link User#id}.
+     *
+     * @param o object to compare to
+     * @return relative value
+     */
+    @Override
+    public int compareTo(@NonNull Object o) {
+        if (!(o instanceof User)) {
+            throw new ClassCastException("A User object was expected.");
+        }
+        return id - ((User) o).id;
     }
 }

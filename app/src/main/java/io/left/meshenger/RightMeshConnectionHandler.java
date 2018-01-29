@@ -191,6 +191,10 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 MeshIDTuple dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
                 if (dietPeer == null) {
                     dao.insertUsers(peer);
+
+                    // Fetch the user's id after it is initialized.
+                    dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
+                    peer.id = dietPeer.id;
                 } else {
                     peer.id = dietPeer.id;
                     dao.updateUsers(peer);
