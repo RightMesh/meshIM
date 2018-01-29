@@ -5,7 +5,7 @@
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/rm_launcher"
+        android:icon="@mipmap/available_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -26,8 +26,10 @@
         <activity
             android:name="io.left.meshenger.Activities.FirstTimeCreateUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />
-        <activity android:name="io.left.meshenger.Activities.ChooseAvatarActivity" />
-        <activity android:name="io.left.meshenger.Activities.MainTabActivity" />
+        <activity android:name="io.left.meshenger.Activities.ChooseAvatarActivity"
+            android:label="@string/title_choose_avatar"/>
+        <activity android:name="io.left.meshenger.Activities.MainTabActivity"
+            android:label="@string/app_name"/>
         <activity android:name="io.left.meshenger.Activities.ChatActivity"></activity>
     </application>
 

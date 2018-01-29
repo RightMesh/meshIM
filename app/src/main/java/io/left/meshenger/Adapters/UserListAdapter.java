@@ -60,7 +60,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
         User user = this.getItem(position);
         if (user != null) {
             ImageView userAvatar = v.findViewById(R.id.user_Avatar);
-            userAvatar.setImageResource(R.mipmap.avatar_00);
+            userAvatar.setImageResource(user.getUserAvatar());
             TextView userName = v.findViewById(R.id.userNameText);
             userName.setText(user.getUserName());
         }

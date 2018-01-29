@@ -16,7 +16,6 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/avatar_select"
         android:elevation="3dp"
-        android:src="@mipmap/avatar_00"
         app:layout_constraintBottom_toTopOf="@+id/avatarScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.455"

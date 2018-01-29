@@ -21,7 +21,7 @@ public class ChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-       user = new User("Bruce Lee",R.mipmap.avatar_00);
+       user = new User("Bruce Lee",R.mipmap.avatar1);
         mChatrecyclerview = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         mChatrecyclerview.setNestedScrollingEnabled(false);
 
