@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Meshenger</string>
+    <string name="app_name">meshIM</string>
 
     <string name="title_FirstTimeUsernameActivity">Create a username</string>
     <string name="title_activity_main_screen">MainScreenActivity</string>
+    <string name="title_choose_avatar">Select your avatar </string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
