@@ -3,6 +3,8 @@ package io.left.meshenger.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.protobuf.Timestamp;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -67,6 +69,19 @@ public class Message implements Parcelable {
         this.sender = user;
         this.isMyMessage = isMyMessage;
         this.date = new Date();
+    }
+
+    /**
+     * Converts local {@link Date} to a Protobuf {@link Timestamp} for use in data payloads.
+     *
+     * @return formatted timestamp
+     */
+    public Timestamp getDateAsTimestamp() {
+        long millis = date.getTime();
+        return Timestamp.newBuilder()
+                .setSeconds(millis / 1000)
+                .setNanos((int) ((millis % 1000) * 1000000))
+                .build();
     }
 
     /**
