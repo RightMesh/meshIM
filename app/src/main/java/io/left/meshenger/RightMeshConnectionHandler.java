@@ -4,6 +4,7 @@ import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.arch.persistence.room.Room;
@@ -16,6 +17,7 @@ import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDao;
 import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.MeshIDTuple;
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -32,7 +34,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
+import protobuf.MeshIMMessages.MessageType;
 import protobuf.MeshIMMessages.PeerUpdate;
 
 /**
@@ -256,5 +260,19 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 .build();
 
         return message.toByteArray();
+    }
+
+    private byte[] createMessagePayloadFromMessage(Message message) {
+        MeshIMMessages.Message protoMsg = MeshIMMessages.Message.newBuilder()
+                .setMessage(message.getMessage())
+                .setTime(message.getDateAsTimestamp())
+                .build();
+
+        MeshIMMessage payload = MeshIMMessage.newBuilder()
+                .setMessageType(MESSAGE)
+                .setMessage(protoMsg)
+                .build();
+
+        return payload.toByteArray();
     }
 }
