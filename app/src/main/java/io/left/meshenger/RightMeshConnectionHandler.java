@@ -97,8 +97,20 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         return new ArrayList<>(users.values());
     }
 
+    /**
+     * Sends a simple text message to another user.
+     * @param recipient recipient of the message
+     * @param message contents of the message
+     */
     public void sendTextMessage(User recipient, String message) {
-
+        Message messageObject = new Message(user, recipient, message, true);
+        try {
+            meshManager.sendDataReliable(recipient.getMeshId(), HELLO_PORT,
+                    createMessagePayloadFromMessage(messageObject));
+            messages.get(recipient).add(messageObject);
+        } catch (RightMeshException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

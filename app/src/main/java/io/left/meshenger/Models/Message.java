@@ -60,13 +60,25 @@ public class Message implements Parcelable {
 
     /**
      * Constructor.
-     * @param message message sender want to send
-     * @param user User data of the sender
-     * @param isMyMessage boolean
+     * @param sender user that sent the message
+     * @param recipient target recipient of the message
+     * @param message message to be sent
      */
-    public Message(String message, User user, boolean isMyMessage) {
+    public Message(User sender, User recipient, String message) {
+        this(sender, recipient, message, false);
+    }
+
+    /**
+     * Constructor.
+     * @param sender user that sent the message
+     * @param recipient target recipient of the message
+     * @param message message to be sent
+     * @param isMyMessage if this device's user sent the message
+     */
+    public Message(User sender, User recipient, String message, boolean isMyMessage) {
+        this.sender = sender;
+        this.recipient = recipient;
         this.message = message;
-        this.sender = user;
         this.isMyMessage = isMyMessage;
         this.date = new Date();
     }
