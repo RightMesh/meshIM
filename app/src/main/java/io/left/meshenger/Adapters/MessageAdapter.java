@@ -1,7 +1,6 @@
 package io.left.meshenger.Adapters;
 
-
-import android.content.Context;
+import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,91 +8,116 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import io.left.meshenger.Models.Message;
+import io.left.meshenger.Models.User;
+import io.left.meshenger.R;
+import io.left.meshenger.Services.IMeshIMService;
+import io.left.meshenger.Services.MeshIMService;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import io.left.meshenger.Models.Message;
-import io.left.meshenger.R;
-
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
+/**
+ * Adapter that fetches a conversation between the devices's user and a recipient, rendering
+ * messages sent by this device's user in a `message_send` view and received messages in a
+ * `message_recieve` view.
+ */
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
-    public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
-    private Context mContext;
-    private List<Message> mMessageList;
+    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
-    /**
-     * Constructor for the adapter
-     * @param context context of the activity
-     * @param messageList list of the messages
-     */
-    public MessageAdapter(Context context, List<Message> messageList) {
-        mContext = context;
-        mMessageList = messageList;
+    // List of both sent and received messages.
+    private List<Message> mMessageList = new ArrayList<>();
+
+    // User these messages have been exchanged with.
+    private User mRecipient;
+
+    public MessageAdapter(User recipient) {
+        this.mRecipient = recipient;
     }
 
-
     /**
-     * Checks whether the message should be displayed in send or recieve layout.
-     * Finds all the required layout fields.
+     * Update the list of messages from the service.
+     * @param service open connection to {@link MeshIMService}
      */
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView  time, messageBody;
-        public ImageView userImage;
+    public void updateList(IMeshIMService service) {
+        try {
+            this.mMessageList.clear();
+            List<Message> results = service.getMessagesForUser(this.mRecipient);
+            if (results != null) {
+                this.mMessageList.addAll(results);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
-        public MyViewHolder(View view, int messageType) {
+    class MessageViewHolder extends RecyclerView.ViewHolder {
+        TextView mTime;
+        TextView mMessagaeBody;
+        ImageView mUserImage;
+
+        /**
+         * Checks whether the message should be displayed in send or received layout.
+         * Finds all the required layout fields.
+         * @param view view to work with
+         * @param messageType type of message, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
+         *                    or {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+         */
+        MessageViewHolder(View view, int messageType) {
             super(view);
             if (messageType == VIEW_TYPE_MESSAGE_RECEIVED) {
-                userImage = (ImageView) view.findViewById(R.id.image_message_profile);
-                messageBody = (TextView) view.findViewById(R.id.text_message_body);
-                time = (TextView) view.findViewById(R.id.text_message_time_recieved);
+                mUserImage = view.findViewById(R.id.image_message_profile);
+                mMessagaeBody = view.findViewById(R.id.text_message_body);
+                mTime = view.findViewById(R.id.text_message_time_recieved);
             } else {
-                messageBody = (TextView) view.findViewById(R.id.text_message_body_sent);
-                time = (TextView) view.findViewById(R.id.text_message_time_sent);
+                mMessagaeBody = view.findViewById(R.id.text_message_body_sent);
+                mTime = view.findViewById(R.id.text_message_time_sent);
             }
         }
     }
 
     /**
-     * sets up the required layout for the message
-     * @param parent
-     * @param viewType
-     * @return
+     * Sets up the required layout for the message.
+     * @param parent parent group of view
+     * @param viewType type of view, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+     *                 or {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
+     * @return view holder instance
      */
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_recieve, parent, false);
-
-            return new MyViewHolder(itemView, VIEW_TYPE_MESSAGE_RECEIVED);
+            return new MessageViewHolder(itemView, VIEW_TYPE_MESSAGE_RECEIVED);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_send, parent, false);
-            return new MyViewHolder(itemView, VIEW_TYPE_MESSAGE_SENT);
-
+            return new MessageViewHolder(itemView, VIEW_TYPE_MESSAGE_SENT);
         }
     }
 
     /**
-     * setup the layout field with user data
-     * @param holder
-     * @param position
+     * Setup the layout field with user data.
+     * @param holder holder for view to be initialised
+     * @param position position of message in list to populate view with
      */
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = mMessageList.get(position);
         if (!(message.isMyMessage())) {
-            holder.messageBody.setText(message.getMessage());
-            holder.time.setText(message.getDateAsString());
-            holder.userImage.setImageResource(message.getSender().getUserAvatar());
+            holder.mMessagaeBody.setText(message.getMessage());
+            holder.mTime.setText(message.getDateAsString());
+            holder.mUserImage.setImageResource(message.getSender().getUserAvatar());
         } else {
-            holder.messageBody.setText(message.getMessage());
-            holder.time.setText(message.getDateAsString());
+            holder.mMessagaeBody.setText(message.getMessage());
+            holder.mTime.setText(message.getDateAsString());
         }
     }
 
     /**
-     * returns the size of the message
-     * @return
+     * Returns the size of the message list.
+     * @return size of message list
      */
     @Override
     public int getItemCount() {
@@ -102,8 +126,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
 
     /**
      * Checks whether the message was sent or received.
-     * @param position
-     * @return
+     * @param position index of message in list
+     * @return message type, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+     *         or {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
      */
     @Override
     public int getItemViewType(int position) {

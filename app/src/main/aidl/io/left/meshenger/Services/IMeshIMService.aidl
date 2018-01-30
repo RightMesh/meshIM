@@ -1,6 +1,7 @@
 package io.left.meshenger.Services;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 
 interface IMeshIMService {
@@ -11,4 +12,6 @@ interface IMeshIMService {
     void registerMainActivityCallback(in IActivity callback);
 
     List<User> getOnlineUsers();
+
+    List<Message> getMessagesForUser(in User user);
 }

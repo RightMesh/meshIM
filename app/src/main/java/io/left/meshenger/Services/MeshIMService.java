@@ -9,15 +9,16 @@ import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDatabase;
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.RightMeshConnectionHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,6 +104,11 @@ public class MeshIMService extends Service {
         @Override
         public List<User> getOnlineUsers() {
             return mMeshConnection.getUserList();
+        }
+
+        @Override
+        public List<Message> getMessagesForUser(User user) throws RemoteException {
+            return mMeshConnection.getMessagesForUser(user);
         }
     };
 

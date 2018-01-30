@@ -71,7 +71,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         listView.setAdapter(mUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
-            intent.putExtra("user", mUserListAdapter.getItem(position));
+            intent.putExtra("recipient", mUserListAdapter.getItem(position));
             startActivity(intent);
         });
     }
@@ -87,6 +87,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         listView.setAdapter(mUserMessageListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
+            intent.putExtra("recipient", mUserMessageListAdapter.getItem(position));
             startActivity(intent);
         });
     }

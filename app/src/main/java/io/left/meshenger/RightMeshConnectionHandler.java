@@ -90,6 +90,15 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
+     * Retrieve the list of messages exchanged between this device and the supplied user.
+     * @param user user to get messages exchanged with
+     * @return list of messages exchanged with the supplied user
+     */
+    public List<Message> getMessagesForUser(User user) {
+        return messages.get(user);
+    }
+
+    /**
      * Returns a list of online users.
      * @return online users
      */
@@ -107,7 +116,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         try {
             meshManager.sendDataReliable(recipient.getMeshId(), HELLO_PORT,
                     createMessagePayloadFromMessage(messageObject));
+
             messages.get(recipient).add(messageObject);
+            updateInterface();
         } catch (RightMeshException e) {
             e.printStackTrace();
         }
@@ -229,7 +240,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 User sender = users.get(peerId);
                 Message message = new Message(sender, user, protoMessage.getMessage(), false);
                 messages.get(sender).add(message);
-                echo("New message: " + message.getMessage());
+                updateInterface();
             }
         } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }

@@ -69,6 +69,7 @@ public class User implements Parcelable, Comparable {
      * @param userAvatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
      */
+    @Ignore
     public User(String userName, int userAvatar, MeshID meshId) {
         this(userName, userAvatar);
         this.meshId = meshId;
