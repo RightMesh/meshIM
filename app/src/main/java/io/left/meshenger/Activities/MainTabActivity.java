@@ -7,10 +7,13 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
 import io.left.meshenger.Adapters.UserListAdapter;
+import io.left.meshenger.Adapters.UserMessageListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
@@ -62,6 +65,7 @@ public class MainTabActivity extends Activity {
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
+    UserMessageListAdapter mUserMessageListAdapter;
 
     /**
      * Binds to service and initializes UI elements.
@@ -75,6 +79,8 @@ public class MainTabActivity extends Activity {
         configureTabs();
         configureUserList();
         connectToService();
+        configureMessageList();
+
     }
 
     /**
@@ -113,6 +119,23 @@ public class MainTabActivity extends Activity {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
             startActivity(intent);
+        });
+    }
+    private void configureMessageList(){
+        ArrayList<User> u = new ArrayList<>();
+        u.add(new User("user1",R.mipmap.avatar1));
+        u.add(new User("user2",R.mipmap.avatar2));
+        u.add(new User("user3",R.mipmap.avatar3));
+
+        ListView listView = findViewById(R.id.multiUserMessageListView);
+        mUserMessageListAdapter = new UserMessageListAdapter(this,u);
+        listView.setAdapter(mUserMessageListAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
+                startActivity(intent);
+            }
         });
     }
 

@@ -9,21 +9,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
 
-import java.util.ArrayList;
-
-/**
- * Adapter that fetches online users from the app service to populat the list of online users in
- * {@link io.left.meshenger.Activities.MainTabActivity}.
- */
-public class UserListAdapter extends ArrayAdapter<User> {
+public class UserMessageListAdapter extends ArrayAdapter<User> {
     // Used to inflate views for the list.
     private Context mContext;
 
-    // Reference to user list. Used for updating from service.
+    // Reference to user list.
     private ArrayList<User> mUserList;
 
     /**
@@ -31,7 +27,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param context context of activity
      * @param userList list to manage
      */
-    public UserListAdapter(Context context, ArrayList<User> userList) {
+    public UserMessageListAdapter(Context context, ArrayList<User> userList) {
         super(context, R.layout.user_list, userList);
         this.mContext = context;
         this.mUserList = userList;
@@ -54,7 +50,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
-        View v = View.inflate(mContext, R.layout.user_list, null);
+        View v = View.inflate(mContext, R.layout.user_message_list, null);
 
         // Null-check the user at this position.
         User user = this.getItem(position);
@@ -63,6 +59,10 @@ public class UserListAdapter extends ArrayAdapter<User> {
             userAvatar.setImageResource(user.getUserAvatar());
             TextView userName = v.findViewById(R.id.userNameMessageText);
             userName.setText(user.getUserName());
+            TextView newMessage = v.findViewById(R.id.userNewestMessageText);
+            newMessage.setText("kgndsjkgt njkgn jkndfgjk ngkjf nkjgnfgkfng");
+            TextView time = v.findViewById(R.id.userNewestMessageTimeText);
+            time.setText("11:00am");
         }
 
         return v;
