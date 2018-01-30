@@ -15,6 +15,7 @@ import io.left.meshenger.R;
  * An activity that displays a conversation between two users, and enables sending messages.
  */
 public class ChatActivity extends ServiceConnectedActivity {
+    private RecyclerView mMessageListView;
     private MessageAdapter mMessageAdapter;
     User mRecipient;
 
@@ -31,11 +32,10 @@ public class ChatActivity extends ServiceConnectedActivity {
         mMessageAdapter = new MessageAdapter(mRecipient);
 
         // Initialize the list view for the messages.
-        RecyclerView messageListView = findViewById(R.id.reyclerview_message_list);
-        messageListView.setNestedScrollingEnabled(false);
-        messageListView.setLayoutManager(new LinearLayoutManager(this));
-        messageListView.setAdapter(mMessageAdapter);
-        messageListView.smoothScrollToPosition(0);
+        mMessageListView = findViewById(R.id.reyclerview_message_list);
+        mMessageListView.setNestedScrollingEnabled(false);
+        mMessageListView.setLayoutManager(new LinearLayoutManager(this));
+        mMessageListView.setAdapter(mMessageAdapter);
 
         // Connect the send button to the service.
         Button sendButton = findViewById(R.id.sendButton);
@@ -43,7 +43,11 @@ public class ChatActivity extends ServiceConnectedActivity {
         sendButton.setOnClickListener(view -> {
             if (mService != null) {
                 try {
-                    mService.sendTextMessage(mRecipient, messageText.getText().toString());
+                    String message = messageText.getText().toString();
+                    if (!message.equals("")) {
+                        mService.sendTextMessage(mRecipient, message);
+                        messageText.setText("");
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -59,6 +63,10 @@ public class ChatActivity extends ServiceConnectedActivity {
         runOnUiThread(() -> {
             mMessageAdapter.updateList(mService);
             mMessageAdapter.notifyDataSetChanged();
+            int index = mMessageAdapter.getItemCount() - 1;
+            if (index > -1) {
+                mMessageListView.smoothScrollToPosition(index);
+            }
         });
     }
 }
