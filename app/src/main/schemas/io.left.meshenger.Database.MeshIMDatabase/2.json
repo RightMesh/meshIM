@@ -1,0 +1,61 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "83438a9f47024a3ab873c035a1ba1cb3",
+    "entities": [
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`UserID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `MeshID` BLOB, `Username` TEXT, `Avatar` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "UserID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meshId",
+            "columnName": "MeshID",
+            "affinity": "BLOB",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "Username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "avatar",
+            "columnName": "Avatar",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "UserID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Users_UserID_MeshID",
+            "unique": true,
+            "columnNames": [
+              "UserID",
+              "MeshID"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_Users_UserID_MeshID` ON `${TABLE_NAME}` (`UserID`, `MeshID`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"83438a9f47024a3ab873c035a1ba1cb3\")"
+    ]
+  }
+}

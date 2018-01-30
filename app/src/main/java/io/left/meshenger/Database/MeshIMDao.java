@@ -23,6 +23,6 @@ public interface MeshIMDao {
     @Query("SELECT * FROM Users")
     public User[] fetchAllUsers();
 
-    @Query("SELECT UserId, UserMeshID FROM Users WHERE UserMeshID = :meshId")
+    @Query("SELECT UserID, MeshID FROM Users WHERE MeshID = :meshId")
     public MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
 }

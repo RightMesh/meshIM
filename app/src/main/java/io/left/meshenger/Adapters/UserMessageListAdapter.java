@@ -56,9 +56,9 @@ public class UserMessageListAdapter extends ArrayAdapter<User> {
         User user = this.getItem(position);
         if (user != null) {
             ImageView userAvatar = v.findViewById(R.id.userMessageAvatar);
-            userAvatar.setImageResource(user.getUserAvatar());
+            userAvatar.setImageResource(user.getAvatar());
             TextView userName = v.findViewById(R.id.userNameMessageText);
-            userName.setText(user.getUserName());
+            userName.setText(user.getUsername());
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText("kgndsjkgt njkgn jkndfgjk ngkjf nkjgnfgkfng");
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);

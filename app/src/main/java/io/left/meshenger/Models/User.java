@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,7 +32,7 @@ import java.lang.reflect.Type;
  * </p>
  */
 @Entity(tableName = "Users",
-        indices = {@Index(value = {"UserID", "UserMeshID"}, unique = true)})
+        indices = {@Index(value = {"UserID", "MeshID"}, unique = true)})
 public class User implements Parcelable {
     //used in share preference to save or load data
     @Ignore
@@ -43,14 +42,14 @@ public class User implements Parcelable {
     @ColumnInfo(name = "UserID")
     public int id;
 
-    @ColumnInfo(name = "UserMeshID")
+    @ColumnInfo(name = "MeshID")
     private MeshID meshId = new MeshID();
 
-    @ColumnInfo(name = "UserName")
-    private String userName;
+    @ColumnInfo(name = "Username")
+    private String username;
 
-    @ColumnInfo(name = "UserAvatar")
-    private int userAvatar;
+    @ColumnInfo(name = "Avatar")
+    private int avatar;
 
     // SharedPreferences is a singleton - the same reference is always returned. It also updates
     // itself in a threadsafe way, so might as well keep one version of it open.
@@ -65,26 +64,26 @@ public class User implements Parcelable {
     /**
      * Constructor with {@link MeshID} option. Used in
      * {@link io.left.meshenger.RightMeshConnectionHandler} where we care about mesh logic.
-     * @param userName displayed username for the user
-     * @param userAvatar avatar chosen by the user
+     * @param username displayed username for the user
+     * @param avatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
      */
     @Ignore
-    public User(String userName, int userAvatar, MeshID meshId) {
-        this(userName, userAvatar);
+    public User(String username, int avatar, MeshID meshId) {
+        this(username, avatar);
         this.meshId = meshId;
     }
 
     /**
      * Constructor with only username and avatar. Used in the UI layer where we don't care about
      * mesh logic.
-     * @param userName displayed username for the user
-     * @param userAvatar avatar chosen by the user
+     * @param username displayed username for the user
+     * @param avatar avatar chosen by the user
      */
     @Ignore
-    public User(String userName, int userAvatar) {
-        this.userAvatar = userAvatar;
-        this.userName = userName;
+    public User(String username, int avatar) {
+        this.avatar = avatar;
+        this.username = username;
     }
 
     /**
@@ -131,21 +130,21 @@ public class User implements Parcelable {
         this.meshId = meshId;
     }
 
-    public int getUserAvatar() {
+    public int getAvatar() {
 
-        return userAvatar;
+        return avatar;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserAvatar(int userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -158,8 +157,8 @@ public class User implements Parcelable {
      */
     private User(Parcel in) {
         this.id = in.readInt();
-        this.userName = in.readString();
-        this.userAvatar = in.readInt();
+        this.username = in.readString();
+        this.avatar = in.readInt();
         byte[] uuid = new byte[20];
         in.readByteArray(uuid);
         this.meshId = new MeshID(uuid);
@@ -191,8 +190,8 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
-        dest.writeString(this.getUserName());
-        dest.writeInt(this.userAvatar);
+        dest.writeString(this.getUsername());
+        dest.writeInt(this.avatar);
         dest.writeByteArray(this.meshId.getRawUuid());
     }
 
@@ -211,8 +210,8 @@ public class User implements Parcelable {
                 return false;
             } else {
                 this.id = 1; // This device's user is always the first in the database, so id of 1.
-                this.setUserAvatar(temp.getUserAvatar());
-                this.setUserName(temp.getUserName());
+                this.setAvatar(temp.getAvatar());
+                this.setUsername(temp.getUsername());
             }
             return true;
         } catch (NullPointerException npe) {

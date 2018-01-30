@@ -7,7 +7,6 @@ import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.RemoteException;
 
@@ -30,7 +29,6 @@ import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -281,8 +279,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     private byte[] createPeerUpdatePayloadFromUser(User user) {
         PeerUpdate peerUpdate = PeerUpdate.newBuilder()
-                .setUserName(user.getUserName())
-                .setAvatarId(user.getUserAvatar())
+                .setUserName(user.getUsername())
+                .setAvatarId(user.getAvatar())
                 .build();
 
         MeshIMMessage message = MeshIMMessage.newBuilder()

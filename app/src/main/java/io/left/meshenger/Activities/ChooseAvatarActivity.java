@@ -37,7 +37,7 @@ public class ChooseAvatarActivity extends Activity {
         // Update user and launch app when save button is tapped.
         Button saveButton = findViewById(R.id.saveUserAvatarButton);
         saveButton.setOnClickListener(v -> {
-            mUser.setUserAvatar(mUserAvatarId);
+            mUser.setAvatar(mUserAvatarId);
             mUser.save();
             Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
             startActivity(intent);
