@@ -2,6 +2,7 @@ package io.left.meshenger.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * An activity that displays a conversation between two users, and enables sending messages.
  */
-public class ChatActivity extends Activity {
+public class ChatActivity extends ServiceConnectedActivity {
     private RecyclerView mChatrecyclerview;
     private MessageAdapter mMessageAdapter;
     List<Message> mMessagelist = new ArrayList<>();
@@ -30,20 +31,32 @@ public class ChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        mUser = new User("Bruce Lee",R.mipmap.avatar1);
-        mChatrecyclerview = findViewById(R.id.reyclerview_message_list);
-        mChatrecyclerview.setNestedScrollingEnabled(false);
+        mUser = getIntent().getParcelableExtra("user");
 
         mMessageAdapter = new MessageAdapter(this, mMessagelist);
+        mMessageAdapter.notifyDataSetChanged();
+
+        mChatrecyclerview = findViewById(R.id.reyclerview_message_list);
+        mChatrecyclerview.setNestedScrollingEnabled(false);
         mChatrecyclerview.setLayoutManager(new LinearLayoutManager(this));
         mChatrecyclerview.setAdapter(mMessageAdapter);
-        mChatrecyclerview.smoothScrollToPosition(mChatrecyclerview.getAdapter().getItemCount() - 1);
-        mMessageAdapter.notifyDataSetChanged();
+        mChatrecyclerview.smoothScrollToPosition(0);
 
         Button sendButton = findViewById(R.id.sendButton);
         EditText messageText = findViewById(R.id.myMessageEditText);
         sendButton.setOnClickListener(view -> {
-            messageText.getText().toString();
+            if (mService != null) {
+                try {
+                    mService.sendTextMessage(mUser, messageText.getText().toString());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         });
+    }
+
+    @Override
+    void updateInterface() {
+
     }
 }

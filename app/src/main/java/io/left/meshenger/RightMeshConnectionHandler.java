@@ -257,7 +257,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 rme.printStackTrace();
             }
         } else if (event.state == REMOVED) {
-            users.remove(event.peerUuid);
+            messages.remove(users.remove(event.peerUuid));
             updateInterface();
         }
     }
