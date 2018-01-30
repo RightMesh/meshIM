@@ -4,6 +4,7 @@ import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.arch.persistence.room.Room;
@@ -16,6 +17,7 @@ import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDao;
 import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.MeshIDTuple;
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
@@ -32,7 +34,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
+import protobuf.MeshIMMessages.MessageType;
 import protobuf.MeshIMMessages.PeerUpdate;
 
 /**
@@ -48,6 +52,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
+
+    // Temporary messages array before we store them to the database.
+    private HashMap<User, List<Message>> messages = new HashMap<>();
 
     // Database reference.
     private MeshIMDatabase database;
@@ -83,11 +90,38 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
+     * Retrieve the list of messages exchanged between this device and the supplied user.
+     * @param user user to get messages exchanged with
+     * @return list of messages exchanged with the supplied user
+     */
+    public List<Message> getMessagesForUser(User user) {
+        return messages.get(user);
+    }
+
+    /**
      * Returns a list of online users.
      * @return online users
      */
     public List<User> getUserList() {
         return new ArrayList<>(users.values());
+    }
+
+    /**
+     * Sends a simple text message to another user.
+     * @param recipient recipient of the message
+     * @param message contents of the message
+     */
+    public void sendTextMessage(User recipient, String message) {
+        Message messageObject = new Message(user, recipient, message, true);
+        try {
+            meshManager.sendDataReliable(recipient.getMeshId(), HELLO_PORT,
+                    createMessagePayloadFromMessage(messageObject));
+
+            messages.get(recipient).add(messageObject);
+            updateInterface();
+        } catch (RightMeshException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -174,11 +208,12 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         DataReceivedEvent event = (DataReceivedEvent) e;
 
         try {
-            MeshIMMessage message = MeshIMMessage.parseFrom(event.data);
+            MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
+            MeshID peerId = event.peerUuid;
 
-            if (message.getMessageType() == PEER_UPDATE) {
-                PeerUpdate peerUpdate = message.getPeerUpdate();
-                MeshID peerId = e.peerUuid;
+            MessageType messageType = messageWrapper.getMessageType();
+            if (messageType == PEER_UPDATE) {
+                PeerUpdate peerUpdate = messageWrapper.getPeerUpdate();
 
                 // Initialize peer with info from update packet.
                 User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId(), peerId);
@@ -187,6 +222,10 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 MeshIDTuple dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
                 if (dietPeer == null) {
                     dao.insertUsers(peer);
+
+                    // Fetch the user's id after it is initialized.
+                    dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
+                    peer.id = dietPeer.id;
                 } else {
                     peer.id = dietPeer.id;
                     dao.updateUsers(peer);
@@ -194,13 +233,16 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
                 // Store user in list of online users.
                 users.put(peerId, peer);
+                messages.put(peer, new ArrayList<>());
+                updateInterface();
+            } else if (messageType == MESSAGE) {
+                MeshIMMessages.Message protoMessage = messageWrapper.getMessage();
+                User sender = users.get(peerId);
+                Message message = new Message(sender, user, protoMessage.getMessage(), false);
+                messages.get(sender).add(message);
                 updateInterface();
             }
-        } catch (InvalidProtocolBufferException ignored) {
-            /* Ignore malformed messages. */
-            // but for now...
-            echo(new String(event.data));
-        }
+        } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }
 
     /**
@@ -226,7 +268,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 rme.printStackTrace();
             }
         } else if (event.state == REMOVED) {
-            users.remove(event.peerUuid);
+            messages.remove(users.remove(event.peerUuid));
             updateInterface();
         }
     }
@@ -248,5 +290,19 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 .build();
 
         return message.toByteArray();
+    }
+
+    private byte[] createMessagePayloadFromMessage(Message message) {
+        MeshIMMessages.Message protoMsg = MeshIMMessages.Message.newBuilder()
+                .setMessage(message.getMessage())
+                .setTime(message.getDateAsTimestamp())
+                .build();
+
+        MeshIMMessage payload = MeshIMMessage.newBuilder()
+                .setMessageType(MESSAGE)
+                .setMessage(protoMsg)
+                .build();
+
+        return payload.toByteArray();
     }
 }

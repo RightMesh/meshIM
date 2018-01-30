@@ -1,14 +1,7 @@
 package io.left.meshenger.Activities;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TabHost;
 
@@ -16,8 +9,6 @@ import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Adapters.UserMessageListAdapter;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-import io.left.meshenger.Services.IMeshIMService;
-import io.left.meshenger.Services.MeshIMService;
 
 import java.util.ArrayList;
 
@@ -25,50 +16,14 @@ import java.util.ArrayList;
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
-public class MainTabActivity extends Activity {
-    // Reference to AIDL interface of app service.
-    private IMeshIMService mService = null;
-
-    // Handles connecting to service. Registers `mCallback` with the service when the
-    // mConnection is successful.
-    ServiceConnection mConnection = new ServiceConnection() {
-        // Called when the mConnection with the service is established
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = IMeshIMService.Stub.asInterface(service);
-            try {
-                mService.registerMainActivityCallback(mCallback);
-                mService.setForeground(false);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Called when the mConnection with the service disconnects unexpectedly
-        public void onServiceDisconnected(ComponentName className) {
-            mService = null;
-        }
-    };
-
-    // Implementation of AIDL interface.
-    private IActivity.Stub mCallback = new IActivity.Stub() {
-        @Override
-        public void updateInterface() throws RemoteException {
-            runOnUiThread(() -> {
-                if (mService != null) {
-                    mUserListAdapter.updateList(mService);
-                    mUserListAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-    };
-
+public class MainTabActivity extends ServiceConnectedActivity {
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
     UserMessageListAdapter mUserMessageListAdapter;
 
     /**
-     * Binds to service and initializes UI elements.
+     * Initializes UI elements.
      * @param savedInstanceState passed by Android
      */
     @Override
@@ -78,9 +33,7 @@ public class MainTabActivity extends Activity {
 
         configureTabs();
         configureUserList();
-        connectToService();
         configureMessageList();
-
     }
 
     /**
@@ -118,10 +71,12 @@ public class MainTabActivity extends Activity {
         listView.setAdapter(mUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+            intent.putExtra("recipient", mUserListAdapter.getItem(position));
             startActivity(intent);
         });
     }
-    private void configureMessageList(){
+
+    private void configureMessageList() {
         ArrayList<User> u = new ArrayList<>();
         u.add(new User("user1",R.mipmap.avatar1));
         u.add(new User("user2",R.mipmap.avatar2));
@@ -130,63 +85,20 @@ public class MainTabActivity extends Activity {
         ListView listView = findViewById(R.id.multiUserMessageListView);
         mUserMessageListAdapter = new UserMessageListAdapter(this,u);
         listView.setAdapter(mUserMessageListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
-                startActivity(intent);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
+            intent.putExtra("recipient", mUserMessageListAdapter.getItem(position));
+            startActivity(intent);
         });
     }
 
-    /**
-     * Disconnect from service when activity stops.
-     */
     @Override
-    protected void onStop() {
-        super.onStop();
-        disconnectFromService();
-    }
-
-    /**
-     * Reconnect to service when activity resumes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        connectToService();
-    }
-
-    /**
-     * Disconnect from service when activity isn't active on screen.
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        disconnectFromService();
-    }
-
-    /**
-     * Handle creating the service intent and binding to it in a reusable function.
-     */
-    private void connectToService() {
-        Intent serviceIntent = new Intent(this, MeshIMService.class);
-        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
-        startService(serviceIntent);
-    }
-
-    /**
-     * Unbinds from app service and sets {@link this#mService} to null.
-     */
-    private void disconnectFromService() {
-        if (mService != null) {
-            try {
-                mService.setForeground(true);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+    public void updateInterface() {
+        runOnUiThread(() -> {
+            if (mService != null) {
+                mUserListAdapter.updateList(mService);
+                mUserListAdapter.notifyDataSetChanged();
             }
-            unbindService(mConnection);
-            mService = null;
-        }
+        });
     }
 }

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,6 +69,7 @@ public class User implements Parcelable {
      * @param userAvatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
      */
+    @Ignore
     public User(String userName, int userAvatar, MeshID meshId) {
         this(userName, userAvatar);
         this.meshId = meshId;
@@ -95,6 +97,16 @@ public class User implements Parcelable {
     public User(Context context) {
         this();
         preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof User && ((User) o).id == this.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 
     /**
@@ -145,8 +157,12 @@ public class User implements Parcelable {
      * @param in parel to parse
      */
     private User(Parcel in) {
+        this.id = in.readInt();
         this.userName = in.readString();
         this.userAvatar = in.readInt();
+        byte[] uuid = new byte[20];
+        in.readByteArray(uuid);
+        this.meshId = new MeshID(uuid);
     }
 
 
@@ -174,8 +190,10 @@ public class User implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.getUserName());
         dest.writeInt(this.userAvatar);
+        dest.writeByteArray(this.meshId.getRawUuid());
     }
 
     /**

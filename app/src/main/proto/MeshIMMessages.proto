@@ -1,6 +1,8 @@
 syntax = "proto3";
 package protobuf;
 
+import "google/protobuf/timestamp.proto";
+
 enum MessageType {
     PEER_UPDATE = 0;
     MESSAGE = 1;
@@ -18,5 +20,5 @@ message PeerUpdate{
 }
 message Message{
     string message =1;
-    int64 time=2;
+    google.protobuf.Timestamp time=2;
 }

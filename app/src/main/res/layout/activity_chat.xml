@@ -20,18 +20,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.RecyclerView>
+
     <EditText
         android:id="@+id/myMessageEditText"
         android:layout_width="279dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="enter text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:inputType="textCapSentences|textMultiLine"
 
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button

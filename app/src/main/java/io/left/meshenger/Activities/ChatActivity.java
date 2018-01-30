@@ -1,65 +1,72 @@
 package io.left.meshenger.Activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
+import android.widget.EditText;
+
 import io.left.meshenger.Adapters.MessageAdapter;
-import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ChatActivity extends Activity {
-    private RecyclerView mChatrecyclerview;
+/**
+ * An activity that displays a conversation between two users, and enables sending messages.
+ */
+public class ChatActivity extends ServiceConnectedActivity {
+    private RecyclerView mMessageListView;
     private MessageAdapter mMessageAdapter;
-    List<Message> mMessagelist = new ArrayList<>();
-    User user;
+    User mRecipient;
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-       user = new User("Bruce Lee",R.mipmap.avatar1);
-        mChatrecyclerview = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        mChatrecyclerview.setNestedScrollingEnabled(false);
 
-        MessageTest();
+        // Fetch the recipient from the intent and set up the message adapter.
+        mRecipient = getIntent().getParcelableExtra("recipient");
+        mMessageAdapter = new MessageAdapter(mRecipient);
 
-        mMessageAdapter = new MessageAdapter(this, mMessagelist);
-        mChatrecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mChatrecyclerview.setAdapter(mMessageAdapter);
-        mChatrecyclerview.smoothScrollToPosition(mChatrecyclerview.getAdapter().getItemCount()-1);
-        mMessageAdapter.notifyDataSetChanged();
+        // Initialize the list view for the messages.
+        mMessageListView = findViewById(R.id.reyclerview_message_list);
+        mMessageListView.setNestedScrollingEnabled(false);
+        mMessageListView.setLayoutManager(new LinearLayoutManager(this));
+        mMessageListView.setAdapter(mMessageAdapter);
 
-
+        // Connect the send button to the service.
+        Button sendButton = findViewById(R.id.sendButton);
+        EditText messageText = findViewById(R.id.myMessageEditText);
+        sendButton.setOnClickListener(view -> {
+            if (mService != null) {
+                try {
+                    String message = messageText.getText().toString();
+                    if (!message.equals("")) {
+                        mService.sendTextMessage(mRecipient, message);
+                        messageText.setText("");
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    private void MessageTest() {
-        Message message = new Message("Adapt what is useful, reject what is useless, "
-                + "and add what is specifically your own.", user, true);
-        Message message1 = new Message("Always be yourself, express yourself, have faith"
-                + " in yourself, do not go out and look for a successful "
-                + "personality and duplicate it.",
-                user, false);
-        Message message2 = new Message("If you love life, don't waste time, for time is what"
-                + " life is made up of.", user, true);
-        Message message3 = new Message("The key to immortality is first living a life"
-                + " worth remembering", user, false);
-        mMessagelist.add(message);
-        mMessagelist.add(message1);
-        mMessagelist.add(message2);
-        mMessagelist.add(message3);
-        mMessagelist.add(message);
-        mMessagelist.add(message1);
-        mMessagelist.add(message2);
-        mMessagelist.add(message3);
-        mMessagelist.add(message);
-        mMessagelist.add(message1);
-        mMessagelist.add(message2);
-        mMessagelist.add(message3);
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    void updateInterface() {
+        runOnUiThread(() -> {
+            mMessageAdapter.updateList(mService);
+            mMessageAdapter.notifyDataSetChanged();
+            int index = mMessageAdapter.getItemCount() - 1;
+            if (index > -1) {
+                mMessageListView.smoothScrollToPosition(index);
+            }
+        });
     }
-
-
 }
