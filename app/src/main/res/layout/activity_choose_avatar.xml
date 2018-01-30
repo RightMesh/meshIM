@@ -29,6 +29,7 @@
         android:layout_height="153dp"
         android:background="@color/greenDark"
         android:gravity="top"
+
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -42,20 +43,17 @@
         style="@android:style/Widget.ScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/scrollbar"
         android:elevation="3dp"
         android:fillViewport="false"
-        android:scrollbarStyle="insideInset"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/saveUserAvatarButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectedAvatar"
-        app:layout_constraintVertical_bias="0.263"
         tools:backgroundTint="@color/greenDark">
 
     </ScrollView>
@@ -63,7 +61,7 @@
     <Button
         android:id="@+id/saveUserAvatarButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:background="#FF01A076"
         android:clickable="false"
         android:elevation="5dp"
@@ -75,8 +73,6 @@
         android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatarScrollView"
-        app:layout_constraintVertical_bias="0.924" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
