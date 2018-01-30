@@ -197,11 +197,12 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         DataReceivedEvent event = (DataReceivedEvent) e;
 
         try {
-            MeshIMMessage message = MeshIMMessage.parseFrom(event.data);
+            MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
+            MeshID peerId = event.peerUuid;
 
-            if (message.getMessageType() == PEER_UPDATE) {
-                PeerUpdate peerUpdate = message.getPeerUpdate();
-                MeshID peerId = e.peerUuid;
+            MessageType messageType = messageWrapper.getMessageType();
+            if (messageType == PEER_UPDATE) {
+                PeerUpdate peerUpdate = messageWrapper.getPeerUpdate();
 
                 // Initialize peer with info from update packet.
                 User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId(), peerId);
@@ -223,12 +224,14 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 users.put(peerId, peer);
                 messages.put(peer, new ArrayList<>());
                 updateInterface();
+            } else if (messageType == MESSAGE) {
+                MeshIMMessages.Message protoMessage = messageWrapper.getMessage();
+                User sender = users.get(peerId);
+                Message message = new Message(sender, user, protoMessage.getMessage(), false);
+                messages.get(sender).add(message);
+                echo("New message: " + message.getMessage());
             }
-        } catch (InvalidProtocolBufferException ignored) {
-            /* Ignore malformed messages. */
-            // but for now...
-            echo(new String(event.data));
-        }
+        } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }
 
     /**
