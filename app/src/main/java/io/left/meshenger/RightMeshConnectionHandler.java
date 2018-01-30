@@ -53,6 +53,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
+    // Temporary messages array before we store them to the database.
+    private HashMap<User, List<Message>> messages = new HashMap<>();
+
     // Database reference.
     private MeshIMDatabase database;
     private MeshIMDao dao;
@@ -206,6 +209,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
                 // Store user in list of online users.
                 users.put(peerId, peer);
+                messages.put(peer, new ArrayList<>());
                 updateInterface();
             }
         } catch (InvalidProtocolBufferException ignored) {
