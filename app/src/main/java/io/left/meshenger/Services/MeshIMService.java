@@ -47,7 +47,7 @@ public class MeshIMService extends Service {
                 .setTicker("Mesh IM")
                 .setContentTitle("Mesh IM is Running")
                 .setContentText("Tap to go offline.")
-                .setSmallIcon(R.mipmap.rm_launcher)
+                .setSmallIcon(R.mipmap.available_icon)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setNumber(100)
