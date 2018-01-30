@@ -1,5 +1,11 @@
 package io.left.meshenger.Models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,12 +14,39 @@ import com.google.protobuf.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+@Entity(tableName = "Messages",
+        indices = { @Index(value = {"RecipientID"}), @Index(value = {"SenderID"}) },
+        foreignKeys =
+                {
+                        @ForeignKey(entity = User.class, parentColumns = "UserID",
+                                childColumns = "SenderID"),
+                        @ForeignKey(entity = User.class, parentColumns = "UserID",
+                                childColumns = "RecipientID")
+                })
 public class Message implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "MessageID")
+    public int id;
+
+    @ColumnInfo(name = "Contents")
     private String message;
+
+    @ColumnInfo(name = "Timestamp")
     private Date date;
+
+    @ColumnInfo(name = "SenderID")
+    public int senderId;
+
+    @Ignore
     private User sender;
+
+    @ColumnInfo(name = "RecipientID")
+    public int recipientId;
+
+    @Ignore
     private User recipient;
+
+    @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
@@ -62,8 +95,9 @@ public class Message implements Parcelable {
      * Constructor.
      * @param sender user that sent the message
      * @param recipient target recipient of the message
-     * @param message message to be sent
+     * @param message message contents
      */
+    @Ignore
     public Message(User sender, User recipient, String message) {
         this(sender, recipient, message, false);
     }
@@ -72,15 +106,25 @@ public class Message implements Parcelable {
      * Constructor.
      * @param sender user that sent the message
      * @param recipient target recipient of the message
-     * @param message message to be sent
+     * @param message message contents
      * @param isMyMessage if this device's user sent the message
      */
+    @Ignore
     public Message(User sender, User recipient, String message, boolean isMyMessage) {
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;
         this.isMyMessage = isMyMessage;
         this.date = new Date();
+    }
+
+    /**
+     * Room constructor.
+     * @param message message contents
+     * @param isMyMessage if this device's user sent the message
+     */
+    public Message(String message, boolean isMyMessage) {
+        this(null, null, message, isMyMessage);
     }
 
     /**
@@ -112,6 +156,7 @@ public class Message implements Parcelable {
      * </p>
      * @param in Parcel to parse.
      */
+    @Ignore
     protected Message(Parcel in) {
         message = in.readString();
         date = new Date(in.readLong());
