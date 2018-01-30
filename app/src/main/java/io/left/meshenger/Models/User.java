@@ -34,7 +34,7 @@ import java.lang.reflect.Type;
  */
 @Entity(tableName = "Users",
         indices = {@Index(value = {"UserID", "UserMeshID"}, unique = true)})
-public class User implements Parcelable, Comparable {
+public class User implements Parcelable {
     //used in share preference to save or load data
     @Ignore
     private static final String SAVE_VERSION = "UserDataSaveVersion_v1";
@@ -107,20 +107,6 @@ public class User implements Parcelable, Comparable {
     @Override
     public int hashCode() {
         return this.id;
-    }
-
-    /**
-     * Compares {@link User}s by their database-generated {@link User#id}.
-     *
-     * @param o object to compare to
-     * @return relative value
-     */
-    @Override
-    public int compareTo(@NonNull Object o) {
-        if (!(o instanceof User)) {
-            throw new ClassCastException("A User object was expected.");
-        }
-        return id - ((User) o).id;
     }
 
     /**
