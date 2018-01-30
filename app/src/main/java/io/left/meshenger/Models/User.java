@@ -98,6 +98,30 @@ public class User implements Parcelable, Comparable {
         preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof User && ((User) o).id == this.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    /**
+     * Compares {@link User}s by their database-generated {@link User#id}.
+     *
+     * @param o object to compare to
+     * @return relative value
+     */
+    @Override
+    public int compareTo(@NonNull Object o) {
+        if (!(o instanceof User)) {
+            throw new ClassCastException("A User object was expected.");
+        }
+        return id - ((User) o).id;
+    }
+
     /**
      * Attempts to load the stored {@link User} from {@link SharedPreferences}.
      *
@@ -146,8 +170,12 @@ public class User implements Parcelable, Comparable {
      * @param in parel to parse
      */
     private User(Parcel in) {
+        this.id = in.readInt();
         this.userName = in.readString();
         this.userAvatar = in.readInt();
+        byte[] uuid = new byte[20];
+        in.readByteArray(uuid);
+        this.meshId = new MeshID(uuid);
     }
 
 
@@ -175,8 +203,10 @@ public class User implements Parcelable, Comparable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.getUserName());
         dest.writeInt(this.userAvatar);
+        dest.writeByteArray(this.meshId.getRawUuid());
     }
 
     /**
@@ -217,19 +247,5 @@ public class User implements Parcelable, Comparable {
         } catch (NullPointerException ignored) {
             // In case preferences is null.
         }
-    }
-
-    /**
-     * Compares {@link User}s by their database-generated {@link User#id}.
-     *
-     * @param o object to compare to
-     * @return relative value
-     */
-    @Override
-    public int compareTo(@NonNull Object o) {
-        if (!(o instanceof User)) {
-            throw new ClassCastException("A User object was expected.");
-        }
-        return id - ((User) o).id;
     }
 }
