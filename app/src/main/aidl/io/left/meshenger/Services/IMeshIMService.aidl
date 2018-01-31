@@ -14,5 +14,5 @@ interface IMeshIMService {
     List<User> getOnlineUsers();
 
     List<Message> getMessagesForUser(in User user);
-      void showRightMeshSetting();
+    void showRightMeshSettings();
 }

@@ -112,12 +112,8 @@ public class MeshIMService extends Service {
             return mMeshConnection.getMessagesForUser(user);
         }
         @Override
-        public void showRightMeshSetting()  {
-            try {
-                mMeshConnection.showRightMeshSetting();
-            } catch (RightMeshException e) {
-                e.printStackTrace();
-            }
+        public void showRightMeshSettings()  {
+            mMeshConnection.showRightMeshSetting();
         }
 
     };

@@ -125,49 +125,43 @@ public class MainTabActivity extends ServiceConnectedActivity {
 
         //turn notification on/off
         Switch mNotificationSwitch = findViewById(R.id.userSettingNotification);
-        mNotificationSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mNotificationSwitch.setOnClickListener(view-> {
                 if(mNotificationSwitch.isChecked()) {
                     mSettings.setShowNotifications(true);
-                    Toast.makeText(MainTabActivity.this,"Notification is On!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainTabActivity.this,"Notification is On!",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     mSettings.setShowNotifications(false);
 
-                    Toast.makeText(MainTabActivity.this,"Notification is Off!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainTabActivity.this,"Notification is Off!",
+                            Toast.LENGTH_SHORT).show();
                 }
                 mSettings.save(MainTabActivity.this);
-            }
+
         });
         //show rightmesh services
         Button fl = findViewById(R.id.rightmeshSettingButton);
-        fl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    mService.showRightMeshSetting();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        fl.setOnClickListener(v-> {
+            try {
+                mService.showRightMeshSettings();
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
         Button mUserNameButton = findViewById(R.id.editUsernameButtonSetting);
-        mUserNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog();
-            }
+        mUserNameButton.setOnClickListener(v-> {
+            alertDialog();
         });
 
         //setup userAvatar
-        ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
-        userAvatar.setImageResource(mUser.getUserAvatar());
+        ImageButton mUserAvatar = findViewById(R.id.userSettingAvatar);
+        mUserAvatar.setImageResource(mUser.getUserAvatar());
     }
 
     /**
      * creates an alert dialog box to change username.
      */
-    private void alertDialog(){
+    private void alertDialog() {
         User user = User.fromDisk(this);
         final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
