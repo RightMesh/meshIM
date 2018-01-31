@@ -152,6 +152,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     @Override
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
+            user.setMeshId(uuid);
+            user.save();
             try {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
@@ -254,7 +256,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         PeerChangedEvent event = (PeerChangedEvent) e;
 
         // Ignore ourselves.
-        if (event.peerUuid == meshManager.getUuid()) {
+        if (event.peerUuid == user.getMeshId()) {
             return;
         }
 
