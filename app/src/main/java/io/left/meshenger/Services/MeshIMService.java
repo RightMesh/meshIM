@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -14,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 
 import io.left.meshenger.Activities.IActivity;
 import io.left.meshenger.Database.MeshIMDatabase;
+import io.left.meshenger.Database.Migrations;
 import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
@@ -55,6 +57,7 @@ public class MeshIMService extends Service {
                 .build();
 
         mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "MeshIM")
+                .addMigrations(Migrations.ALL_MIGRATIONS)
                 .build();
 
         User user = User.fromDisk(this);
