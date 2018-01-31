@@ -41,6 +41,7 @@ public class ChooseAvatarActivity extends Activity {
             mUser.save();
             Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 

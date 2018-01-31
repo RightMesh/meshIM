@@ -110,6 +110,11 @@ public class MeshIMService extends Service {
         public List<Message> getMessagesForUser(User user) throws RemoteException {
             return mMeshConnection.getMessagesForUser(user);
         }
+        @Override
+        public void showRightMeshSettings()  {
+            mMeshConnection.showRightMeshSettings();
+        }
+
     };
 
     /**

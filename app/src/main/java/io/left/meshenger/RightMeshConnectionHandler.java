@@ -176,6 +176,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
         }
     }
 
+
     /**
      * A helper method that handles the null checking and exception handling around the AIDL
      * `echo` method.
@@ -305,4 +306,15 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
         return payload.toByteArray();
     }
+    /**
+     * Displays Rightmesh setting page
+     */
+    public void showRightMeshSettings() {
+        try {
+            meshManager.showSettingsActivity();
+        } catch (RightMeshException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
