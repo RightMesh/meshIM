@@ -1,12 +1,26 @@
 package io.left.meshenger.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.apache.commons.lang3.StringUtils;
 
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Adapters.UserMessageListAdapter;
+import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 
@@ -34,6 +48,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         configureTabs();
         configureUserList();
         configureMessageList();
+        setupSettingTab();
     }
 
     /**
@@ -100,5 +115,92 @@ public class MainTabActivity extends ServiceConnectedActivity {
                 mUserListAdapter.notifyDataSetChanged();
             }
         });
+    }
+    /**
+     * setup buttons and switches in the setting tab.
+     */
+    private void   setupSettingTab() {
+        Settings mSettings = Settings.fromDisk(this);
+        User mUser = User.fromDisk(this);
+
+        //turn notification on/off
+        Switch mNotificationSwitch = findViewById(R.id.userSettingNotification);
+        mNotificationSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mNotificationSwitch.isChecked()) {
+                    mSettings.setShowNotifications(true);
+                    Toast.makeText(MainTabActivity.this,"Notification is On!",Toast.LENGTH_SHORT).show();
+                } else {
+                    mSettings.setShowNotifications(false);
+
+                    Toast.makeText(MainTabActivity.this,"Notification is Off!",Toast.LENGTH_SHORT).show();
+                }
+                mSettings.save(MainTabActivity.this);
+            }
+        });
+        //show rightmesh services
+        Button fl = findViewById(R.id.rightmeshSettingButton);
+        fl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mService.showRightMeshSetting();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        Button mUserNameButton = findViewById(R.id.editUsernameButtonSetting);
+        mUserNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog();
+            }
+        });
+
+        //setup userAvatar
+        ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
+        userAvatar.setImageResource(mUser.getUserAvatar());
+    }
+
+    /**
+     * creates an alert dialog box to change username.
+     */
+    private void alertDialog(){
+        User user = User.fromDisk(this);
+        final  AlertDialog levelDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter username");
+        final EditText input = new EditText(MainTabActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        builder.setView(input);
+
+        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String username= input.getText().toString();
+                if(!StringUtils.isEmpty(username)) {
+                    user.setUserName(username);
+                    user.save();
+                    TextView textView = findViewById(R.id.usernameTextViewSetting);
+                    textView.setText(username);
+                } else {
+                    Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //exit
+            }
+        });
+        levelDialog = builder.create();
+        levelDialog.show();
     }
 }
