@@ -119,7 +119,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
     /**
      * setup buttons and switches in the setting tab.
      */
-    private void   setupSettingTab() {
+    private void setupSettingTab() {
         Settings mSettings = Settings.fromDisk(this);
         User mUser = User.fromDisk(this);
 

@@ -18,7 +18,6 @@ import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.RightMeshConnectionHandler;
-import io.left.rightmesh.util.RightMeshException;
 
 import java.util.List;
 
@@ -113,7 +112,7 @@ public class MeshIMService extends Service {
         }
         @Override
         public void showRightMeshSettings()  {
-            mMeshConnection.showRightMeshSetting();
+            mMeshConnection.showRightMeshSettings();
         }
 
     };
