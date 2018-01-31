@@ -54,6 +54,7 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/src/main/schemas".toString()]
             }
         }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -67,6 +68,9 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/src/main/schemas".toString())
     }
 }
 
@@ -107,4 +111,8 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:design:27.0.2'
+
+    androidTestImplementation 'com.android.support:support-annotations:27.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation "android.arch.persistence.room:testing:1.0.0"
 }
