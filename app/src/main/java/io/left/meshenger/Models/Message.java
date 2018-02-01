@@ -161,7 +161,9 @@ public class Message implements Parcelable {
         message = in.readString();
         date = new Date(in.readLong());
         sender = in.readParcelable(User.class.getClassLoader());
+        senderId = in.readInt();
         recipient = in.readParcelable(User.class.getClassLoader());
+        recipientId = in.readInt();
         isMyMessage = in.readByte() != 0;
     }
 
@@ -206,7 +208,9 @@ public class Message implements Parcelable {
         dest.writeString(message);
         dest.writeLong(date.getTime());
         dest.writeParcelable(sender, flags);
+        dest.writeInt(senderId);
         dest.writeParcelable(recipient, flags);
+        dest.writeInt(recipientId);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
     }
 }
