@@ -92,7 +92,10 @@ public class Message implements Parcelable {
     }
 
     /**
-     * Constructor.
+     * Simplest constructor for a new message created on a device to be sent. Starts with sender,
+     * recipient, and message, then passes them along
+     * to {@link Message#Message(User, User, String, boolean)}.
+     *
      * @param sender user that sent the message
      * @param recipient target recipient of the message
      * @param message message contents
@@ -103,7 +106,10 @@ public class Message implements Parcelable {
     }
 
     /**
-     * Constructor.
+     * Next simplest constructor, extrapolates data like database ids and the time and sends them
+     * along to the biggest constructor,
+     * {@link Message#Message(User, int, User, int, String, boolean, Date)}.
+     *
      * @param sender user that sent the message
      * @param recipient target recipient of the message
      * @param message message contents
@@ -111,20 +117,44 @@ public class Message implements Parcelable {
      */
     @Ignore
     public Message(User sender, User recipient, String message, boolean isMyMessage) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.message = message;
-        this.isMyMessage = isMyMessage;
-        this.date = new Date();
+        this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
     }
 
     /**
-     * Room constructor.
+     * Room constructor. NOTE: {@link Message#sender} and {@link Message#recipient} will be null
+     * until they can be fetched from the database based on their UserID.
+     *
+     * @param senderId database id for sender
+     * @param recipientId database id for recipient
      * @param message message contents
      * @param isMyMessage if this device's user sent the message
+     * @param date date message was sent
      */
-    public Message(String message, boolean isMyMessage) {
-        this(null, null, message, isMyMessage);
+    public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date) {
+        this(null, senderId, null, recipientId, message, isMyMessage, date);
+    }
+
+    /**
+     * Main constructor - sets all values from parameters.
+     *
+     * @param sender user that sent the message
+     * @param senderId database id for sender
+     * @param recipient target recipient of the message
+     * @param recipientId database id for recipient
+     * @param message message contents
+     * @param isMyMessage if this device's user sent the message
+     * @param date date message was sent
+     */
+    @Ignore
+    public Message(User sender, int senderId, User recipient, int recipientId, String message,
+                   boolean isMyMessage, Date date) {
+        this.sender = sender;
+        this.senderId = senderId;
+        this.recipient = recipient;
+        this.recipientId = recipientId;
+        this.message = message;
+        this.isMyMessage = isMyMessage;
+        this.date = date;
     }
 
     /**
