@@ -67,6 +67,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * Constructor.
      * @param user user info for this device
      * @param database open connection to database
+     * @param meshIMService link to service instance
      */
     public RightMeshConnectionHandler(User user, MeshIMDatabase database,
                                       MeshIMService meshIMService) {

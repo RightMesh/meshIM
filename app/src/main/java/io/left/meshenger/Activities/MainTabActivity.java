@@ -1,7 +1,6 @@
 package io.left.meshenger.Activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -14,14 +13,14 @@ import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Adapters.UserMessageListAdapter;
 import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-import java.util.ArrayList;
-import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -108,10 +107,8 @@ public class MainTabActivity extends ServiceConnectedActivity {
     @Override
     public void updateInterface() {
         runOnUiThread(() -> {
-            if (mService != null) {
-                mUserListAdapter.updateList(mService);
-                mUserListAdapter.notifyDataSetChanged();
-            }
+            mUserListAdapter.updateList(mService);
+            mUserListAdapter.notifyDataSetChanged();
         });
     }
 
@@ -119,26 +116,21 @@ public class MainTabActivity extends ServiceConnectedActivity {
      * setup buttons and switches in the setting tab.
      */
     private void setupSettingTab() {
-        Settings mSettings = Settings.fromDisk(this);
-        User mUser = User.fromDisk(this);
+        Settings settings = Settings.fromDisk(this);
+        if (settings != null) {
+            //turn notification on/off
+            Switch notificationSwitch = findViewById(R.id.userSettingNotification);
+            notificationSwitch.setChecked(settings.isShowNotifications());
+            notificationSwitch.setOnClickListener(view -> {
+                if (notificationSwitch.isChecked()) {
+                    settings.setShowNotifications(true);
+                } else {
+                    settings.setShowNotifications(false);
+                }
+                settings.save(MainTabActivity.this);
+            });
+        }
 
-        //turn notification on/off
-        Switch mNotificationSwitch = findViewById(R.id.userSettingNotification);
-        mNotificationSwitch.setChecked(true);
-        mNotificationSwitch.setOnClickListener(view -> {
-            if (mNotificationSwitch.isChecked()) {
-                mSettings.setShowNotifications(true);
-                Toast.makeText(MainTabActivity.this,"Notification is On!",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                mSettings.setShowNotifications(false);
-
-                Toast.makeText(MainTabActivity.this,"Notification is Off!",
-                            Toast.LENGTH_SHORT).show();
-            }
-            mSettings.save(MainTabActivity.this);
-
-        });
         //show rightmesh services
         Button fl = findViewById(R.id.rightmeshSettingButton);
         fl.setOnClickListener(v -> {
@@ -148,14 +140,17 @@ public class MainTabActivity extends ServiceConnectedActivity {
                 e.printStackTrace();
             }
         });
-        Button mUserNameButton = findViewById(R.id.editUsernameButtonSetting);
-        mUserNameButton.setOnClickListener(v -> {
-            alertDialog();
-        });
+
+        Button userNameButton = findViewById(R.id.editUsernameButtonSetting);
+        userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
-        ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
-        userAvatar.setImageResource(mUser.getAvatar());
+
+        User user = User.fromDisk(this);
+        if (user != null) {
+            ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
+            userAvatar.setImageResource(user.getAvatar());
+        }
     }
 
     /**
@@ -165,6 +160,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter username");
+
         final EditText input = new EditText(MainTabActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -175,22 +171,19 @@ public class MainTabActivity extends ServiceConnectedActivity {
         User user = User.fromDisk(this);
         builder.setPositiveButton("SAVE", (dialog, which) -> {
             String username = input.getText().toString();
-            if (!StringUtils.isEmpty(username)) {
-                user.setUsername(username);
-                user.save();
-                TextView textView = findViewById(R.id.usernameTextViewSetting);
-                textView.setText(username);
+            if (!username.isEmpty()) {
+                if (user != null) {
+                    user.setUsername(username);
+                    user.save();
+                    TextView textView = findViewById(R.id.usernameTextViewSetting);
+                    textView.setText(username);
+                }
             } else {
                 Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
                         Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //exit
-            }
-        });
+        builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
     }

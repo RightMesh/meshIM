@@ -40,24 +40,21 @@ public class FirstTimeCreateUsernameActivity extends Activity {
     private void finishButton() {
 
         Button button = findViewById(R.id.saveUserNameButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText userText = findViewById(R.id.userNameEditText);
-                String userName = userText.getText().toString();
-                if (StringUtils.isBlank(userName)) {
-                    Toast.makeText(FirstTimeCreateUsernameActivity.this,
-                            "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
-                } else {
-                    mUser = new User(FirstTimeCreateUsernameActivity.this);
-                    mUser.setUsername(userName);
-                    mUser.setAvatar(1);
-                    mUser.save();
-                    Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
-                            ChooseAvatarActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+        button.setOnClickListener(v -> {
+            EditText userText = findViewById(R.id.userNameEditText);
+            String userName = userText.getText().toString();
+            if (StringUtils.isBlank(userName)) {
+                Toast.makeText(FirstTimeCreateUsernameActivity.this,
+                        "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
+            } else {
+                mUser = new User(FirstTimeCreateUsernameActivity.this);
+                mUser.setUsername(userName);
+                mUser.setAvatar(1);
+                mUser.save();
+                Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
+                        ChooseAvatarActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

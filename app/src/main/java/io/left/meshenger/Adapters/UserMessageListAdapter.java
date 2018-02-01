@@ -9,11 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.Services.IMeshIMService;
+
+import java.util.ArrayList;
 
 public class UserMessageListAdapter extends ArrayAdapter<User> {
     // Used to inflate views for the list.

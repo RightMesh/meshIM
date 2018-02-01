@@ -1,16 +1,15 @@
 package io.left.meshenger.Services;
 
 /**
- * Holds all the constants for Foreground Service
+ * Holds all the constants for Foreground Service.
  */
-
-public class ServiceConstants {
+class ServiceConstants {
     public interface ACTION {
-        public static String STARTFOREGROUND_ACTION = "io.left.alertdialog.action.startforeground";
-        public static String STOPFOREGROUND_ACTION = "io.left.alertdialog.action.stopforeground";
+        String STARTFOREGROUND_ACTION = "io.left.alertdialog.action.startforeground";
+        String STOPFOREGROUND_ACTION = "io.left.alertdialog.action.stopforeground";
     }
 
-    public interface NOTIFICATION_ID {
-        public static int FOREGROUND_SERVICE = 101;
+    public interface NOTIFICATION_ID { //SUPPRESS CHECKSTYLE TypeNameCheck
+        int FOREGROUND_SERVICE = 101;
     }
 }

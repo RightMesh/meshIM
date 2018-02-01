@@ -8,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
-import android.arch.persistence.room.migration.Migration;
 
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +40,7 @@ public class MeshIMService extends Service {
     private RightMeshConnectionHandler mMeshConnection;
     private Notification mServiceNotification;
     private boolean mIsBound = false;
-    private boolean isForeground = false;
+    private boolean mIsForeground = false;
 
     /**
      * Connects to RightMesh when service is started.
@@ -104,10 +103,10 @@ public class MeshIMService extends Service {
         public void setForeground(boolean value) {
             if (value) {
                 startinForeground();
-                isForeground = true;
+                mIsForeground = true;
             } else {
                 stopForeground(true);
-                isForeground = false;
+                mIsForeground = false;
             }
         }
 
@@ -125,6 +124,7 @@ public class MeshIMService extends Service {
         public List<Message> getMessagesForUser(User user) throws RemoteException {
             return mMeshConnection.getMessagesForUser(user);
         }
+
         @Override
         public void showRightMeshSettings()  {
             mMeshConnection.showRightMeshSettings();
@@ -200,7 +200,7 @@ public class MeshIMService extends Service {
     public void sendNotification(User user,Message message) {
         Settings settings = Settings.fromDisk(this);
 
-        if (isForeground && settings.isShowNotifications()) {
+        if (mIsForeground && settings.isShowNotifications()) {
             long time = Calendar.getInstance().getTimeInMillis();
             String notifContent =  message.getMessage();
             String notifTitle = user.getUsername();
@@ -209,7 +209,8 @@ public class MeshIMService extends Service {
             intent.setData(Uri.parse("content://" + time));
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager
+                    = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
             builder.setWhen(time)
@@ -219,8 +220,8 @@ public class MeshIMService extends Service {
                    .setAutoCancel(true)
                    .setTicker(notifTitle)
                    .setLargeIcon(bitmap)
-                   .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND |
-                           Notification.DEFAULT_VIBRATE)
+                   .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND
+                           | Notification.DEFAULT_VIBRATE)
                    .setSmallIcon(R.mipmap.available_icon)
                    .setContentIntent(pendingIntent);
 

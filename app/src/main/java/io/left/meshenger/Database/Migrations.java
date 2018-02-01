@@ -3,6 +3,7 @@ package io.left.meshenger.Database;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;
 
+//CHECKSTYLE IGNORE LineLengthCheck
 public class Migrations {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
@@ -26,3 +27,4 @@ public class Migrations {
 
     public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3 };
 }
+//CHECKSTYLE END IGNORE LineLengthCheck
