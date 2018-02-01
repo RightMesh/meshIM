@@ -5,19 +5,18 @@
     "http://checkstyle.sourceforge.net/dtds/suppressions_1_2.dtd">
     
 <suppressions>
-    <suppress checks="PackageNameCheck" files=".*"/>
     <suppress checks="AbbreviationAsWordInNameCheck" files=".*"/>
 
-    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Activities/"/>
-    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Services/"/>
-    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshenger/Adapters/"/>
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshim/activities/"/>
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshim/services/"/>
+    <suppress id="JavaNaming" files="app/src/main/java/io/left/meshim/adapters/"/>
 
-    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshenger/Models/"/>
-    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshenger/Models/"/>
-    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshenger/Models/"/>
-    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshenger/Database/"/>
-    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshenger/Database/"/>
-    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshenger/Database/"/>
+    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshim/models/"/>
+    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshim/models/"/>
+    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshim/models/"/>
+    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshim/database/"/>
+    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshim/database/"/>
+    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshim/database/"/>
     <suppress id="AndroidNaming1of3" files="RightMeshConnectionHandler.java"/>
     <suppress id="AndroidNaming2of3" files="RightMeshConnectionHandler.java"/>
     <suppress id="AndroidNaming3of3" files="RightMeshConnectionHandler.java"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.left.meshenger">
+    package="io.left.meshim">
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -9,28 +9,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="io.left.meshenger.Activities.WelcomeActivity"
+            android:name="io.left.meshim.activities.WelcomeActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service
-            android:name="io.left.meshenger.Services.MeshIMService"
-            android:process=":MeshIMService"/>
+            android:name="io.left.meshim.services.MeshIMService"
+            android:process=":MeshIMService" />
 
         <activity
-            android:name="io.left.meshenger.Activities.FirstTimeCreateUsernameActivity"
+            android:name="io.left.meshim.activities.FirstTimeCreateUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />
-        <activity android:name="io.left.meshenger.Activities.ChooseAvatarActivity"
-            android:label="@string/title_choose_avatar"/>
-        <activity android:name="io.left.meshenger.Activities.MainTabActivity"
-            android:label="@string/app_name"/>
-        <activity android:name="io.left.meshenger.Activities.ChatActivity"></activity>
+        <activity
+            android:name="io.left.meshim.activities.ChooseAvatarActivity"
+            android:label="@string/title_choose_avatar" />
+        <activity
+            android:name="io.left.meshim.activities.MainTabActivity"
+            android:label="@string/app_name" />
+        <activity android:name="io.left.meshim.activities.ChatActivity" />
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    tools:context="io.left.meshenger.Activities.ChooseAvatarActivity">
+    tools:context="io.left.meshim.activities.ChooseAvatarActivity">
 
     <ImageButton
         android:id="@+id/selectedAvatar"

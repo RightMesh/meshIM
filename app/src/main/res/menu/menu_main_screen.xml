@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="io.left.meshenger.Activities.MainScreenActivity">
+    tools:context="io.left.meshim.activities.MainScreenActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
