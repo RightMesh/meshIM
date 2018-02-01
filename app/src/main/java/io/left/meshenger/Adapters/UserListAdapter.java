@@ -42,6 +42,9 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param service service connection to fetch users from
      */
     public void updateList(IMeshIMService service) {
+        if (service == null) {
+            return;
+        }
         try {
             this.clear();
             this.addAll(service.getOnlineUsers());

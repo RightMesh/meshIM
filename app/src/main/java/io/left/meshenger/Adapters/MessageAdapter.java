@@ -41,6 +41,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @param service open connection to {@link MeshIMService}
      */
     public void updateList(IMeshIMService service) {
+        if (service == null) {
+            return;
+        }
         try {
             this.mMessageList.clear();
             List<Message> results = service.getMessagesForUser(this.mRecipient);
