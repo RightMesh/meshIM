@@ -154,8 +154,8 @@ public class MainTabActivity extends ServiceConnectedActivity {
         });
 
         //setup userAvatar
-        ImageButton mUserAvatar = findViewById(R.id.userSettingAvatar);
-        mUserAvatar.setImageResource(mUser.getUserAvatar());
+        ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
+        userAvatar.setImageResource(user.getAvatar());
     }
 
     /**
@@ -173,19 +173,17 @@ public class MainTabActivity extends ServiceConnectedActivity {
         input.setLayoutParams(lp);
         builder.setView(input);
 
-        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String username= input.getText().toString();
-                if(!StringUtils.isEmpty(username)) {
-                    user.setUserName(username);
-                    user.save();
-                    TextView textView = findViewById(R.id.usernameTextViewSetting);
-                    textView.setText(username);
-                } else {
-                    Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
-                            Toast.LENGTH_SHORT).show();
-                }
+        User user = User.fromDisk(this);
+        builder.setPositiveButton("SAVE", (dialog, which) -> {
+            String username = input.getText().toString();
+            if (!StringUtils.isEmpty(username)) {
+                user.setUsername(username);
+                user.save();
+                TextView textView = findViewById(R.id.usernameTextViewSetting);
+                textView.setText(username);
+            } else {
+                Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
+                        Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

@@ -4,12 +4,13 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 
 /**
  * Manages versioning and exposed queries for the database for MeshIM.
  */
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class, Message.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class MeshIMDatabase extends RoomDatabase {
     public abstract MeshIMDao meshIMDao();

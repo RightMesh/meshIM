@@ -42,6 +42,9 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param service service connection to fetch users from
      */
     public void updateList(IMeshIMService service) {
+        if (service == null) {
+            return;
+        }
         try {
             this.clear();
             this.addAll(service.getOnlineUsers());
@@ -60,9 +63,9 @@ public class UserListAdapter extends ArrayAdapter<User> {
         User user = this.getItem(position);
         if (user != null) {
             ImageView userAvatar = v.findViewById(R.id.userMessageAvatar);
-            userAvatar.setImageResource(user.getUserAvatar());
+            userAvatar.setImageResource(user.getAvatar());
             TextView userName = v.findViewById(R.id.userNameMessageText);
-            userName.setText(user.getUserName());
+            userName.setText(user.getUsername());
         }
 
         return v;

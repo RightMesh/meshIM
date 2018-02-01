@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class FirstTimeCreateUsernameActivity extends Activity {
     private User mUser = null;
-    private Settings settings = null;
+    private Settings mSettings = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +26,8 @@ public class FirstTimeCreateUsernameActivity extends Activity {
         setContentView(R.layout.activity_first_time_username);
 
         //saving dummy settings
-        settings = new Settings(true);
-        settings.save(this);
+        mSettings = new Settings(true);
+        mSettings.save(this);
         finishButton();
     }
 
@@ -50,8 +50,8 @@ public class FirstTimeCreateUsernameActivity extends Activity {
                             "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
                 } else {
                     mUser = new User(FirstTimeCreateUsernameActivity.this);
-                    mUser.setUserName(userName);
-                    mUser.setUserAvatar(1);
+                    mUser.setUsername(userName);
+                    mUser.setAvatar(1);
                     mUser.save();
                     Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
                             ChooseAvatarActivity.class);

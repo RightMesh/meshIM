@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import io.left.meshenger.Models.MeshIDTuple;
+import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
 import io.left.rightmesh.id.MeshID;
 
@@ -15,14 +16,21 @@ import io.left.rightmesh.id.MeshID;
 @Dao
 public interface MeshIMDao {
     @Insert()
-    public void insertUsers(User... users);
+    void insertUsers(User... users);
 
     @Update
-    public void updateUsers(User... users);
+    void updateUsers(User... users);
 
     @Query("SELECT * FROM Users")
-    public User[] fetchAllUsers();
+    User[] fetchAllUsers();
 
-    @Query("SELECT UserId, UserMeshID FROM Users WHERE UserMeshID = :meshId")
-    public MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
+    @Query("SELECT UserID, MeshID FROM Users WHERE MeshID = :meshId")
+    MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
+
+    @Insert()
+    void insertMessages(Message... messages);
+
+    @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) OR RecipientID IN (:userIds)"
+            + " ORDER BY Timestamp ASC")
+    Message[] getMessagesBetweenUsers(int... userIds);
 }

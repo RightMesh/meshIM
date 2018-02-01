@@ -11,6 +11,6 @@ public class MeshIDTuple {
     @ColumnInfo(name = "UserID")
     public int id;
 
-    @ColumnInfo(name = "UserMeshID")
+    @ColumnInfo(name = "MeshID")
     public MeshID meshId;
 }

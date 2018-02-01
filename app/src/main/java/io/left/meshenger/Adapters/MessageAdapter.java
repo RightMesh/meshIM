@@ -41,6 +41,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @param service open connection to {@link MeshIMService}
      */
     public void updateList(IMeshIMService service) {
+        if (service == null) {
+            return;
+        }
         try {
             this.mMessageList.clear();
             List<Message> results = service.getMessagesForUser(this.mRecipient);
@@ -108,7 +111,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (!(message.isMyMessage())) {
             holder.mMessagaeBody.setText(message.getMessage());
             holder.mTime.setText(message.getDateAsString());
-            holder.mUserImage.setImageResource(message.getSender().getUserAvatar());
+            holder.mUserImage.setImageResource(message.getSender().getAvatar());
         } else {
             holder.mMessagaeBody.setText(message.getMessage());
             holder.mTime.setText(message.getDateAsString());
