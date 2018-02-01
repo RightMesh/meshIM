@@ -42,6 +42,7 @@ public class MeshIMService extends Service {
     private Notification mServiceNotification;
     private boolean mIsBound = false;
     private boolean isForeground = false;
+
     /**
      * Connects to RightMesh when service is started.
      */
@@ -196,24 +197,22 @@ public class MeshIMService extends Service {
      * @param user sender
      * @param message message received
      */
-    public void sendNotification(User user,Message message){
+    public void sendNotification(User user,Message message) {
         Settings settings = Settings.fromDisk(this);
 
-        if(isForeground && settings.isShowNotifications() ) {
-           long time = Calendar.getInstance().getTimeInMillis();
+        if (isForeground && settings.isShowNotifications()) {
+            long time = Calendar.getInstance().getTimeInMillis();
+            String notifContent =  message.getMessage();
+            String notifTitle = user.getUsername();
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getAvatar());
+            Intent intent = new Intent(this, MainTabActivity.class);
+            intent.setData(Uri.parse("content://" + time));
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                    0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-           String notifContent = ""+user.getUserName()+"\n"+message.getMessage();
-           String notifTitle = "MeshIM";
-           Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getUserAvatar());
-
-           Intent intent = new Intent(this, MainTabActivity.class);
-           intent.setData(Uri.parse("content://" + time));
-           PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                   0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-           NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-           NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-           builder.setWhen(time)
+            builder.setWhen(time)
                    .setContentText(notifContent)
                    .setContentTitle(notifTitle)
                    //.setSmallIcon(user.getUserAvatar())
@@ -222,11 +221,12 @@ public class MeshIMService extends Service {
                    .setLargeIcon(bitmap)
                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND |
                            Notification.DEFAULT_VIBRATE)
+                   .setSmallIcon(R.mipmap.available_icon)
                    .setContentIntent(pendingIntent);
 
-           Notification notification = builder.build();
-           notificationManager.notify((int) time, notification);
-       }
+            Notification notification = builder.build();
+            notificationManager.notify((int) time, notification);
+        }
     }
 
 }

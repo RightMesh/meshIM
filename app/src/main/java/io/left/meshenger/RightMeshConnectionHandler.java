@@ -68,7 +68,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param user user info for this device
      * @param database open connection to database
      */
-    public RightMeshConnectionHandler(User user, MeshIMDatabase database, MeshIMService meshIMService) {
+    public RightMeshConnectionHandler(User user, MeshIMDatabase database,
+                                      MeshIMService meshIMService) {
         this.user = user;
         this.database = database;
         this.dao = database.meshIMDao();
@@ -258,8 +259,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 User sender = users.get(peerId);
                 Message message = new Message(sender, user, protoMessage.getMessage(), false);
                 dao.insertMessages(message);
+                meshIMService.sendNotification(sender,message);
                 updateInterface();
-                meshIMService.sendNotification(user,message);
             }
         } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }
@@ -324,8 +325,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
         return payload.toByteArray();
     }
+
     /**
-     * Displays Rightmesh setting page
+     * Displays Rightmesh setting page.
      */
     public void showRightMeshSettings() {
         try {

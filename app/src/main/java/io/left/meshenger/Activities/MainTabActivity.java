@@ -1,19 +1,10 @@
 package io.left.meshenger.Activities;
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.app.NotificationCompat;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,17 +14,14 @@ import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.left.meshenger.Adapters.UserListAdapter;
 import io.left.meshenger.Adapters.UserMessageListAdapter;
 import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
-
 import java.util.ArrayList;
-import java.util.Calendar;
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -126,6 +114,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
             }
         });
     }
+
     /**
      * setup buttons and switches in the setting tab.
      */
@@ -136,23 +125,23 @@ public class MainTabActivity extends ServiceConnectedActivity {
         //turn notification on/off
         Switch mNotificationSwitch = findViewById(R.id.userSettingNotification);
         mNotificationSwitch.setChecked(true);
-        mNotificationSwitch.setOnClickListener(view-> {
-                if(mNotificationSwitch.isChecked()) {
-                    mSettings.setShowNotifications(true);
-                    Toast.makeText(MainTabActivity.this,"Notification is On!",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    mSettings.setShowNotifications(false);
+        mNotificationSwitch.setOnClickListener(view -> {
+            if (mNotificationSwitch.isChecked()) {
+                mSettings.setShowNotifications(true);
+                Toast.makeText(MainTabActivity.this,"Notification is On!",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                mSettings.setShowNotifications(false);
 
-                    Toast.makeText(MainTabActivity.this,"Notification is Off!",
+                Toast.makeText(MainTabActivity.this,"Notification is Off!",
                             Toast.LENGTH_SHORT).show();
-                }
-                mSettings.save(MainTabActivity.this);
+            }
+            mSettings.save(MainTabActivity.this);
 
         });
         //show rightmesh services
         Button fl = findViewById(R.id.rightmeshSettingButton);
-        fl.setOnClickListener(v-> {
+        fl.setOnClickListener(v -> {
             try {
                 mService.showRightMeshSettings();
             } catch (RemoteException e) {
@@ -160,20 +149,19 @@ public class MainTabActivity extends ServiceConnectedActivity {
             }
         });
         Button mUserNameButton = findViewById(R.id.editUsernameButtonSetting);
-        mUserNameButton.setOnClickListener(v-> {
+        mUserNameButton.setOnClickListener(v -> {
             alertDialog();
         });
 
         //setup userAvatar
         ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
-        userAvatar.setImageResource(user.getAvatar());
+        userAvatar.setImageResource(mUser.getAvatar());
     }
 
     /**
      * creates an alert dialog box to change username.
      */
     private void alertDialog() {
-        User user = User.fromDisk(this);
         final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter username");
