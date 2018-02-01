@@ -9,6 +9,7 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.SparseArray;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -29,6 +30,7 @@ import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,9 +52,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
-
-    // Temporary messages array before we store them to the database.
-    private HashMap<User, List<Message>> messages = new HashMap<>();
 
     // Database reference.
     private MeshIMDatabase database;
@@ -93,7 +92,21 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @return list of messages exchanged with the supplied user
      */
     public List<Message> getMessagesForUser(User user) {
-        return messages.get(user);
+        // Retrieve messages from database.
+        Message[] messages = dao.getMessagesBetweenUsers(this.user.id, user.id);
+
+        // Make User classes easier to find by their id.
+        SparseArray<User> idUserMap = new SparseArray<>();
+        idUserMap.put(this.user.id, this.user);
+        idUserMap.put(user.id, user);
+
+        // Populate messages with actual User classes.
+        for (Message m : messages) {
+            m.setSender(idUserMap.get(m.senderId));
+            m.setRecipient(idUserMap.get(m.recipientId));
+        }
+
+        return Arrays.asList(messages);
     }
 
     /**
@@ -115,7 +128,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             meshManager.sendDataReliable(recipient.getMeshId(), HELLO_PORT,
                     createMessagePayloadFromMessage(messageObject));
 
-            messages.get(recipient).add(messageObject);
+            dao.insertMessages(messageObject);
             updateInterface();
         } catch (RightMeshException e) {
             e.printStackTrace();
@@ -234,13 +247,12 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
                 // Store user in list of online users.
                 users.put(peerId, peer);
-                messages.put(peer, new ArrayList<>());
                 updateInterface();
             } else if (messageType == MESSAGE) {
                 MeshIMMessages.Message protoMessage = messageWrapper.getMessage();
                 User sender = users.get(peerId);
                 Message message = new Message(sender, user, protoMessage.getMessage(), false);
-                messages.get(sender).add(message);
+                dao.insertMessages(message);
                 updateInterface();
             }
         } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
@@ -269,7 +281,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 rme.printStackTrace();
             }
         } else if (event.state == REMOVED) {
-            messages.remove(users.remove(event.peerUuid));
+            users.remove(event.peerUuid);
             updateInterface();
         }
     }
