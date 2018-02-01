@@ -19,6 +19,7 @@ import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Models.MeshIDTuple;
 import io.left.meshenger.Models.Message;
 import io.left.meshenger.Models.User;
+import io.left.meshenger.Services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
@@ -59,16 +60,19 @@ public class RightMeshConnectionHandler implements MeshStateListener {
 
     // Link to current activity.
     private IActivity callback = null;
+    //reference to service
+    private MeshIMService meshIMService;
 
     /**
      * Constructor.
      * @param user user info for this device
      * @param database open connection to database
      */
-    public RightMeshConnectionHandler(User user, MeshIMDatabase database) {
+    public RightMeshConnectionHandler(User user, MeshIMDatabase database, MeshIMService meshIMService) {
         this.user = user;
         this.database = database;
         this.dao = database.meshIMDao();
+        this.meshIMService  = meshIMService;
 
         new Thread(() -> {
             if (dao.fetchAllUsers().length == 0) {
@@ -171,6 +175,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(HELLO_PORT);
+                meshManager.setPattern("SACHIN");
                 // Subscribes handlers to receive events from the mesh.
                 meshManager.on(DATA_RECEIVED, this::handleDataReceived);
                 meshManager.on(PEER_CHANGED, this::handlePeerChanged);
@@ -254,6 +259,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                 Message message = new Message(sender, user, protoMessage.getMessage(), false);
                 dao.insertMessages(message);
                 updateInterface();
+                meshIMService.sendNotification(user,message);
             }
         } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }

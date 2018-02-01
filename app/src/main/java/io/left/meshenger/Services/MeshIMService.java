@@ -4,23 +4,32 @@ import static io.left.meshenger.Services.ServiceConstants.ACTION.STARTFOREGROUND
 import static io.left.meshenger.Services.ServiceConstants.ACTION.STOPFOREGROUND_ACTION;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.migration.Migration;
+
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 
 import io.left.meshenger.Activities.IActivity;
+import io.left.meshenger.Activities.MainTabActivity;
 import io.left.meshenger.Database.MeshIMDatabase;
 import io.left.meshenger.Database.Migrations;
 import io.left.meshenger.Models.Message;
+import io.left.meshenger.Models.Settings;
 import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 import io.left.meshenger.RightMeshConnectionHandler;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,7 +41,7 @@ public class MeshIMService extends Service {
     private RightMeshConnectionHandler mMeshConnection;
     private Notification mServiceNotification;
     private boolean mIsBound = false;
-
+    private boolean isForeground = false;
     /**
      * Connects to RightMesh when service is started.
      */
@@ -61,7 +70,7 @@ public class MeshIMService extends Service {
                 .build();
 
         User user = User.fromDisk(this);
-        mMeshConnection = new RightMeshConnectionHandler(user, mDatabase);
+        mMeshConnection = new RightMeshConnectionHandler(user, mDatabase,this);
         mMeshConnection.connect(this);
     }
 
@@ -94,8 +103,10 @@ public class MeshIMService extends Service {
         public void setForeground(boolean value) {
             if (value) {
                 startinForeground();
+                isForeground = true;
             } else {
                 stopForeground(true);
+                isForeground = false;
             }
         }
 
@@ -179,4 +190,43 @@ public class MeshIMService extends Service {
     private void startinForeground() {
         startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, mServiceNotification);
     }
+
+    /**
+     *Sends a notification to user when a text message is received.
+     * @param user sender
+     * @param message message received
+     */
+    public void sendNotification(User user,Message message){
+        Settings settings = Settings.fromDisk(this);
+
+        if(isForeground && settings.isShowNotifications() ) {
+           long time = Calendar.getInstance().getTimeInMillis();
+
+           String notifContent = ""+user.getUserName()+"\n"+message.getMessage();
+           String notifTitle = "MeshIM";
+           Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getUserAvatar());
+
+           Intent intent = new Intent(this, MainTabActivity.class);
+           intent.setData(Uri.parse("content://" + time));
+           PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                   0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+           NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+           NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+           builder.setWhen(time)
+                   .setContentText(notifContent)
+                   .setContentTitle(notifTitle)
+                   //.setSmallIcon(user.getUserAvatar())
+                   .setAutoCancel(true)
+                   .setTicker(notifTitle)
+                   .setLargeIcon(bitmap)
+                   .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND |
+                           Notification.DEFAULT_VIBRATE)
+                   .setContentIntent(pendingIntent);
+
+           Notification notification = builder.build();
+           notificationManager.notify((int) time, notification);
+       }
+    }
+
 }

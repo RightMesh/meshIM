@@ -1,10 +1,18 @@
 package io.left.meshenger.Activities;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +33,7 @@ import io.left.meshenger.Models.User;
 import io.left.meshenger.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
@@ -49,6 +58,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         configureUserList();
         configureMessageList();
         setupSettingTab();
+
     }
 
     /**
@@ -125,6 +135,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
 
         //turn notification on/off
         Switch mNotificationSwitch = findViewById(R.id.userSettingNotification);
+        mNotificationSwitch.setChecked(true);
         mNotificationSwitch.setOnClickListener(view-> {
                 if(mNotificationSwitch.isChecked()) {
                     mSettings.setShowNotifications(true);
@@ -195,4 +206,6 @@ public class MainTabActivity extends ServiceConnectedActivity {
         levelDialog = builder.create();
         levelDialog.show();
     }
+
+
 }
