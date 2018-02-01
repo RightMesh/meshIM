@@ -15,13 +15,13 @@ import io.left.rightmesh.id.MeshID;
 @Dao
 public interface MeshIMDao {
     @Insert()
-    public void insertUsers(User... users);
+    void insertUsers(User... users);
 
     @Update
-    public void updateUsers(User... users);
+    void updateUsers(User... users);
 
     @Query("SELECT * FROM Users")
-    public User[] fetchAllUsers();
+    User[] fetchAllUsers();
 
     @Query("SELECT UserID, MeshID FROM Users WHERE MeshID = :meshId")
     public MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
