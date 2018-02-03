@@ -16,6 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.database.MeshIMDatabase;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
@@ -124,6 +125,14 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
+     * Returns a list of conversation summaries stored in the database.
+     * @return summaries of all conversations stored in the database
+     */
+    public List<ConversationSummary> getConversationSummaries() {
+        return Arrays.asList(dao.getConversationSummaries());
+    }
+
+    /**
      * Sends a simple text message to another user.
      * @param recipient recipient of the message
      * @param message contents of the message
@@ -194,7 +203,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             }
         }
     }
-
 
     /**
      * A helper method that handles the null checking and exception handling around the AIDL
@@ -336,5 +344,4 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             e.printStackTrace();
         }
     }
-
 }

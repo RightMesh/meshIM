@@ -24,6 +24,7 @@ import io.left.meshim.activities.IActivity;
 import io.left.meshim.activities.MainTabActivity;
 import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.database.Migrations;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -123,6 +124,11 @@ public class MeshIMService extends Service {
         @Override
         public List<Message> getMessagesForUser(User user) throws RemoteException {
             return mMeshConnection.getMessagesForUser(user);
+        }
+
+        @Override
+        public List<ConversationSummary> getConversationSummaries() throws RemoteException {
+            return mMeshConnection.getConversationSummaries();
         }
 
         @Override

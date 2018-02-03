@@ -21,6 +21,7 @@ import android.widget.Toast;
 import io.left.meshim.R;
 import io.left.meshim.adapters.UserListAdapter;
 import io.left.meshim.adapters.UserMessageListAdapter;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
@@ -34,6 +35,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
+    ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     UserMessageListAdapter mUserMessageListAdapter;
 
     /**
@@ -49,7 +51,12 @@ public class MainTabActivity extends ServiceConnectedActivity {
         configureUserList();
         configureMessageList();
         setupSettingTab();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupSettingTab();
     }
 
     /**
@@ -100,27 +107,30 @@ public class MainTabActivity extends ServiceConnectedActivity {
         });
     }
 
+    /**
+     * Configures the conversatino view list and click event.
+     */
     private void configureMessageList() {
-        ArrayList<User> u = new ArrayList<>();
-        u.add(new User("user1",R.mipmap.avatar1));
-        u.add(new User("user2",R.mipmap.avatar2));
-        u.add(new User("user3",R.mipmap.avatar3));
-
         ListView listView = findViewById(R.id.multiUserMessageListView);
-        mUserMessageListAdapter = new UserMessageListAdapter(this,u);
+        mUserMessageListAdapter = new UserMessageListAdapter(this, mConversationSummaries);
         listView.setAdapter(mUserMessageListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
-            intent.putExtra("recipient", mUserMessageListAdapter.getItem(position));
+            //intent.putExtra("recipient", mUserMessageListAdapter.getItem(position));
             startActivity(intent);
         });
     }
 
+    /**
+     * Updates all adapters when data changes on the service.
+     */
     @Override
     public void updateInterface() {
         runOnUiThread(() -> {
             mUserListAdapter.updateList(mService);
             mUserListAdapter.notifyDataSetChanged();
+            mUserMessageListAdapter.updateList(mService);
+            mUserMessageListAdapter.notifyDataSetChanged();
         });
     }
 
@@ -208,11 +218,5 @@ public class MainTabActivity extends ServiceConnectedActivity {
         builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setupSettingTab();
     }
 }

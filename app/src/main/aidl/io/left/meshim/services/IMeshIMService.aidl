@@ -1,6 +1,7 @@
 package io.left.meshim.services;
 
 import io.left.meshim.activities.IActivity;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 
@@ -14,6 +15,8 @@ interface IMeshIMService {
     List<User> getOnlineUsers();
 
     List<Message> getMessagesForUser(in User user);
+
+    List<ConversationSummary> getConversationSummaries();
 
     void showRightMeshSettings();
 }
