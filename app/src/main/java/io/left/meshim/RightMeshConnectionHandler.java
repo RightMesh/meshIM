@@ -55,8 +55,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
-    // Database reference.
-    private MeshIMDatabase database;
+    // Database interface.
     private MeshIMDao dao;
 
     // Link to current activity.
@@ -73,7 +72,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public RightMeshConnectionHandler(User user, MeshIMDatabase database,
                                       MeshIMService meshIMService) {
         this.user = user;
-        this.database = database;
         this.dao = database.meshIMDao();
         this.meshIMService  = meshIMService;
 
