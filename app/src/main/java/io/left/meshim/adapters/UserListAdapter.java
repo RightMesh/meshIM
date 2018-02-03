@@ -16,7 +16,7 @@ import io.left.meshim.services.IMeshIMService;
 import java.util.ArrayList;
 
 /**
- * Adapter that fetches online users from the app service to populat the list of online users in
+ * Adapter that fetches online users from the app service to populate the list of online users in
  * {@link io.left.meshim.activities.MainTabActivity}.
  */
 public class UserListAdapter extends ArrayAdapter<User> {
