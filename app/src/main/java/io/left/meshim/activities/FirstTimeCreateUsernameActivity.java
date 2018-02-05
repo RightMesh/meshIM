@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 public class FirstTimeCreateUsernameActivity extends Activity {
     private User mUser = null;
     private Settings mSettings = null;
-    private final int MAX_LENGTH_USERNAME_CHARECTERS = 20;
+    private final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
             if (StringUtils.isBlank(userName)) {
                 Toast.makeText(FirstTimeCreateUsernameActivity.this,
                         "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
-            } else if (userName.length() > MAX_LENGTH_USERNAME_CHARECTERS) {
+            } else if (userName.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
                 Toast.makeText(FirstTimeCreateUsernameActivity.this,
                         "Username is bigger than 20 characters!", Toast.LENGTH_SHORT).show();
             }  else {
@@ -85,7 +85,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > MAX_LENGTH_USERNAME_CHARECTERS) {
+                if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
                     errorText.setText("Username bigger than 20 characters");
                     errorText.setTextColor(Color.RED);
                 } else {
