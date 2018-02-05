@@ -177,7 +177,6 @@ public class MainTabActivity extends ServiceConnectedActivity {
         userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
-
         User user = User.fromDisk(this);
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.userSettingAvatar);

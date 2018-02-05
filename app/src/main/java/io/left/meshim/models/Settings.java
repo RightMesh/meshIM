@@ -11,6 +11,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
+/**
+ * Object that stores application settings.
+ */
 public class Settings {
     // Used in shared preference to store / load data
     private static final String SAVE_VERSION = "SettingSaveVersion_v1";
@@ -48,17 +51,16 @@ public class Settings {
     }
 
     /**
-     * This function loads setting data if it exist.
+     * Loads settings data from shared preferences if it exist.
      *
-     * @param context context of the activity
+     * @param context context to load shared preferences with
      * @return true if function was able to load else false
      */
     public boolean load(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
         Gson gson = new Gson();
         String userSetting = preferences.getString(SAVE_VERSION, null);
-        Type type = new TypeToken<Settings>() {
-        }.getType();
+        Type type = new TypeToken<Settings>(){}.getType();
         Settings temp = gson.fromJson(userSetting, type);
         if (temp == null) {
             return false;
@@ -69,9 +71,9 @@ public class Settings {
     }
 
     /**
-     * saves the setting data.
+     * Saves the setting data to shared preferences.
      *
-     * @param context context of the activity
+     * @param context context to load shared preferences with
      */
     public void save(Context context) {
         SharedPreferences pref = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
