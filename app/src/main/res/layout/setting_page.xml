@@ -2,13 +2,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorAccent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/x"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="127dp"
+            android:layout_marginBottom="380dp"
+            android:background="@color/greenDark"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+        </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/frameLayout6"
@@ -35,7 +50,8 @@
                 android:text="Blocked users"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -52,7 +68,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.947"
                 app:layout_constraintStart_toEndOf="@+id/textView14"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="end" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -93,7 +110,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginRight="8dp" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -122,7 +140,9 @@
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginRight="16dp"
+                android:gravity="end" />
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -205,7 +225,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginLeft="16dp" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -217,7 +238,8 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageButton2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="16dp" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -239,10 +261,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
+                android:checked="true"
                 android:layout_marginTop="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginRight="16dp" />
         </android.support.constraint.ConstraintLayout>
 
         <ImageButton
@@ -259,10 +283,10 @@
             app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/editUserAvatarButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@mipmap/account_default"
+            android:background="@drawable/avatar_select"
             android:elevation="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/userSettingAvatar"
             app:layout_constraintEnd_toEndOf="@+id/userSettingAvatar" />
@@ -312,21 +336,6 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="127dp"
-            android:layout_marginBottom="380dp"
-            android:background="@color/greenDark"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0">
-
-        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
 </TableLayout>

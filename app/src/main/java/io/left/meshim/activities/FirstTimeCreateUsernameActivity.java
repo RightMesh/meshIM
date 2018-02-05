@@ -2,6 +2,7 @@ package io.left.meshim.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,10 +67,11 @@ public class FirstTimeCreateUsernameActivity extends Activity {
     }
 
     /**
-     *
+     * Checks for valid usernames.
      */
     private void textWatcherForUsername() {
         TextView charecterCount = findViewById(R.id.charecterCountText);
+        TextView errorText = findViewById(R.id.errrorText);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -83,7 +85,13 @@ public class FirstTimeCreateUsernameActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s.length() > MAX_LENGTH_USERNAME_CHARECTERS) {
+                    errorText.setText("Username bigger than 20 characters");
+                    errorText.setTextColor(Color.RED);
+                } else {
+                    errorText.setText("Change it anytime");
+                    errorText.setTextColor(Color.BLACK);
+                }
             }
         };
         EditText editText = findViewById(R.id.userNameEditText);

@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.Toast;
 
 import io.left.meshim.R;
 import io.left.meshim.models.User;
@@ -34,14 +35,20 @@ public class ChooseAvatarActivity extends Activity {
         mUser = User.fromDisk(this);
         mUserAvatarId = R.mipmap.account_default;
 
+        Intent prevIntent = getIntent();
         // Update user and launch app when save button is tapped.
         Button saveButton = findViewById(R.id.saveUserAvatarButton);
         saveButton.setOnClickListener(v -> {
             mUser.setAvatar(mUserAvatarId);
             mUser.save();
-            Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
-            startActivity(intent);
-            finish();
+            //if intent is launch from setting tab.
+            if (prevIntent.getAction() != null && prevIntent.getAction().equals("change avatar")) {
+                finish();
+            } else {
+                Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
@@ -50,7 +57,7 @@ public class ChooseAvatarActivity extends Activity {
      * table layout of avatars user can choose from.
      */
     private void setupAvatars() {
-        //keep track of the avatar
+        //keep track of the avatars
         int avatarNum = 1;
 
         ScrollView scrollView = findViewById(R.id.avatarScrollView);

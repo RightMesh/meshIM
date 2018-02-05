@@ -2,8 +2,11 @@ package io.left.meshim.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -58,19 +61,23 @@ public class MainTabActivity extends ServiceConnectedActivity {
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator("In Range");
+        Drawable availableDrawable = ContextCompat.getDrawable(this,R.drawable.availabe_tab);
+        spec.setIndicator("",availableDrawable);
         host.addTab(spec);
 
         //Tab 2
         spec = host.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
-        spec.setIndicator("Messages");
+        Drawable messageDrawable = ContextCompat.getDrawable(this,R.drawable.message_tab);
+
+        spec.setIndicator("",messageDrawable);
         host.addTab(spec);
 
         //Tab 3
         spec = host.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator("Account");
+        Drawable accountDrawable = ContextCompat.getDrawable(this,R.drawable.account_tab);
+        spec.setIndicator("",accountDrawable);
         host.addTab(spec);
     }
 
@@ -150,6 +157,13 @@ public class MainTabActivity extends ServiceConnectedActivity {
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
             userAvatar.setImageResource(user.getAvatar());
+            Button button = findViewById(R.id.editUserAvatarButton);
+            button.setOnClickListener(v -> {
+                Intent avatarChooseIntent = new Intent(MainTabActivity.this,
+                        ChooseAvatarActivity.class);
+                avatarChooseIntent.setAction("change avatar");
+                startActivity(avatarChooseIntent);
+            });
         }
     }
 
@@ -172,11 +186,14 @@ public class MainTabActivity extends ServiceConnectedActivity {
         builder.setPositiveButton("SAVE", (dialog, which) -> {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
-                if (user != null) {
+                if (user != null && username.length() <= 20) {
                     user.setUsername(username);
                     user.save();
                     TextView textView = findViewById(R.id.usernameTextViewSetting);
                     textView.setText(username);
+                } else if (username.length() > 20) {
+                    Toast.makeText(MainTabActivity.this, "Username bigger than 20"
+                            + " characters", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
@@ -188,5 +205,9 @@ public class MainTabActivity extends ServiceConnectedActivity {
         levelDialog.show();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupSettingTab();
+    }
 }

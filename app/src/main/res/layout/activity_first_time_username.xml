@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/errrorText"
         android:layout_width="wrap_content"
         android:layout_height="37dp"
         android:layout_marginBottom="8dp"
@@ -86,6 +86,7 @@
         app:layout_constraintBottom_toTopOf="@+id/saveUserNameButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginLeft="44dp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -27,7 +27,7 @@
         android:layout_marginLeft="16dp"
         android:background="@drawable/chat_bubble_rec"
         android:maxWidth="240dp"
-        android:padding="0dp"
+        android:padding="8dp"
         android:text="hi man, how are you?"
         android:textAlignment="center"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
