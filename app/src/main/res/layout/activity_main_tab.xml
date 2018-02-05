@@ -34,13 +34,6 @@
                 android:orientation="vertical"
                 android:theme="@style/SplashTheme">
 
-                <Switch
-                    android:id="@+id/serviceSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Service" />
-
                 <ListView
                     android:id="@+id/userListView"
                     android:layout_width="match_parent"
@@ -65,16 +58,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="spread_inside" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="288dp"
-                    android:text="Button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/multiUserMessageListView" />
 
             </android.support.constraint.ConstraintLayout>
 

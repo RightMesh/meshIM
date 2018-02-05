@@ -30,7 +30,7 @@
         android:padding="0dp"
         android:text="hi man, how are you?"
         android:textAlignment="center"
-        android:textColor="#000"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
         tools:layout_editor_absoluteY="8dp" />
 

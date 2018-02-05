@@ -37,8 +37,8 @@
         android:layout_marginLeft="44dp" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="36dp"
+        android:id="@+id/charecterCountText"
+        android:layout_width="40dp"
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -48,6 +48,7 @@
         android:height="14dp"
         android:lineSpacingMultiplier="1.17"
         android:text="0/20"
+        android:textColor="@color/greenFade"
         app:layout_constraintBottom_toTopOf="@+id/saveUserNameButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.927"

@@ -258,6 +258,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/account_default"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/userSettingAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/userSettingAvatar" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/frameLayout2"
             android:layout_width="0dp"
