@@ -10,37 +10,40 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
-import io.left.meshim.models.User;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
 
-public class UserMessageListAdapter extends ArrayAdapter<User> {
+/**
+ * Adapter that fetches conversations from the app service to populate the list of stored
+ * conversations in {@link io.left.meshim.activities.MainTabActivity}.
+ */
+public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
     // Used to inflate views for the list.
     private Context mContext;
-
-    // Reference to user list.
-    private ArrayList<User> mUserList;
 
     /**
      * Stores context so we can inflate views.
      * @param context context of activity
-     * @param userList list to manage
+     * @param conversations list to manage
      */
-    public UserMessageListAdapter(Context context, ArrayList<User> userList) {
-        super(context, R.layout.user_list, userList);
+    public UserMessageListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
+        super(context, R.layout.user_list, conversations);
         this.mContext = context;
-        this.mUserList = userList;
     }
 
     /**
-     * Updates the list of users.
+     * Updates the list of conversation summaries.
      * @param service service connection to fetch users from
      */
     public void updateList(IMeshIMService service) {
+        if (service == null) {
+            return;
+        }
         try {
             this.clear();
-            this.addAll(service.getOnlineUsers());
+            this.addAll(service.getConversationSummaries());
         } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
     }
 
@@ -52,17 +55,16 @@ public class UserMessageListAdapter extends ArrayAdapter<User> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
         View v = View.inflate(mContext, R.layout.user_message_list, null);
 
-        // Null-check the user at this position.
-        User user = this.getItem(position);
-        if (user != null) {
+        ConversationSummary conversationSummary = this.getItem(position);
+        if (conversationSummary != null) {
             ImageView userAvatar = v.findViewById(R.id.userMessageAvatar);
-            userAvatar.setImageResource(user.getAvatar());
+            userAvatar.setImageResource(conversationSummary.avatar);
             TextView userName = v.findViewById(R.id.userNameMessageText);
-            userName.setText(user.getUsername());
+            userName.setText(conversationSummary.username);
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
-            newMessage.setText("kgndsjkgt njkgn jkndfgjk ngkjf nkjgnfgkfng");
+            newMessage.setText(conversationSummary.messageText);
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
-            time.setText("11:00am");
+            time.setText(conversationSummary.messageTime.toString());
         }
 
         return v;

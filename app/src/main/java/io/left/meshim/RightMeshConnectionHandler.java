@@ -16,6 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.database.MeshIMDatabase;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
@@ -54,8 +55,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
-    // Database reference.
-    private MeshIMDatabase database;
+    // Database interface.
     private MeshIMDao dao;
 
     // Link to current activity.
@@ -72,7 +72,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     public RightMeshConnectionHandler(User user, MeshIMDatabase database,
                                       MeshIMService meshIMService) {
         this.user = user;
-        this.database = database;
         this.dao = database.meshIMDao();
         this.meshIMService  = meshIMService;
 
@@ -121,6 +120,14 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      */
     public List<User> getUserList() {
         return new ArrayList<>(users.values());
+    }
+
+    /**
+     * Returns a list of conversation summaries stored in the database.
+     * @return summaries of all conversations stored in the database
+     */
+    public List<ConversationSummary> getConversationSummaries() {
+        return Arrays.asList(dao.getConversationSummaries());
     }
 
     /**
@@ -194,7 +201,6 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             }
         }
     }
-
 
     /**
      * A helper method that handles the null checking and exception handling around the AIDL
@@ -336,5 +342,4 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             e.printStackTrace();
         }
     }
-
 }

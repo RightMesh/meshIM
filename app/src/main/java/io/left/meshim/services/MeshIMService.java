@@ -24,6 +24,7 @@ import io.left.meshim.activities.IActivity;
 import io.left.meshim.activities.MainTabActivity;
 import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.database.Migrations;
+import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -95,6 +96,11 @@ public class MeshIMService extends Service {
      */
     private final IMeshIMService.Stub mBinder = new IMeshIMService.Stub() {
         @Override
+        public User fetchUserById(int id) {
+            return mDatabase.meshIMDao().fetchUserById(id);
+        }
+
+        @Override
         public void sendTextMessage(User recipient, String message) {
             mMeshConnection.sendTextMessage(recipient, message);
         }
@@ -123,6 +129,11 @@ public class MeshIMService extends Service {
         @Override
         public List<Message> getMessagesForUser(User user) throws RemoteException {
             return mMeshConnection.getMessagesForUser(user);
+        }
+
+        @Override
+        public List<ConversationSummary> getConversationSummaries() throws RemoteException {
+            return mMeshConnection.getConversationSummaries();
         }
 
         @Override
