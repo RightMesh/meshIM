@@ -74,7 +74,8 @@ public interface MeshIMDao {
             + "FROM ("
             + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, MAX(Timestamp) AS Timestamp "
             + "FROM Messages GROUP BY PeerID"
-            + ") INNER JOIN Users ON PeerID = UserID"
+            + ") INNER JOIN Users ON PeerID = UserID "
+            + "ORDER BY Timestamp DESC"
     )
     ConversationSummary[] getConversationSummaries();
 }
