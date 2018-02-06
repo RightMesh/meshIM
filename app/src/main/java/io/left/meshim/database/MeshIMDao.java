@@ -34,7 +34,7 @@ public interface MeshIMDao {
     @Insert()
     void insertMessages(Message... messages);
 
-    @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) OR RecipientID IN (:userIds)"
+    @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) AND RecipientID IN (:userIds)"
             + " ORDER BY Timestamp ASC")
     Message[] getMessagesBetweenUsers(int... userIds);
 

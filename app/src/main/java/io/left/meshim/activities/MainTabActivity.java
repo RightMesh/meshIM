@@ -118,10 +118,12 @@ public class MainTabActivity extends ServiceConnectedActivity {
             try {
                 if (mService != null) {
                     ConversationSummary selected = mUserMessageListAdapter.getItem(position);
-                    Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
-                    User peer = mService.fetchUserById(selected.peerID);
-                    intent.putExtra("recipient", peer);
-                    startActivity(intent);
+                    if (selected != null) {
+                        User peer = mService.fetchUserById(selected.peerID);
+                        Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+                        intent.putExtra("recipient", peer);
+                        startActivity(intent);
+                    }
                 }
             } catch (RemoteException ignored) {
                 // Service has crashed. We don't handle this right now. We should.
