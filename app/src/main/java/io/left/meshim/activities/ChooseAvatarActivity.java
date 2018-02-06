@@ -42,7 +42,7 @@ public class ChooseAvatarActivity extends Activity {
             mUser.setAvatar(mUserAvatarId);
             mUser.save();
             //if intent is launch from setting tab.
-            if (prevIntent.getAction() != null && prevIntent.getAction().equals("change avatar")) {
+            if (prevIntent.getAction() != null && prevIntent.getAction().equals(getString(R.string.ChangeAvatar))) {
                 finish();
             } else {
                 Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);

@@ -3,10 +3,8 @@ package io.left.meshim.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +49,6 @@ public class MainTabActivity extends ServiceConnectedActivity {
         configureUserList();
         configureMessageList();
         setupSettingTab();
-        dummySearchScreen();
 
     }
 
@@ -65,22 +62,22 @@ public class MainTabActivity extends ServiceConnectedActivity {
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator(getTabIndicator(this,"In Range",R.mipmap.in_range_default));
+        spec.setIndicator(createTabIndicator(this,"In Range",R.mipmap.in_range_default));
         host.addTab(spec);
 
         //Tab 2
         spec = host.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
-        spec.setIndicator(getTabIndicator(this,"In Range",R.mipmap.messages_default));
+        spec.setIndicator(createTabIndicator(this,"Messages",R.mipmap.messages_default));
         host.addTab(spec);
 
         //Tab 3
         spec = host.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator(getTabIndicator(this,"In Range",R.mipmap.account_default));
+        spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
         host.addTab(spec);
     }
-    private View getTabIndicator(Context context, String title, int icon) {
+    private View createTabIndicator(Context context, String title, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
         ImageView iv = (ImageView) view.findViewById(R.id.imageView);
         iv.setImageResource(icon);
@@ -169,7 +166,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
             button.setOnClickListener(v -> {
                 Intent avatarChooseIntent = new Intent(MainTabActivity.this,
                         ChooseAvatarActivity.class);
-                avatarChooseIntent.setAction("change avatar");
+                avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
                 startActivity(avatarChooseIntent);
             });
         }
@@ -200,7 +197,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
                     TextView textView = findViewById(R.id.usernameTextViewSetting);
                     textView.setText(username);
                 } else if (username.length() > 20) {
-                    Toast.makeText(MainTabActivity.this, "Username bigger than 20"
+                    Toast.makeText(MainTabActivity.this, "Username longer than 20"
                             + " characters", Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -211,14 +208,6 @@ public class MainTabActivity extends ServiceConnectedActivity {
         builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
-    }
-
-    private void dummySearchScreen(){
-        LinearLayout linearLayout = findViewById(R.id.tab1);
-        TextView textView = new TextView(this);
-        textView.setText("bkvbjhf gkjgkjfg");
-        linearLayout.addView(textView);
-
     }
 
     @Override

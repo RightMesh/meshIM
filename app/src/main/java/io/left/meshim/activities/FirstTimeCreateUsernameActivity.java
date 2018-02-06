@@ -17,8 +17,6 @@ import io.left.meshim.models.User;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-
 
 public class FirstTimeCreateUsernameActivity extends Activity {
     private User mUser = null;
@@ -32,8 +30,8 @@ public class FirstTimeCreateUsernameActivity extends Activity {
 
         mSettings = new Settings(true);
         mSettings.save(this);
-        finishButton();
-        textWatcherForUsername();
+        configureFinishButton();
+        configureUsernameWatcher();
     }
 
 
@@ -42,7 +40,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
      *
      */
 
-    private void finishButton() {
+    private void configureFinishButton() {
 
         Button button = findViewById(R.id.saveUserNameButton);
         button.setOnClickListener(v -> {
@@ -52,8 +50,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
                 Toast.makeText(FirstTimeCreateUsernameActivity.this,
                         "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
             } else if (userName.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                Toast.makeText(FirstTimeCreateUsernameActivity.this,
-                        "Username is bigger than 20 characters!", Toast.LENGTH_SHORT).show();
+
             }  else {
                 mUser = new User(FirstTimeCreateUsernameActivity.this);
                 mUser.setUsername(userName);
@@ -70,7 +67,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
     /**
      * Checks for valid usernames.
      */
-    private void textWatcherForUsername() {
+    private void configureUsernameWatcher() {
         TextView charecterCount = findViewById(R.id.charecterCountText);
         TextView errorText = findViewById(R.id.errrorText);
         final TextWatcher textWatcher = new TextWatcher() {
@@ -87,7 +84,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    errorText.setText("Username bigger than 20 characters");
+                    errorText.setText("Username longer than 20 characters");
                     errorText.setTextColor(Color.RED);
                 } else {
                     errorText.setText("Change it anytime");
