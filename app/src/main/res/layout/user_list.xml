@@ -44,11 +44,11 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/chat_bubble_rec"
         android:text="IN RANGE"
-        android:background="@color/greenFade"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="4dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

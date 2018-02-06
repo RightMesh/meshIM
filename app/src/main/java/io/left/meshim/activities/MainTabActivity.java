@@ -1,12 +1,16 @@
 package io.left.meshim.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -58,20 +62,28 @@ public class MainTabActivity extends ServiceConnectedActivity {
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator("In Range");
+        spec.setIndicator(createTabIndicator(this,"In Range",R.mipmap.in_range_default));
         host.addTab(spec);
 
         //Tab 2
         spec = host.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
-        spec.setIndicator("Messages");
+        spec.setIndicator(createTabIndicator(this,"Messages",R.mipmap.messages_default));
         host.addTab(spec);
 
         //Tab 3
         spec = host.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator("Account");
+        spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
         host.addTab(spec);
+    }
+    private View createTabIndicator(Context context, String title, int icon) {
+        View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        iv.setImageResource(icon);
+        TextView tv = (TextView) view.findViewById(R.id.tabText);
+        tv.setText(title);
+        return view;
     }
 
     /**
@@ -150,6 +162,13 @@ public class MainTabActivity extends ServiceConnectedActivity {
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
             userAvatar.setImageResource(user.getAvatar());
+            Button button = findViewById(R.id.editUserAvatarButton);
+            button.setOnClickListener(v -> {
+                Intent avatarChooseIntent = new Intent(MainTabActivity.this,
+                        ChooseAvatarActivity.class);
+                avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
+                startActivity(avatarChooseIntent);
+            });
         }
     }
 
@@ -172,11 +191,14 @@ public class MainTabActivity extends ServiceConnectedActivity {
         builder.setPositiveButton("SAVE", (dialog, which) -> {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
-                if (user != null) {
+                if (user != null && username.length() <= 20) {
                     user.setUsername(username);
                     user.save();
                     TextView textView = findViewById(R.id.usernameTextViewSetting);
                     textView.setText(username);
+                } else if (username.length() > 20) {
+                    Toast.makeText(MainTabActivity.this, "Username longer than 20"
+                            + " characters", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
@@ -188,5 +210,9 @@ public class MainTabActivity extends ServiceConnectedActivity {
         levelDialog.show();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupSettingTab();
+    }
 }

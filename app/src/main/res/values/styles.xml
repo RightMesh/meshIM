@@ -15,7 +15,7 @@
     <style name="Text" parent="AlertDialog.AppCompat.Light"/>
 
     <style name="MyTabs">
-        <item name="android:background">@color/greenDark</item>
+        <item name="android:background">@color/white</item>
         <item name="android:backgroundStacked">@color/greenFade</item>
         <item name="android:textColorPrimary">@color/white</item>
     </style>
