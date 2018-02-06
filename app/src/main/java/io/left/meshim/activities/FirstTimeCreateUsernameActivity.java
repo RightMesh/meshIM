@@ -47,10 +47,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
         button.setOnClickListener(v -> {
             EditText userText = findViewById(R.id.userNameEditText);
             String userName = userText.getText().toString();
-            if (!isUsernameValid) {
-                Toast.makeText(FirstTimeCreateUsernameActivity.this,
-                        "You Must Enter a valid User Name!", Toast.LENGTH_SHORT).show();
-            }  else {
+            if (isUsernameValid) {
                 mUser = new User(FirstTimeCreateUsernameActivity.this);
                 mUser.setUsername(userName);
                 mUser.setAvatar(1);
@@ -87,6 +84,8 @@ public class FirstTimeCreateUsernameActivity extends Activity {
                     errorText.setText("Username over 20 characters");
                     errorText.setTextColor(Color.RED);
                 } else if (s.length() < 1) {
+                    errorText.setText("Username cannot be empty");
+                    errorText.setTextColor(Color.RED);
                     isUsernameValid = false;
                 } else {
                     errorText.setText("Change it anytime");
