@@ -108,6 +108,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = mMessageList.get(position);
+
         if (!(message.isMyMessage())) {
             holder.mMessagaeBody.setText(message.getMessage());
             holder.mTime.setText(message.getDateAsString());

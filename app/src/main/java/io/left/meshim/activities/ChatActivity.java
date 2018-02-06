@@ -30,6 +30,7 @@ public class ChatActivity extends ServiceConnectedActivity {
         // Fetch the recipient from the intent and set up the message adapter.
         mRecipient = getIntent().getParcelableExtra("recipient");
         mMessageAdapter = new MessageAdapter(mRecipient);
+        mMessageAdapter.updateList(this.mService);
 
         // Initialize the list view for the messages.
         mMessageListView = findViewById(R.id.reyclerview_message_list);
