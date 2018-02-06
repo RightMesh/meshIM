@@ -17,6 +17,7 @@ import io.left.meshim.models.User;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 
 
 public class FirstTimeCreateUsernameActivity extends Activity {
