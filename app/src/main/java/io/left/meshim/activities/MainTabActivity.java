@@ -108,7 +108,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
     }
 
     /**
-     * Configures the conversatino view list and click event.
+     * Configures the conversation view list and click event.
      */
     private void configureMessageList() {
         ListView listView = findViewById(R.id.multiUserMessageListView);
