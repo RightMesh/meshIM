@@ -115,9 +115,17 @@ public class MainTabActivity extends ServiceConnectedActivity {
         mUserMessageListAdapter = new UserMessageListAdapter(this, mConversationSummaries);
         listView.setAdapter(mUserMessageListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainTabActivity.this,ChatActivity.class);
-            //intent.putExtra("recipient", mUserMessageListAdapter.getItem(position));
-            startActivity(intent);
+            try {
+                if (mService != null) {
+                    ConversationSummary selected = mUserMessageListAdapter.getItem(position);
+                    Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+                    User peer = mService.fetchUserById(selected.peerID);
+                    intent.putExtra("recipient", peer);
+                    startActivity(intent);
+                }
+            } catch (RemoteException ignored) {
+                // Service has crashed. We don't handle this right now. We should.
+            }
         });
     }
 
