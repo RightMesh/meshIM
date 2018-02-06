@@ -28,6 +28,9 @@ public interface MeshIMDao {
     @Query("SELECT UserID, MeshID FROM Users WHERE MeshID = :meshId")
     MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
 
+    @Query("SELECT * FROM Users WHERE UserID = :id")
+    User fetchUserById(int id);
+
     @Insert()
     void insertMessages(Message... messages);
 
@@ -67,7 +70,7 @@ public interface MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID "
             + "FROM ("
             + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, MAX(Timestamp) AS Timestamp "
             + "FROM Messages GROUP BY PeerID"

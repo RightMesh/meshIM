@@ -26,6 +26,9 @@ public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "Timestamp")
     public Date messageTime;
 
+    @ColumnInfo(name = "PeerID")
+    public int peerID;
+
     /**
      * General purpose setter-constructor used by Room.
      *
@@ -52,6 +55,7 @@ public class ConversationSummary implements Parcelable {
         avatar = in.readInt();
         messageText = in.readString();
         messageTime = new Date(in.readLong());
+        peerID = in.readInt();
     }
 
     // Auto-generated Parcelable stuff.
@@ -87,5 +91,6 @@ public class ConversationSummary implements Parcelable {
         dest.writeInt(avatar);
         dest.writeString(messageText);
         dest.writeLong(messageTime.getTime());
+        dest.writeInt(peerID);
     }
 }
