@@ -22,6 +22,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
     private User mUser = null;
     private Settings mSettings = null;
     private final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
+    private boolean isUsernameValid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,9 @@ public class FirstTimeCreateUsernameActivity extends Activity {
         button.setOnClickListener(v -> {
             EditText userText = findViewById(R.id.userNameEditText);
             String userName = userText.getText().toString();
-            if (StringUtils.isBlank(userName)) {
+            if (!isUsernameValid) {
                 Toast.makeText(FirstTimeCreateUsernameActivity.this,
-                        "You Must Enter User Name!", Toast.LENGTH_SHORT).show();
-            } else if (userName.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-
+                        "You Must Enter a valid User Name!", Toast.LENGTH_SHORT).show();
             }  else {
                 mUser = new User(FirstTimeCreateUsernameActivity.this);
                 mUser.setUsername(userName);
@@ -68,7 +67,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
      * Checks for valid usernames.
      */
     private void configureUsernameWatcher() {
-        TextView charecterCount = findViewById(R.id.charecterCountText);
+        TextView charecterCount = findViewById(R.id.characterCountText);
         TextView errorText = findViewById(R.id.errrorText);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
@@ -84,11 +83,15 @@ public class FirstTimeCreateUsernameActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    errorText.setText("Username longer than 20 characters");
+                    isUsernameValid = false;
+                    errorText.setText("Username over 20 characters");
                     errorText.setTextColor(Color.RED);
+                } else if (s.length() < 1) {
+                    isUsernameValid = false;
                 } else {
                     errorText.setText("Change it anytime");
                     errorText.setTextColor(Color.BLACK);
+                    isUsernameValid = true;
                 }
             }
         };

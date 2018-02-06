@@ -37,7 +37,7 @@
         android:layout_marginLeft="44dp" />
 
     <TextView
-        android:id="@+id/charecterCountText"
+        android:id="@+id/characterCountText"
         android:layout_width="40dp"
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"
@@ -80,13 +80,15 @@
         android:layout_width="wrap_content"
         android:layout_height="37dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="44dp"
         android:layout_marginTop="8dp"
         android:text="Change it anytime"
         app:layout_constraintBottom_toTopOf="@+id/saveUserNameButton"
+        app:layout_constraintEnd_toStartOf="@+id/characterCountText"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginLeft="44dp" />
+        app:layout_constraintVertical_bias="0.888" />
 
 </android.support.constraint.ConstraintLayout>
