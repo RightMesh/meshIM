@@ -6,9 +6,6 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 import android.util.SparseArray;
 
-import java.util.Arrays;
-import java.util.List;
-
 import io.left.meshim.activities.MainActivity;
 import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.models.ConversationSummary;
@@ -16,6 +13,9 @@ import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.rightmesh.id.MeshID;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A collection of queries for accessing data types for MeshIM.

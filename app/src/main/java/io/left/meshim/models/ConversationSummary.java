@@ -5,10 +5,10 @@ import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.database.MeshIMDao;
+
+import java.util.Date;
 
 /**
  * A class that holds the information from {@link MeshIMDao#getConversationSummaries()} and is used

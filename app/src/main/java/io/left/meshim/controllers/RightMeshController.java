@@ -146,8 +146,6 @@ public class RightMeshController implements MeshStateListener {
             user.setMeshId(uuid);
             user.save();
             try {
-                //meshManager.setPattern("FRAZER");
-
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(HELLO_PORT);

@@ -16,18 +16,18 @@ import io.left.meshim.models.User;
 
 
 public class OnboardingUsernameActivity extends Activity {
+    private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
+
     private User mUser = null;
-    private Settings mSettings = null;
-    private final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
-    private boolean isUsernameValid = false;
+    private boolean mIsUsernameValid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding_username);
 
-        mSettings = new Settings(true);
-        mSettings.save(this);
+        Settings settings = new Settings(true);
+        settings.save(this);
         configureFinishButton();
         configureUsernameWatcher();
     }
@@ -35,16 +35,14 @@ public class OnboardingUsernameActivity extends Activity {
 
     /**
      * Creates a User profile.
-     *
      */
-
     private void configureFinishButton() {
 
         Button button = findViewById(R.id.saveUserNameButton);
         button.setOnClickListener(v -> {
             EditText userText = findViewById(R.id.userNameEditText);
             String userName = userText.getText().toString();
-            if (isUsernameValid) {
+            if (mIsUsernameValid) {
                 mUser = new User(OnboardingUsernameActivity.this);
                 mUser.setUsername(userName);
                 mUser.setAvatar(1);
@@ -77,17 +75,17 @@ public class OnboardingUsernameActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    isUsernameValid = false;
+                    mIsUsernameValid = false;
                     errorText.setText("Username over 20 characters");
                     errorText.setTextColor(Color.RED);
                 } else if (s.length() < 1) {
                     errorText.setText("Username cannot be empty");
                     errorText.setTextColor(Color.RED);
-                    isUsernameValid = false;
+                    mIsUsernameValid = false;
                 } else {
                     errorText.setText("Change it anytime");
                     errorText.setTextColor(Color.BLACK);
-                    isUsernameValid = true;
+                    mIsUsernameValid = true;
                 }
             }
         };

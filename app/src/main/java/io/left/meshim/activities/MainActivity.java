@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.left.meshim.R;
-import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.adapters.ConversationListAdapter;
+import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -84,11 +84,12 @@ public class MainActivity extends ServiceConnectedActivity {
         spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
         host.addTab(spec);
     }
+
     private View createTabIndicator(Context context, String title, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        ImageView iv = view.findViewById(R.id.imageView);
         iv.setImageResource(icon);
-        TextView tv = (TextView) view.findViewById(R.id.tabText);
+        TextView tv = view.findViewById(R.id.tabText);
         tv.setText(title);
         return view;
     }

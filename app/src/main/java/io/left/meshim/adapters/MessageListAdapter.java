@@ -64,8 +64,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
          * Checks whether the message should be displayed in send or received layout.
          * Finds all the required layout fields.
          * @param view view to work with
-         * @param messageType type of message, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
-         *                    or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+         * @param messageType type of message, either
+         *                    {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT} or
+         *                    {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
          */
         MessageViewHolder(View view, int messageType) {
             super(view);
