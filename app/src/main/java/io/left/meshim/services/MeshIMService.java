@@ -1,16 +1,17 @@
 package io.left.meshim.services;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.arch.persistence.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
@@ -57,8 +58,15 @@ public class MeshIMService extends Service {
         PendingIntent pendingIntent
                 = PendingIntent.getService(this,0,stopForegroundIntent,0);
 
-        mServiceNotification = new NotificationCompat.Builder(this)
-                .setAutoCancel(false)
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(this,
+                    NotificationChannel.DEFAULT_CHANNEL_ID);
+        } else {
+            //noinspection deprecation
+            builder = new NotificationCompat.Builder(this);
+        }
+        mServiceNotification = builder.setAutoCancel(false)
                 .setTicker("Mesh IM")
                 .setContentTitle("Mesh IM is Running")
                 .setContentText("Tap to go offline.")
@@ -220,11 +228,16 @@ public class MeshIMService extends Service {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setData(Uri.parse("content://" + time));
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                    0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-            NotificationManager notificationManager
-                    = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+                    0, intent, PendingIntent.FLAG_ONE_SHOT);
 
+            NotificationCompat.Builder builder;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                builder = new NotificationCompat.Builder(this,
+                        NotificationChannel.DEFAULT_CHANNEL_ID);
+            } else {
+                //noinspection deprecation
+                builder = new NotificationCompat.Builder(this);
+            }
             builder.setWhen(time)
                    .setContentText(notifContent)
                    .setContentTitle(notifTitle)
@@ -237,7 +250,11 @@ public class MeshIMService extends Service {
                    .setContentIntent(pendingIntent);
 
             Notification notification = builder.build();
-            notificationManager.notify((int) time, notification);
+            NotificationManager notificationManager
+                    = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.notify((int) time, notification);
+            }
         }
     }
 }
