@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.left.meshim.R;
-import io.left.meshim.adapters.UserListAdapter;
+import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.adapters.UserMessageListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Settings;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class MainActivity extends ServiceConnectedActivity {
     // Adapter that populates the online user list with user information from the app service.
-    UserListAdapter mUserListAdapter;
+    OnlineUserListAdapter mOnlineUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     UserMessageListAdapter mUserMessageListAdapter;
@@ -98,11 +98,11 @@ public class MainActivity extends ServiceConnectedActivity {
      */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
-        mUserListAdapter = new UserListAdapter(this, mUsers);
-        listView.setAdapter(mUserListAdapter);
+        mOnlineUserListAdapter = new OnlineUserListAdapter(this, mUsers);
+        listView.setAdapter(mOnlineUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-            intent.putExtra("recipient", mUserListAdapter.getItem(position));
+            intent.putExtra("recipient", mOnlineUserListAdapter.getItem(position));
             startActivity(intent);
         });
     }
@@ -137,8 +137,8 @@ public class MainActivity extends ServiceConnectedActivity {
     @Override
     public void updateInterface() {
         runOnUiThread(() -> {
-            mUserListAdapter.updateList(mService);
-            mUserListAdapter.notifyDataSetChanged();
+            mOnlineUserListAdapter.updateList(mService);
+            mOnlineUserListAdapter.notifyDataSetChanged();
             mUserMessageListAdapter.updateList(mService);
             mUserMessageListAdapter.notifyDataSetChanged();
         });

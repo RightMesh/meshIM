@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Adapter that fetches online users from the app service to populate the list of online users in
  * {@link MainActivity}.
  */
-public class UserListAdapter extends ArrayAdapter<User> {
+public class OnlineUserListAdapter extends ArrayAdapter<User> {
     // Used to inflate views for the list.
     private Context mContext;
 
@@ -32,7 +32,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param context context of activity
      * @param userList list to manage
      */
-    public UserListAdapter(Context context, ArrayList<User> userList) {
+    public OnlineUserListAdapter(Context context, ArrayList<User> userList) {
         super(context, R.layout.user_list, userList);
         this.mContext = context;
         this.mUserList = userList;
