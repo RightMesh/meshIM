@@ -30,7 +30,7 @@
         android:layout_marginStart="8dp"
         android:ems="10"
 
-        android:hint="Enter message"
+        android:hint="@string/type_message"
         android:inputType="textCapSentences|textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sendButton"

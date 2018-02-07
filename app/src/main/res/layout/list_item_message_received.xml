@@ -10,6 +10,7 @@
     >
 
     <ImageView
+        android:contentDescription="@string/user_avatar_description"
         android:id="@+id/image_message_profile"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -28,7 +29,6 @@
         android:background="@drawable/chat_bubble_rec"
         android:maxWidth="240dp"
         android:padding="8dp"
-        android:text="hi man, how are you?"
         android:textAlignment="center"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
@@ -38,7 +38,6 @@
         android:id="@+id/text_message_time_recieved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="11:40"
         android:textSize="10sp"
         app:layout_constraintLeft_toRightOf="@+id/text_message_body"
         app:layout_constraintStart_toStartOf="@+id/text_message_body"
