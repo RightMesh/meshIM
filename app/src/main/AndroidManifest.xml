@@ -24,7 +24,7 @@
             android:process=":MeshIMService" />
 
         <activity
-            android:name="io.left.meshim.activities.FirstTimeCreateUsernameActivity"
+            android:name="io.left.meshim.activities.OnboardingUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />
         <activity
             android:name="io.left.meshim.activities.ChooseAvatarActivity"

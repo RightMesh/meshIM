@@ -9,16 +9,13 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import io.left.meshim.R;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
-import org.apache.commons.lang3.StringUtils;
 
-
-public class FirstTimeCreateUsernameActivity extends Activity {
+public class OnboardingUsernameActivity extends Activity {
     private User mUser = null;
     private Settings mSettings = null;
     private final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
@@ -27,7 +24,7 @@ public class FirstTimeCreateUsernameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_time_username);
+        setContentView(R.layout.activity_onboarding_username);
 
         mSettings = new Settings(true);
         mSettings.save(this);
@@ -48,11 +45,11 @@ public class FirstTimeCreateUsernameActivity extends Activity {
             EditText userText = findViewById(R.id.userNameEditText);
             String userName = userText.getText().toString();
             if (isUsernameValid) {
-                mUser = new User(FirstTimeCreateUsernameActivity.this);
+                mUser = new User(OnboardingUsernameActivity.this);
                 mUser.setUsername(userName);
                 mUser.setAvatar(1);
                 mUser.save();
-                Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
+                Intent intent = new Intent(OnboardingUsernameActivity.this,
                         ChooseAvatarActivity.class);
                 startActivity(intent);
                 finish();

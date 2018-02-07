@@ -19,7 +19,7 @@ public class WelcomeActivity extends Activity {
         } else {
             // Launch first time activity to create a new profile
             intent = new Intent(WelcomeActivity.this,
-                    FirstTimeCreateUsernameActivity.class);
+                    OnboardingUsernameActivity.class);
         }
         startActivity(intent);
         finish();
