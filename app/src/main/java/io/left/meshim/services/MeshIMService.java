@@ -16,9 +16,9 @@ import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 
 import io.left.meshim.R;
-import io.left.meshim.RightMeshConnectionHandler;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.activities.MainActivity;
+import io.left.meshim.controllers.RightMeshController;
 import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.database.Migrations;
 import io.left.meshim.models.ConversationSummary;
@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Handles service and lifecycle management. Defers RightMesh operations to
- * {@link RightMeshConnectionHandler}.
+ * {@link RightMeshController}.
  */
 public class MeshIMService extends Service {
     public static final String START_FOREGROUND_ACTION = "io.left.meshim.action.startforeground";
@@ -40,7 +40,7 @@ public class MeshIMService extends Service {
     public static final int FOREGROUND_SERVICE_ID = 101;
 
     private MeshIMDatabase mDatabase;
-    private RightMeshConnectionHandler mMeshConnection;
+    private RightMeshController mMeshConnection;
     private Notification mServiceNotification;
     private boolean mIsBound = false;
     private boolean mIsForeground = false;
@@ -73,7 +73,7 @@ public class MeshIMService extends Service {
                 .build();
 
         User user = User.fromDisk(this);
-        mMeshConnection = new RightMeshConnectionHandler(user, mDatabase,this);
+        mMeshConnection = new RightMeshController(user, mDatabase,this);
         mMeshConnection.connect(this);
     }
 

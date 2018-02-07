@@ -1,4 +1,4 @@
-package io.left.meshim;
+package io.left.meshim.controllers;
 
 import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
@@ -9,14 +9,12 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.SparseArray;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.database.MeshIMDatabase;
-import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
@@ -31,7 +29,6 @@ import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,7 +40,7 @@ import protobuf.MeshIMMessages.PeerUpdate;
 /**
  * All RightMesh logic abstracted into one class to keep it separate from Android logic.
  */
-public class RightMeshConnectionHandler implements MeshStateListener {
+public class RightMeshController implements MeshStateListener {
     // Port to bind app to.
     private static final int HELLO_PORT = 9876;
 
@@ -68,8 +65,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param database open connection to database
      * @param meshIMService link to service instance
      */
-    public RightMeshConnectionHandler(User user, MeshIMDatabase database,
-                                      MeshIMService meshIMService) {
+    public RightMeshController(User user, MeshIMDatabase database,
+                               MeshIMService meshIMService) {
         this.user = user;
         this.dao = database.meshIMDao();
         this.meshIMService  = meshIMService;
@@ -122,7 +119,7 @@ public class RightMeshConnectionHandler implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshConnectionHandler.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**
@@ -149,6 +146,8 @@ public class RightMeshConnectionHandler implements MeshStateListener {
             user.setMeshId(uuid);
             user.save();
             try {
+                //meshManager.setPattern("FRAZER");
+
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(HELLO_PORT);

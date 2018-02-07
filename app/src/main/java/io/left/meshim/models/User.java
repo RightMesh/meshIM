@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import io.left.meshim.controllers.RightMeshController;
 import io.left.rightmesh.id.MeshID;
 
 import java.lang.reflect.Type;
@@ -67,7 +68,7 @@ public class User implements Parcelable {
 
     /**
      * Constructor with {@link MeshID} option. Used in
-     * {@link io.left.meshim.RightMeshConnectionHandler} where we care about mesh logic.
+     * {@link RightMeshController} where we care about mesh logic.
      * @param username displayed username for the user
      * @param avatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
