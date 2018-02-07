@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Adapter that fetches conversations from the app service to populate the list of stored
  * conversations in {@link MainActivity}.
  */
-public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
+public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
     // Used to inflate views for the list.
     private Context mContext;
 
@@ -29,7 +29,7 @@ public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
      * @param context context of activity
      * @param conversations list to manage
      */
-    public UserMessageListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
+    public ConversationListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
         super(context, R.layout.online_user_list_item, conversations);
         this.mContext = context;
     }

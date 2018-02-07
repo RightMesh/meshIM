@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import io.left.meshim.activities.MainActivity;
+import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
@@ -40,7 +41,7 @@ public interface MeshIMDao {
     Message[] getMessagesBetweenUsers(int... userIds);
 
     /**
-     * This query is used by {@link io.left.meshim.adapters.UserMessageListAdapter}. That adapter
+     * This query is used by {@link ConversationListAdapter}. That adapter
      * populates a tab in {@link MainActivity} which shows a list of
      * conversations that have been had with other meshIM users in the past.
      *

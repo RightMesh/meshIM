@@ -7,11 +7,12 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
+import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.database.MeshIMDao;
 
 /**
  * A class that holds the information from {@link MeshIMDao#getConversationSummaries()} and is used
- * to populate {@link io.left.meshim.adapters.UserMessageListAdapter}.
+ * to populate {@link ConversationListAdapter}.
  */
 public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "Username")

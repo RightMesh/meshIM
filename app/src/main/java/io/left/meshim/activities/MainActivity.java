@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import io.left.meshim.R;
 import io.left.meshim.adapters.OnlineUserListAdapter;
-import io.left.meshim.adapters.UserMessageListAdapter;
+import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -36,7 +36,7 @@ public class MainActivity extends ServiceConnectedActivity {
     OnlineUserListAdapter mOnlineUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
-    UserMessageListAdapter mUserMessageListAdapter;
+    ConversationListAdapter mConversationListAdapter;
 
     /**
      * Initializes UI elements.
@@ -112,12 +112,12 @@ public class MainActivity extends ServiceConnectedActivity {
      */
     private void configureMessageList() {
         ListView listView = findViewById(R.id.multiUserMessageListView);
-        mUserMessageListAdapter = new UserMessageListAdapter(this, mConversationSummaries);
-        listView.setAdapter(mUserMessageListAdapter);
+        mConversationListAdapter = new ConversationListAdapter(this, mConversationSummaries);
+        listView.setAdapter(mConversationListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             try {
                 if (mService != null) {
-                    ConversationSummary selected = mUserMessageListAdapter.getItem(position);
+                    ConversationSummary selected = mConversationListAdapter.getItem(position);
                     if (selected != null) {
                         User peer = mService.fetchUserById(selected.peerID);
                         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
@@ -139,8 +139,8 @@ public class MainActivity extends ServiceConnectedActivity {
         runOnUiThread(() -> {
             mOnlineUserListAdapter.updateList(mService);
             mOnlineUserListAdapter.notifyDataSetChanged();
-            mUserMessageListAdapter.updateList(mService);
-            mUserMessageListAdapter.notifyDataSetChanged();
+            mConversationListAdapter.updateList(mService);
+            mConversationListAdapter.notifyDataSetChanged();
         });
     }
 
