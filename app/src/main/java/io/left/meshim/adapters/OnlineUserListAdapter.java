@@ -33,7 +33,7 @@ public class OnlineUserListAdapter extends ArrayAdapter<User> {
      * @param userList list to manage
      */
     public OnlineUserListAdapter(Context context, ArrayList<User> userList) {
-        super(context, R.layout.user_list, userList);
+        super(context, R.layout.online_user_list_item, userList);
         this.mContext = context;
         this.mUserList = userList;
     }
@@ -58,7 +58,7 @@ public class OnlineUserListAdapter extends ArrayAdapter<User> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
-        View v = View.inflate(mContext, R.layout.user_list, null);
+        View v = View.inflate(mContext, R.layout.online_user_list_item, null);
 
         // Null-check the user at this position.
         User user = this.getItem(position);

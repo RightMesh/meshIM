@@ -30,7 +30,7 @@ public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
      * @param conversations list to manage
      */
     public UserMessageListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
-        super(context, R.layout.user_list, conversations);
+        super(context, R.layout.online_user_list_item, conversations);
         this.mContext = context;
     }
 
