@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.User;
 import io.left.meshim.services.IMeshIMService;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Adapter that fetches online users from the app service to populate the list of online users in
- * {@link io.left.meshim.activities.MainTabActivity}.
+ * {@link MainActivity}.
  */
 public class UserListAdapter extends ArrayAdapter<User> {
     // Used to inflate views for the list.

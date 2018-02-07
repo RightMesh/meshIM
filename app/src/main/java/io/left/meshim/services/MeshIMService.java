@@ -21,7 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import io.left.meshim.R;
 import io.left.meshim.RightMeshConnectionHandler;
 import io.left.meshim.activities.IActivity;
-import io.left.meshim.activities.MainTabActivity;
+import io.left.meshim.activities.MainActivity;
 import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.database.Migrations;
 import io.left.meshim.models.ConversationSummary;
@@ -216,7 +216,7 @@ public class MeshIMService extends Service {
             String notifContent =  message.getMessage();
             String notifTitle = user.getUsername();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getAvatar());
-            Intent intent = new Intent(this, MainTabActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.setData(Uri.parse("content://" + time));
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);

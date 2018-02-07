@@ -30,7 +30,7 @@
             android:name="io.left.meshim.activities.ChooseAvatarActivity"
             android:label="@string/title_choose_avatar" />
         <activity
-            android:name="io.left.meshim.activities.MainTabActivity"
+            android:name="io.left.meshim.activities.MainActivity"
             android:label="@string/app_name" />
         <activity android:name="io.left.meshim.activities.ChatActivity" />
     </application>

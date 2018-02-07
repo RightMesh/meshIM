@@ -15,7 +15,7 @@ public class WelcomeActivity extends Activity {
         Intent intent;
         //checking if we already have a user profile
         if (User.fromDisk(this) != null && Settings.fromDisk(this) != null) {
-            intent = new Intent(WelcomeActivity.this, MainTabActivity.class);
+            intent = new Intent(WelcomeActivity.this, MainActivity.class);
         } else {
             // Launch first time activity to create a new profile
             intent = new Intent(WelcomeActivity.this,

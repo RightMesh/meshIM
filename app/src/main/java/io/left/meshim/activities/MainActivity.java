@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
-public class MainTabActivity extends ServiceConnectedActivity {
+public class MainActivity extends ServiceConnectedActivity {
     // Adapter that populates the online user list with user information from the app service.
     UserListAdapter mUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
@@ -101,7 +101,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         mUserListAdapter = new UserListAdapter(this, mUsers);
         listView.setAdapter(mUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
             intent.putExtra("recipient", mUserListAdapter.getItem(position));
             startActivity(intent);
         });
@@ -120,7 +120,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
                     ConversationSummary selected = mUserMessageListAdapter.getItem(position);
                     if (selected != null) {
                         User peer = mService.fetchUserById(selected.peerID);
-                        Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                         intent.putExtra("recipient", peer);
                         startActivity(intent);
                     }
@@ -159,7 +159,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
                 } else {
                     settings.setShowNotifications(false);
                 }
-                settings.save(MainTabActivity.this);
+                settings.save(MainActivity.this);
             });
         }
 
@@ -183,7 +183,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
             userAvatar.setImageResource(user.getAvatar());
             Button button = findViewById(R.id.editUserAvatarButton);
             button.setOnClickListener(v -> {
-                Intent avatarChooseIntent = new Intent(MainTabActivity.this,
+                Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
                 avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
                 startActivity(avatarChooseIntent);
@@ -199,7 +199,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter username");
 
-        final EditText input = new EditText(MainTabActivity.this);
+        final EditText input = new EditText(MainActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -216,11 +216,11 @@ public class MainTabActivity extends ServiceConnectedActivity {
                     TextView textView = findViewById(R.id.usernameTextViewSetting);
                     textView.setText(username);
                 } else if (username.length() > 20) {
-                    Toast.makeText(MainTabActivity.this, "Username longer than 20"
+                    Toast.makeText(MainActivity.this, "Username longer than 20"
                             + " characters", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
+                Toast.makeText(MainActivity.this, "Empty username not allowed!",
                         Toast.LENGTH_SHORT).show();
             }
         });

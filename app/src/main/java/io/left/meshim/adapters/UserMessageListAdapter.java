@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.services.IMeshIMService;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Adapter that fetches conversations from the app service to populate the list of stored
- * conversations in {@link io.left.meshim.activities.MainTabActivity}.
+ * conversations in {@link MainActivity}.
  */
 public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
     // Used to inflate views for the list.
