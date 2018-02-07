@@ -22,7 +22,7 @@ import java.util.List;
  * messages sent by this device's user in a `message_send` view and received messages in a
  * `message_recieve` view.
  */
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
@@ -32,7 +32,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     // User these messages have been exchanged with.
     private User mRecipient;
 
-    public MessageAdapter(User recipient) {
+    public MessageListAdapter(User recipient) {
         this.mRecipient = recipient;
     }
 
@@ -64,8 +64,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
          * Checks whether the message should be displayed in send or received layout.
          * Finds all the required layout fields.
          * @param view view to work with
-         * @param messageType type of message, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
-         *                    or {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+         * @param messageType type of message, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
+         *                    or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
          */
         MessageViewHolder(View view, int messageType) {
             super(view);
@@ -83,8 +83,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     /**
      * Sets up the required layout for the message.
      * @param parent parent group of view
-     * @param viewType type of view, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
-     *                 or {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
+     * @param viewType type of view, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+     *                 or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
      * @return view holder instance
      */
     @Override
@@ -131,8 +131,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     /**
      * Checks whether the message was sent or received.
      * @param position index of message in list
-     * @return message type, either {@link MessageAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
-     *         or {@link MessageAdapter#VIEW_TYPE_MESSAGE_SENT}
+     * @return message type, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
+     *         or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
      */
     @Override
     public int getItemViewType(int position) {
