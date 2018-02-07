@@ -42,7 +42,7 @@ import protobuf.MeshIMMessages.PeerUpdate;
  */
 public class RightMeshController implements MeshStateListener {
     // Port to bind app to.
-    private static final int HELLO_PORT = 9876;
+    private static final int MESH_PORT = 54321;
 
     // MeshManager instance - interface to the mesh network.
     private AndroidMeshManager meshManager = null;
@@ -103,7 +103,7 @@ public class RightMeshController implements MeshStateListener {
     public void sendTextMessage(User recipient, String message) {
         Message messageObject = new Message(user, recipient, message, true);
         try {
-            meshManager.sendDataReliable(recipient.getMeshId(), HELLO_PORT,
+            meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT,
                     createMessagePayloadFromMessage(messageObject));
 
             dao.insertMessages(messageObject);
@@ -148,7 +148,7 @@ public class RightMeshController implements MeshStateListener {
             try {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
-                meshManager.bind(HELLO_PORT);
+                meshManager.bind(MESH_PORT);
                 // Subscribes handlers to receive events from the mesh.
                 meshManager.on(DATA_RECEIVED, this::handleDataReceived);
                 meshManager.on(PEER_CHANGED, this::handlePeerChanged);
@@ -244,7 +244,7 @@ public class RightMeshController implements MeshStateListener {
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
-                meshManager.sendDataReliable(event.peerUuid, HELLO_PORT, message);
+                meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
             } catch (RightMeshException rme) {
                 rme.printStackTrace();
             }
