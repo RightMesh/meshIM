@@ -38,7 +38,7 @@
         android:id="@+id/text_message_time_recieved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:layout_constraintLeft_toRightOf="@+id/text_message_body"
         app:layout_constraintStart_toStartOf="@+id/text_message_body"
         app:layout_constraintTop_toBottomOf="@+id/text_message_body" />
