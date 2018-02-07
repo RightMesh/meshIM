@@ -11,7 +11,7 @@ import io.left.meshim.database.MeshIMDao;
 import java.util.Date;
 
 /**
- * A class that holds the information from {@link MeshIMDao#getConversationSummaries()} and is used
+ * A class that holds the information from {@link MeshIMDao#fetchConversationSummaries()} and is used
  * to populate {@link ConversationListAdapter}.
  */
 public class ConversationSummary implements Parcelable {

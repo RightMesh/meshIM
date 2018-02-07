@@ -44,7 +44,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
         }
         try {
             this.clear();
-            this.addAll(service.getConversationSummaries());
+            this.addAll(service.fetchConversationSummaries());
         } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
     }
 

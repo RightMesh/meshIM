@@ -46,7 +46,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         }
         try {
             this.mMessageList.clear();
-            List<Message> results = service.getMessagesForUser(this.mRecipient);
+            List<Message> results = service.fetchMessagesForUser(this.mRecipient);
             if (results != null) {
                 this.mMessageList.addAll(results);
             }

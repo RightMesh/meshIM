@@ -98,16 +98,6 @@ public class MeshIMService extends Service {
      */
     private final IMeshIMService.Stub mBinder = new IMeshIMService.Stub() {
         @Override
-        public User fetchUserById(int id) {
-            return mDatabase.meshIMDao().fetchUserById(id);
-        }
-
-        @Override
-        public void sendTextMessage(User recipient, String message) {
-            mMeshConnection.sendTextMessage(recipient, message);
-        }
-
-        @Override
         public void setForeground(boolean value) {
             if (value) {
                 startInForeground();
@@ -119,23 +109,18 @@ public class MeshIMService extends Service {
         }
 
         @Override
-        public void registerMainActivityCallback(IActivity callback) {
-            mMeshConnection.setCallback(callback);
-        }
-
-        @Override
         public List<User> getOnlineUsers() {
             return mMeshConnection.getUserList();
         }
 
         @Override
-        public List<Message> getMessagesForUser(User user) throws RemoteException {
-            return mDatabase.meshIMDao().getMessagesForUser(user);
+        public void registerActivityCallback(IActivity callback) {
+            mMeshConnection.setCallback(callback);
         }
 
         @Override
-        public List<ConversationSummary> getConversationSummaries() throws RemoteException {
-            return Arrays.asList(mDatabase.meshIMDao().getConversationSummaries());
+        public void sendTextMessage(User recipient, String message) {
+            mMeshConnection.sendTextMessage(recipient, message);
         }
 
         @Override
@@ -143,6 +128,20 @@ public class MeshIMService extends Service {
             mMeshConnection.showRightMeshSettings();
         }
 
+        @Override
+        public List<ConversationSummary> fetchConversationSummaries() throws RemoteException {
+            return Arrays.asList(mDatabase.meshIMDao().fetchConversationSummaries());
+        }
+
+        @Override
+        public List<Message> fetchMessagesForUser(User user) throws RemoteException {
+            return mDatabase.meshIMDao().fetchMessagesForUser(user);
+        }
+
+        @Override
+        public User fetchUserById(int id) {
+            return mDatabase.meshIMDao().fetchUserById(id);
+        }
     };
 
     /**
@@ -210,7 +209,7 @@ public class MeshIMService extends Service {
      * @param user sender
      * @param message message received
      */
-    public void sendNotification(User user,Message message) {
+    public void sendNotification(User user, Message message) {
         Settings settings = Settings.fromDisk(this);
 
         if (mIsForeground && (settings == null || settings.isShowNotifications())) {

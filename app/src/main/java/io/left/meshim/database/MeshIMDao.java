@@ -42,7 +42,7 @@ public abstract class MeshIMDao {
 
     @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) AND RecipientID IN (:userIds)"
             + " ORDER BY Timestamp ASC")
-    public abstract Message[] getMessagesBetweenUsers(int... userIds);
+    public abstract Message[] fetchMessagesBetweenUsers(int... userIds);
 
     /**
      * This query is used by {@link ConversationListAdapter}. That adapter
@@ -83,19 +83,19 @@ public abstract class MeshIMDao {
             + ") INNER JOIN Users ON PeerID = UserID "
             + "ORDER BY Timestamp DESC"
     )
-    public abstract ConversationSummary[] getConversationSummaries();
+    public abstract ConversationSummary[] fetchConversationSummaries();
 
     /**
      * Retrieve the list of messages exchanged between this device and the supplied user.
      * @param user user to get messages exchanged with
      * @return list of messages exchanged with the supplied user
      */
-    public List<Message> getMessagesForUser(User user) {
+    public List<Message> fetchMessagesForUser(User user) {
         // Fetch device's user
         User deviceUser = this.fetchUserById(User.DEVICE_USER_ID);
 
         // Retrieve messages from database.
-        Message[] messages = this.getMessagesBetweenUsers(deviceUser.id, user.id);
+        Message[] messages = this.fetchMessagesBetweenUsers(deviceUser.id, user.id);
 
         // Make User classes easier to find by their id.
         SparseArray<User> idUserMap = new SparseArray<>();
