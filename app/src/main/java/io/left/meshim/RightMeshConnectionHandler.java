@@ -28,7 +28,6 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
@@ -197,19 +196,9 @@ public class RightMeshConnectionHandler implements MeshStateListener {
                     e.printStackTrace();
                 }
             } catch (RightMeshException e) {
-                echo("Error initializing the library" + e.toString());
+                e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * A helper method that handles the null checking and exception handling around the AIDL
-     * `echo` method.
-     *
-     * @param message Message to be forwarded to the activity.
-     */
-    private void echo(String message) {
-        MeshUtility.Log("MeshIM", message);
     }
 
     /**
