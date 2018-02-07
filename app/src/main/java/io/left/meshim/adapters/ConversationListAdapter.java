@@ -30,7 +30,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
      * @param conversations list to manage
      */
     public ConversationListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
-        super(context, R.layout.online_user_list_item, conversations);
+        super(context, R.layout.list_item_online_user, conversations);
         this.mContext = context;
     }
 
@@ -54,7 +54,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
-        View v = View.inflate(mContext, R.layout.user_message_list, null);
+        View v = View.inflate(mContext, R.layout.list_item_conversation, null);
 
         ConversationSummary conversationSummary = this.getItem(position);
         if (conversationSummary != null) {

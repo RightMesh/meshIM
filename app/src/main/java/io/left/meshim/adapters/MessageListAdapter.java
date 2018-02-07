@@ -19,8 +19,8 @@ import java.util.List;
 
 /**
  * Adapter that fetches a conversation between the devices's user and a recipient, rendering
- * messages sent by this device's user in a `message_send` view and received messages in a
- * `message_recieve` view.
+ * messages sent by this device's user in a `list_item_message_sent` view and received messages in a
+ * `list_item_message_received` view.
  */
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageViewHolder> {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -91,11 +91,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_recieve, parent, false);
+                    .inflate(R.layout.list_item_message_received, parent, false);
             return new MessageViewHolder(itemView, VIEW_TYPE_MESSAGE_RECEIVED);
         } else {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_send, parent, false);
+                    .inflate(R.layout.list_item_message_sent, parent, false);
             return new MessageViewHolder(itemView, VIEW_TYPE_MESSAGE_SENT);
         }
     }

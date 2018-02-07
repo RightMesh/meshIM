@@ -45,7 +45,7 @@ public class MainActivity extends ServiceConnectedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_tab);
+        setContentView(R.layout.activity_main);
 
         configureTabs();
         configureUserList();
