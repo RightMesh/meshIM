@@ -1,8 +1,5 @@
 package io.left.meshim.services;
 
-import static io.left.meshim.services.ServiceConstants.ACTION.STARTFOREGROUND_ACTION;
-import static io.left.meshim.services.ServiceConstants.ACTION.STOPFOREGROUND_ACTION;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,6 +34,10 @@ import java.util.List;
  * {@link RightMeshConnectionHandler}.
  */
 public class MeshIMService extends Service {
+    public static final String START_FOREGROUND_ACTION = "io.left.meshim.action.startforeground";
+    public static final String STOP_FOREGROUND_ACTION = "io.left.meshim.action.stopforeground";
+    public static final int FOREGROUND_SERVICE_ID = 101;
+
     private MeshIMDatabase mDatabase;
     private RightMeshConnectionHandler mMeshConnection;
     private Notification mServiceNotification;
@@ -51,7 +52,7 @@ public class MeshIMService extends Service {
         super.onCreate();
 
         Intent stopForegroundIntent = new Intent(this, MeshIMService.class);
-        stopForegroundIntent.setAction(STOPFOREGROUND_ACTION);
+        stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
         PendingIntent pendingIntent
                 = PendingIntent.getService(this,0,stopForegroundIntent,0);
 
@@ -184,13 +185,13 @@ public class MeshIMService extends Service {
         if (intent != null) {
             action = intent.getAction();
         }
-        if (action != null && action.equals(STOPFOREGROUND_ACTION)) {
+        if (action != null && action.equals(STOP_FOREGROUND_ACTION)) {
             if (mIsBound) {
                 stopForeground(true);
             } else {
                 stopSelf();
             }
-        } else if (action != null && action.equals(STARTFOREGROUND_ACTION)) {
+        } else if (action != null && action.equals(START_FOREGROUND_ACTION)) {
             startinForeground();
         }
         return START_STICKY;
@@ -200,7 +201,7 @@ public class MeshIMService extends Service {
      * creates a notification bar for foreground service and starts the service.
      */
     private void startinForeground() {
-        startForeground(ServiceConstants.NOTIFICATION_ID.FOREGROUND_SERVICE, mServiceNotification);
+        startForeground(FOREGROUND_SERVICE_ID, mServiceNotification);
     }
 
     /**
