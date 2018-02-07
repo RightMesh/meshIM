@@ -7,7 +7,7 @@ import android.os.Bundle;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
-public class WelcomeActivity extends Activity {
+public class LaunchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,10 +15,10 @@ public class WelcomeActivity extends Activity {
         Intent intent;
         //checking if we already have a user profile
         if (User.fromDisk(this) != null && Settings.fromDisk(this) != null) {
-            intent = new Intent(WelcomeActivity.this, MainActivity.class);
+            intent = new Intent(LaunchActivity.this, MainActivity.class);
         } else {
             // Launch first time activity to create a new profile
-            intent = new Intent(WelcomeActivity.this,
+            intent = new Intent(LaunchActivity.this,
                     OnboardingUsernameActivity.class);
         }
         startActivity(intent);
