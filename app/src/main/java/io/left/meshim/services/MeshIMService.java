@@ -26,6 +26,7 @@ import io.left.meshim.models.Message;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -109,7 +110,7 @@ public class MeshIMService extends Service {
         @Override
         public void setForeground(boolean value) {
             if (value) {
-                startinForeground();
+                startInForeground();
                 mIsForeground = true;
             } else {
                 stopForeground(true);
@@ -129,12 +130,12 @@ public class MeshIMService extends Service {
 
         @Override
         public List<Message> getMessagesForUser(User user) throws RemoteException {
-            return mMeshConnection.getMessagesForUser(user);
+            return mDatabase.meshIMDao().getMessagesForUser(user);
         }
 
         @Override
         public List<ConversationSummary> getConversationSummaries() throws RemoteException {
-            return mMeshConnection.getConversationSummaries();
+            return Arrays.asList(mDatabase.meshIMDao().getConversationSummaries());
         }
 
         @Override
@@ -192,7 +193,7 @@ public class MeshIMService extends Service {
                 stopSelf();
             }
         } else if (action != null && action.equals(START_FOREGROUND_ACTION)) {
-            startinForeground();
+            startInForeground();
         }
         return START_STICKY;
     }
@@ -200,7 +201,7 @@ public class MeshIMService extends Service {
     /**
      * creates a notification bar for foreground service and starts the service.
      */
-    private void startinForeground() {
+    private void startInForeground() {
         startForeground(FOREGROUND_SERVICE_ID, mServiceNotification);
     }
 
@@ -212,7 +213,7 @@ public class MeshIMService extends Service {
     public void sendNotification(User user,Message message) {
         Settings settings = Settings.fromDisk(this);
 
-        if (mIsForeground && settings.isShowNotifications()) {
+        if (mIsForeground && (settings == null || settings.isShowNotifications())) {
             long time = Calendar.getInstance().getTimeInMillis();
             String notifContent =  message.getMessage();
             String notifTitle = user.getUsername();
@@ -228,18 +229,16 @@ public class MeshIMService extends Service {
             builder.setWhen(time)
                    .setContentText(notifContent)
                    .setContentTitle(notifTitle)
-                   //.setSmallIcon(user.getUserAvatar())
                    .setAutoCancel(true)
                    .setTicker(notifTitle)
                    .setLargeIcon(bitmap)
                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND
                            | Notification.DEFAULT_VIBRATE)
-                   .setSmallIcon(R.mipmap.available_icon)
+                   .setSmallIcon(R.mipmap.ic_launcher)
                    .setContentIntent(pendingIntent);
 
             Notification notification = builder.build();
             notificationManager.notify((int) time, notification);
         }
     }
-
 }

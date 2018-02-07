@@ -91,42 +91,11 @@ public class RightMeshConnectionHandler implements MeshStateListener {
     }
 
     /**
-     * Retrieve the list of messages exchanged between this device and the supplied user.
-     * @param user user to get messages exchanged with
-     * @return list of messages exchanged with the supplied user
-     */
-    public List<Message> getMessagesForUser(User user) {
-        // Retrieve messages from database.
-        Message[] messages = dao.getMessagesBetweenUsers(this.user.id, user.id);
-
-        // Make User classes easier to find by their id.
-        SparseArray<User> idUserMap = new SparseArray<>();
-        idUserMap.put(this.user.id, this.user);
-        idUserMap.put(user.id, user);
-
-        // Populate messages with actual User classes.
-        for (Message m : messages) {
-            m.setSender(idUserMap.get(m.senderId));
-            m.setRecipient(idUserMap.get(m.recipientId));
-        }
-
-        return Arrays.asList(messages);
-    }
-
-    /**
      * Returns a list of online users.
      * @return online users
      */
     public List<User> getUserList() {
         return new ArrayList<>(users.values());
-    }
-
-    /**
-     * Returns a list of conversation summaries stored in the database.
-     * @return summaries of all conversations stored in the database
-     */
-    public List<ConversationSummary> getConversationSummaries() {
-        return Arrays.asList(dao.getConversationSummaries());
     }
 
     /**
