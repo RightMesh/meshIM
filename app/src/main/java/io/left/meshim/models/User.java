@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import io.left.meshim.controllers.RightMeshController;
 import io.left.rightmesh.id.MeshID;
 
 import java.lang.reflect.Type;
@@ -34,9 +35,13 @@ import java.lang.reflect.Type;
 @Entity(tableName = "Users",
         indices = {@Index(value = {"UserID", "MeshID"}, unique = true)})
 public class User implements Parcelable {
-    //used in share preference to save or load data
+    // Used in shared preference to save or load data.
     @Ignore
     private static final String SAVE_VERSION = "UserDataSaveVersion_v1";
+
+    // ID of the device's user, achieved by ensuring it is the first one inserted into the database.
+    @Ignore
+    public static final int DEVICE_USER_ID = 1;
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "UserID")
@@ -63,7 +68,7 @@ public class User implements Parcelable {
 
     /**
      * Constructor with {@link MeshID} option. Used in
-     * {@link io.left.meshim.RightMeshConnectionHandler} where we care about mesh logic.
+     * {@link RightMeshController} where we care about mesh logic.
      * @param username displayed username for the user
      * @param avatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
@@ -209,7 +214,7 @@ public class User implements Parcelable {
             if (temp == null) {
                 return false;
             } else {
-                this.id = 1; // This device's user is always the first in the database, so id of 1.
+                this.id = DEVICE_USER_ID;
                 this.setAvatar(temp.getAvatar());
                 this.setUsername(temp.getUsername());
             }

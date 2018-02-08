@@ -25,7 +25,7 @@ public abstract class ServiceConnectedActivity extends Activity {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = IMeshIMService.Stub.asInterface(service);
             try {
-                mService.registerMainActivityCallback(mCallback);
+                mService.registerActivityCallback(mCallback);
                 mService.setForeground(false);
             } catch (RemoteException e) {
                 e.printStackTrace();

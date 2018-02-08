@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.left.meshim.R;
-import io.left.meshim.adapters.UserListAdapter;
-import io.left.meshim.adapters.UserMessageListAdapter;
+import io.left.meshim.adapters.ConversationListAdapter;
+import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -31,12 +31,12 @@ import java.util.ArrayList;
  * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
-public class MainTabActivity extends ServiceConnectedActivity {
+public class MainActivity extends ServiceConnectedActivity {
     // Adapter that populates the online user list with user information from the app service.
-    UserListAdapter mUserListAdapter;
+    OnlineUserListAdapter mOnlineUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
-    UserMessageListAdapter mUserMessageListAdapter;
+    ConversationListAdapter mConversationListAdapter;
 
     /**
      * Initializes UI elements.
@@ -45,7 +45,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_tab);
+        setContentView(R.layout.activity_main);
 
         configureTabs();
         configureUserList();
@@ -84,11 +84,12 @@ public class MainTabActivity extends ServiceConnectedActivity {
         spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
         host.addTab(spec);
     }
+
     private View createTabIndicator(Context context, String title, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        ImageView iv = (ImageView) view.findViewById(R.id.imageView);
+        ImageView iv = view.findViewById(R.id.imageView);
         iv.setImageResource(icon);
-        TextView tv = (TextView) view.findViewById(R.id.tabText);
+        TextView tv = view.findViewById(R.id.tabText);
         tv.setText(title);
         return view;
     }
@@ -98,11 +99,11 @@ public class MainTabActivity extends ServiceConnectedActivity {
      */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
-        mUserListAdapter = new UserListAdapter(this, mUsers);
-        listView.setAdapter(mUserListAdapter);
+        mOnlineUserListAdapter = new OnlineUserListAdapter(this, mUsers);
+        listView.setAdapter(mOnlineUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
-            intent.putExtra("recipient", mUserListAdapter.getItem(position));
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra("recipient", mOnlineUserListAdapter.getItem(position));
             startActivity(intent);
         });
     }
@@ -112,15 +113,15 @@ public class MainTabActivity extends ServiceConnectedActivity {
      */
     private void configureMessageList() {
         ListView listView = findViewById(R.id.multiUserMessageListView);
-        mUserMessageListAdapter = new UserMessageListAdapter(this, mConversationSummaries);
-        listView.setAdapter(mUserMessageListAdapter);
+        mConversationListAdapter = new ConversationListAdapter(this, mConversationSummaries);
+        listView.setAdapter(mConversationListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             try {
                 if (mService != null) {
-                    ConversationSummary selected = mUserMessageListAdapter.getItem(position);
+                    ConversationSummary selected = mConversationListAdapter.getItem(position);
                     if (selected != null) {
                         User peer = mService.fetchUserById(selected.peerID);
-                        Intent intent = new Intent(MainTabActivity.this, ChatActivity.class);
+                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                         intent.putExtra("recipient", peer);
                         startActivity(intent);
                     }
@@ -137,10 +138,10 @@ public class MainTabActivity extends ServiceConnectedActivity {
     @Override
     public void updateInterface() {
         runOnUiThread(() -> {
-            mUserListAdapter.updateList(mService);
-            mUserListAdapter.notifyDataSetChanged();
-            mUserMessageListAdapter.updateList(mService);
-            mUserMessageListAdapter.notifyDataSetChanged();
+            mOnlineUserListAdapter.updateList(mService);
+            mOnlineUserListAdapter.notifyDataSetChanged();
+            mConversationListAdapter.updateList(mService);
+            mConversationListAdapter.notifyDataSetChanged();
         });
     }
 
@@ -159,7 +160,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
                 } else {
                     settings.setShowNotifications(false);
                 }
-                settings.save(MainTabActivity.this);
+                settings.save(MainActivity.this);
             });
         }
 
@@ -177,14 +178,13 @@ public class MainTabActivity extends ServiceConnectedActivity {
         userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
-
         User user = User.fromDisk(this);
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
             userAvatar.setImageResource(user.getAvatar());
             Button button = findViewById(R.id.editUserAvatarButton);
             button.setOnClickListener(v -> {
-                Intent avatarChooseIntent = new Intent(MainTabActivity.this,
+                Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
                 avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
                 startActivity(avatarChooseIntent);
@@ -200,7 +200,7 @@ public class MainTabActivity extends ServiceConnectedActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter username");
 
-        final EditText input = new EditText(MainTabActivity.this);
+        final EditText input = new EditText(MainActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -217,11 +217,11 @@ public class MainTabActivity extends ServiceConnectedActivity {
                     TextView textView = findViewById(R.id.usernameTextViewSetting);
                     textView.setText(username);
                 } else if (username.length() > 20) {
-                    Toast.makeText(MainTabActivity.this, "Username longer than 20"
+                    Toast.makeText(MainActivity.this, "Username longer than 20"
                             + " characters", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainTabActivity.this, "Empty username not allowed!",
+                Toast.makeText(MainActivity.this, "Empty username not allowed!",
                         Toast.LENGTH_SHORT).show();
             }
         });

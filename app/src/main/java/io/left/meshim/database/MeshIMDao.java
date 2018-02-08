@@ -4,43 +4,49 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.util.SparseArray;
 
+import io.left.meshim.activities.MainActivity;
+import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.rightmesh.id.MeshID;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A collection of queries for accessing data types for MeshIM.
  */
 @Dao
-public interface MeshIMDao {
+public abstract class MeshIMDao {
     @Insert()
-    void insertUsers(User... users);
+    public abstract void insertUsers(User... users);
 
     @Update
-    void updateUsers(User... users);
+    public abstract void updateUsers(User... users);
 
     @Query("SELECT * FROM Users")
-    User[] fetchAllUsers();
+    public abstract User[] fetchAllUsers();
 
     @Query("SELECT UserID, MeshID FROM Users WHERE MeshID = :meshId")
-    MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
+    public abstract MeshIDTuple fetchMeshIdTupleByMeshId(MeshID meshId);
 
     @Query("SELECT * FROM Users WHERE UserID = :id")
-    User fetchUserById(int id);
+    public abstract User fetchUserById(int id);
 
     @Insert()
-    void insertMessages(Message... messages);
+    public abstract void insertMessages(Message... messages);
 
     @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) AND RecipientID IN (:userIds)"
             + " ORDER BY Timestamp ASC")
-    Message[] getMessagesBetweenUsers(int... userIds);
+    public abstract Message[] fetchMessagesBetweenUsers(int... userIds);
 
     /**
-     * This query is used by {@link io.left.meshim.adapters.UserMessageListAdapter}. That adapter
-     * populates a tab in {@link io.left.meshim.activities.MainTabActivity} which shows a list of
+     * This query is used by {@link ConversationListAdapter}. That adapter
+     * populates a tab in {@link MainActivity} which shows a list of
      * conversations that have been had with other meshIM users in the past.
      *
      * <p>
@@ -77,5 +83,31 @@ public interface MeshIMDao {
             + ") INNER JOIN Users ON PeerID = UserID "
             + "ORDER BY Timestamp DESC"
     )
-    ConversationSummary[] getConversationSummaries();
+    public abstract ConversationSummary[] fetchConversationSummaries();
+
+    /**
+     * Retrieve the list of messages exchanged between this device and the supplied user.
+     * @param user user to get messages exchanged with
+     * @return list of messages exchanged with the supplied user
+     */
+    public List<Message> fetchMessagesForUser(User user) {
+        // Fetch device's user
+        User deviceUser = this.fetchUserById(User.DEVICE_USER_ID);
+
+        // Retrieve messages from database.
+        Message[] messages = this.fetchMessagesBetweenUsers(deviceUser.id, user.id);
+
+        // Make User classes easier to find by their id.
+        SparseArray<User> idUserMap = new SparseArray<>();
+        idUserMap.put(deviceUser.id, deviceUser);
+        idUserMap.put(user.id, user);
+
+        // Populate messages with actual User classes.
+        for (Message m : messages) {
+            m.setSender(idUserMap.get(m.senderId));
+            m.setRecipient(idUserMap.get(m.recipientId));
+        }
+
+        return Arrays.asList(messages);
+    }
 }

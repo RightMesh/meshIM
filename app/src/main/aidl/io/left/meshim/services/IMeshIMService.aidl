@@ -6,19 +6,27 @@ import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 
 interface IMeshIMService {
-    User fetchUserById(in int id);
-
-    void sendTextMessage(in User recipient, in String message);
+    // Service funcionality.
 
     void setForeground(in boolean value);
 
-    void registerMainActivityCallback(in IActivity callback);
+
+    // RightMesh funcionality.
 
     List<User> getOnlineUsers();
 
-    List<Message> getMessagesForUser(in User user);
+    void registerActivityCallback(in IActivity callback);
 
-    List<ConversationSummary> getConversationSummaries();
+    void sendTextMessage(in User recipient, in String message);
 
     void showRightMeshSettings();
+
+
+    // Database queries.
+
+    List<ConversationSummary> fetchConversationSummaries();
+
+    List<Message> fetchMessagesForUser(in User user);
+
+    User fetchUserById(in int id);
 }

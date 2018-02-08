@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.services.IMeshIMService;
 
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 
 /**
  * Adapter that fetches conversations from the app service to populate the list of stored
- * conversations in {@link io.left.meshim.activities.MainTabActivity}.
+ * conversations in {@link MainActivity}.
  */
-public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
+public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
     // Used to inflate views for the list.
     private Context mContext;
 
@@ -28,8 +29,8 @@ public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
      * @param context context of activity
      * @param conversations list to manage
      */
-    public UserMessageListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
-        super(context, R.layout.user_list, conversations);
+    public ConversationListAdapter(Context context, ArrayList<ConversationSummary> conversations) {
+        super(context, R.layout.list_item_online_user, conversations);
         this.mContext = context;
     }
 
@@ -43,7 +44,7 @@ public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
         }
         try {
             this.clear();
-            this.addAll(service.getConversationSummaries());
+            this.addAll(service.fetchConversationSummaries());
         } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
     }
 
@@ -53,7 +54,7 @@ public class UserMessageListAdapter extends ArrayAdapter<ConversationSummary> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
-        View v = View.inflate(mContext, R.layout.user_message_list, null);
+        View v = View.inflate(mContext, R.layout.list_item_conversation, null);
 
         ConversationSummary conversationSummary = this.getItem(position);
         if (conversationSummary != null) {

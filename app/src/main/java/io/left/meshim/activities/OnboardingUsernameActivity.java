@@ -9,28 +9,25 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import io.left.meshim.R;
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
-import org.apache.commons.lang3.StringUtils;
 
+public class OnboardingUsernameActivity extends Activity {
+    private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
-public class FirstTimeCreateUsernameActivity extends Activity {
     private User mUser = null;
-    private Settings mSettings = null;
-    private final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
-    private boolean isUsernameValid = false;
+    private boolean mIsUsernameValid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_time_username);
+        setContentView(R.layout.activity_onboarding_username);
 
-        mSettings = new Settings(true);
-        mSettings.save(this);
+        Settings settings = new Settings(true);
+        settings.save(this);
         configureFinishButton();
         configureUsernameWatcher();
     }
@@ -38,21 +35,19 @@ public class FirstTimeCreateUsernameActivity extends Activity {
 
     /**
      * Creates a User profile.
-     *
      */
-
     private void configureFinishButton() {
 
         Button button = findViewById(R.id.saveUserNameButton);
         button.setOnClickListener(v -> {
             EditText userText = findViewById(R.id.userNameEditText);
             String userName = userText.getText().toString();
-            if (isUsernameValid) {
-                mUser = new User(FirstTimeCreateUsernameActivity.this);
+            if (mIsUsernameValid) {
+                mUser = new User(OnboardingUsernameActivity.this);
                 mUser.setUsername(userName);
                 mUser.setAvatar(1);
                 mUser.save();
-                Intent intent = new Intent(FirstTimeCreateUsernameActivity.this,
+                Intent intent = new Intent(OnboardingUsernameActivity.this,
                         ChooseAvatarActivity.class);
                 startActivity(intent);
                 finish();
@@ -80,17 +75,17 @@ public class FirstTimeCreateUsernameActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    isUsernameValid = false;
+                    mIsUsernameValid = false;
                     errorText.setText("Username over 20 characters");
                     errorText.setTextColor(Color.RED);
                 } else if (s.length() < 1) {
                     errorText.setText("Username cannot be empty");
                     errorText.setTextColor(Color.RED);
-                    isUsernameValid = false;
+                    mIsUsernameValid = false;
                 } else {
                     errorText.setText("Change it anytime");
                     errorText.setTextColor(Color.BLACK);
-                    isUsernameValid = true;
+                    mIsUsernameValid = true;
                 }
             }
         };

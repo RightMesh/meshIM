@@ -5,13 +5,14 @@ import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
+import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.database.MeshIMDao;
 
+import java.util.Date;
+
 /**
- * A class that holds the information from {@link MeshIMDao#getConversationSummaries()} and is used
- * to populate {@link io.left.meshim.adapters.UserMessageListAdapter}.
+ * A class that holds the information from {@link MeshIMDao#fetchConversationSummaries()} and is used
+ * to populate {@link ConversationListAdapter}.
  */
 public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "Username")

@@ -17,7 +17,7 @@
     <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshim/database/"/>
     <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshim/database/"/>
     <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshim/database/"/>
-    <suppress id="AndroidNaming1of3" files="RightMeshConnectionHandler.java"/>
-    <suppress id="AndroidNaming2of3" files="RightMeshConnectionHandler.java"/>
-    <suppress id="AndroidNaming3of3" files="RightMeshConnectionHandler.java"/>
+    <suppress id="AndroidNaming1of3" files="app/src/main/java/io/left/meshim/controllers/"/>
+    <suppress id="AndroidNaming2of3" files="app/src/main/java/io/left/meshim/controllers/"/>
+    <suppress id="AndroidNaming3of3" files="app/src/main/java/io/left/meshim/controllers/"/>
 </suppressions>

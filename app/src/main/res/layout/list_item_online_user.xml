@@ -3,11 +3,9 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    >
+    android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/userMessageAvatar"
@@ -15,11 +13,13 @@
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/userNameMessageText"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/user_avatar_description" />
 
     <TextView
         android:id="@+id/userNameMessageText"
@@ -27,10 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
         android:paddingBottom="3dp"
-        android:text="User Name"
         android:textColor="#000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/userMessageAvatar"
@@ -39,13 +39,15 @@
 
     <TextView
         android:id="@+id/textView3"
+        android:gravity="start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/chat_bubble_rec"
-        android:text="IN RANGE"
+        android:text="@string/in_range"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.User;
 import io.left.meshim.services.IMeshIMService;
 
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 
 /**
  * Adapter that fetches online users from the app service to populate the list of online users in
- * {@link io.left.meshim.activities.MainTabActivity}.
+ * {@link MainActivity}.
  */
-public class UserListAdapter extends ArrayAdapter<User> {
+public class OnlineUserListAdapter extends ArrayAdapter<User> {
     // Used to inflate views for the list.
     private Context mContext;
 
@@ -31,8 +32,8 @@ public class UserListAdapter extends ArrayAdapter<User> {
      * @param context context of activity
      * @param userList list to manage
      */
-    public UserListAdapter(Context context, ArrayList<User> userList) {
-        super(context, R.layout.user_list, userList);
+    public OnlineUserListAdapter(Context context, ArrayList<User> userList) {
+        super(context, R.layout.list_item_online_user, userList);
         this.mContext = context;
         this.mUserList = userList;
     }
@@ -57,7 +58,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent)  {
-        View v = View.inflate(mContext, R.layout.user_list, null);
+        View v = View.inflate(mContext, R.layout.list_item_online_user, null);
 
         // Null-check the user at this position.
         User user = this.getItem(position);

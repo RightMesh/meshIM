@@ -10,4 +10,13 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="ChangeAvatar">change avatar</string>
+    <string name="type_message">Type message</string>
+    <string name="in_range">IN RANGE</string>
+    <string name="user_avatar_description">User avatar</string>
+    <string name="tab_icon_description">Tab icon</string>
+    <string name="username">Username</string>
+    <string name="username_prompt">Create a user name</string>
+    <string name="username_length">0/20</string>
+    <string name="save">SAVE</string>
+    <string name="change_it_anytime">Change it anytime</string>
 </resources>

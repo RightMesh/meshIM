@@ -8,7 +8,6 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.Toast;
 
 import io.left.meshim.R;
 import io.left.meshim.models.User;
@@ -42,10 +41,11 @@ public class ChooseAvatarActivity extends Activity {
             mUser.setAvatar(mUserAvatarId);
             mUser.save();
             //if intent is launch from setting tab.
-            if (prevIntent.getAction() != null && prevIntent.getAction().equals(getString(R.string.ChangeAvatar))) {
+            String action = prevIntent.getAction();
+            if (action != null && action.equals(getString(R.string.ChangeAvatar))) {
                 finish();
             } else {
-                Intent intent = new Intent(ChooseAvatarActivity.this, MainTabActivity.class);
+                Intent intent = new Intent(ChooseAvatarActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
