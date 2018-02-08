@@ -4,7 +4,7 @@ MeshIM is an on- or off-line Android messaging application built on [the RightMe
 
 You can send messages to other MeshIM users over the internet, or form automatically form a local network to send messages to devices nearby!
 
-##RightMesh
+## RightMesh
 
 RightMesh is a software-based, mobile mesh networking platform and protocol using blockchain technology and tokens to enhance global connectivity. Find out more at [RightMesh.io](https://rightmeseh.io)
 
