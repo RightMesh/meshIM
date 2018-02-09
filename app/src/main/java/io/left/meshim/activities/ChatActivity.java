@@ -19,6 +19,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
 
+
     /**
      * {@inheritDoc}.
      */
