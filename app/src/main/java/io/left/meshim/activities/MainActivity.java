@@ -51,6 +51,14 @@ public class MainActivity extends ServiceConnectedActivity {
         configureUserList();
         configureMessageList();
         setupSettingTab();
+        Button bttn = findViewById(R.id.chatTestButton);
+        bttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ChatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
