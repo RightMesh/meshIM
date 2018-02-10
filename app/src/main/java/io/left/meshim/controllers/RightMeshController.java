@@ -149,7 +149,6 @@ public class RightMeshController implements MeshStateListener {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(MESH_PORT);
-                meshManager.setPattern("SACHIN");
                 // Subscribes handlers to receive events from the mesh.
                 meshManager.on(DATA_RECEIVED, this::handleDataReceived);
                 meshManager.on(PEER_CHANGED, this::handlePeerChanged);
