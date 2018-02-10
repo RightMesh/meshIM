@@ -32,7 +32,10 @@
         <activity
             android:name="io.left.meshim.activities.MainActivity"
             android:label="@string/app_name" />
-        <activity android:name="io.left.meshim.activities.ChatActivity" />
+        <activity android:name="io.left.meshim.activities.ChatActivity">
+        </activity>
+
+        />
     </application>
 
 </manifest>

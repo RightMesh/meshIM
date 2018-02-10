@@ -3,8 +3,12 @@ package io.left.meshim.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +63,7 @@ public class MainActivity extends ServiceConnectedActivity {
                 startActivity(intent);
             }
         });
+        setupActionBar();
     }
 
     @Override
@@ -107,6 +112,7 @@ public class MainActivity extends ServiceConnectedActivity {
      */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
+        listView.setEmptyView(findViewById(R.id.empty_list_item));
         mOnlineUserListAdapter = new OnlineUserListAdapter(this, mUsers);
         listView.setAdapter(mOnlineUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -181,12 +187,13 @@ public class MainActivity extends ServiceConnectedActivity {
                 e.printStackTrace();
             }
         });
-
+        User user = User.fromDisk(this);
+        TextView usernameText = findViewById(R.id.usernameTextViewSetting);
+        usernameText.setText(user.getUsername());
         Button userNameButton = findViewById(R.id.editUsernameButtonSetting);
         userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
-        User user = User.fromDisk(this);
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
             userAvatar.setImageResource(user.getAvatar());
@@ -236,5 +243,21 @@ public class MainActivity extends ServiceConnectedActivity {
         builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
+    }
+
+    /**
+     * Sets up action bar icon and logo.
+     */
+    private void setupActionBar() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            String title = "MeshIM";
+            SpannableString s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, title.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            getSupportActionBar().setTitle(s);
+        }
     }
 }

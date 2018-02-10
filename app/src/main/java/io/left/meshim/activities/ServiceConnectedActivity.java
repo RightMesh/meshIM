@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v7.app.AppCompatActivity;
 
 import io.left.meshim.services.IMeshIMService;
 import io.left.meshim.services.MeshIMService;
@@ -14,7 +15,7 @@ import io.left.meshim.services.MeshIMService;
 /**
  * Abstract parent class to all Acitivies that need to connect to {@link MeshIMService}.
  */
-public abstract class ServiceConnectedActivity extends Activity {
+public abstract class ServiceConnectedActivity extends AppCompatActivity {
     // Reference to AIDL interface of app service.
     IMeshIMService mService = null;
 
