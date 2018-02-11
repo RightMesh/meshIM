@@ -40,6 +40,9 @@ public class MeshIMService extends Service {
     public static final String STOP_FOREGROUND_ACTION = "io.left.meshim.action.stopforeground";
     public static final int FOREGROUND_SERVICE_ID = 101;
 
+    public static final String CHANNEL_NAME = "meshim";
+    public static final String CHANNEL_ID = "notification_channel";
+
     private MeshIMDatabase mDatabase;
     private RightMeshController mMeshConnection;
     private Notification mServiceNotification;
@@ -60,8 +63,10 @@ public class MeshIMService extends Service {
 
         NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(this,
-                    NotificationChannel.DEFAULT_CHANNEL_ID);
+            NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         } else {
             //noinspection deprecation
             builder = new NotificationCompat.Builder(this);
