@@ -19,7 +19,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.left.rightmesh:rightmesh-plugin:1.3'
+        classpath 'io.left.rightmesh:rightmesh-plugin:1.4'
     }
 
 }
