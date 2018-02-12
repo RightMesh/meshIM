@@ -223,11 +223,20 @@ public class RightMeshController implements MeshStateListener {
                 updateInterface();
             } else if (messageType == MESSAGE) {
                 MeshIMMessages.Message protoMessage = messageWrapper.getMessage();
+
+                // Try to find user details, fetching from database if they aren't in the online
+                // users list.
                 User sender = users.get(peerId);
-                Message message = new Message(sender, user, protoMessage.getMessage(), false);
-                dao.insertMessages(message);
-                meshIMService.sendNotification(sender,message);
-                updateInterface();
+                if (sender == null) {
+                    sender = dao.fetchUserByMeshId(peerId);
+                }
+
+                if (sender != null && user != null) {
+                    Message message = new Message(sender, user, protoMessage.getMessage(), false);
+                    dao.insertMessages(message);
+                    meshIMService.sendNotification(sender, message);
+                    updateInterface();
+                }
             }
         } catch (InvalidProtocolBufferException ignored) { /* Ignore malformed messages. */ }
     }
