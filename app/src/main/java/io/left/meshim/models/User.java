@@ -205,38 +205,35 @@ public class User implements Parcelable {
      * @return true if function was able to load else false
      */
     public boolean load() {
-        try {
-            Gson gson = new Gson();
-            String user = preferences.getString(SAVE_VERSION, null);
-            Type type = new TypeToken<User>() {
-            }.getType();
-            User temp = gson.fromJson(user, type);
-            if (temp == null) {
-                return false;
-            } else {
-                this.id = DEVICE_USER_ID;
-                this.setAvatar(temp.getAvatar());
-                this.setUsername(temp.getUsername());
-            }
-            return true;
-        } catch (NullPointerException npe) {
-            // If preferences is null, we can't load anything.
+        // Can't load anything if preferences hasn't been initialized.
+        if (preferences == null) {
             return false;
         }
+
+        Gson gson = new Gson();
+        String user = preferences.getString(SAVE_VERSION, null);
+        Type type = new TypeToken<User>() {}.getType();
+        User temp = gson.fromJson(user, type);
+        if (temp == null) {
+            return false;
+        } else {
+            this.id = DEVICE_USER_ID;
+            this.setAvatar(temp.getAvatar());
+            this.setUsername(temp.getUsername());
+        }
+        return true;
     }
 
     /**
      * This function saves data to SharedPreferences.
      */
     public void save() {
-        try {
+        if (preferences != null) {
             SharedPreferences.Editor editor = preferences.edit();
             Gson gsonModel = new Gson();
             String savemodel = gsonModel.toJson(this);
             editor.putString(SAVE_VERSION, savemodel);
             editor.commit();
-        } catch (NullPointerException ignored) {
-            // In case preferences is null.
         }
     }
 }
