@@ -96,7 +96,10 @@ public class MeshIMService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mMeshConnection.disconnect();
+        mMeshConnection = null;
+
         mDatabase.close();
+        mDatabase = null;
 
         // We need to ensure the service is recreated every time we think it is dead.
         // If this doesn't happen, RightMesh doesn't always start up again.
