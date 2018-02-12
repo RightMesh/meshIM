@@ -64,14 +64,14 @@ public class RightMeshController implements MeshStateListener {
     /**
      * Constructor.
      * @param user user info for this device
-     * @param database open connection to database
+     * @param dao DAO instance from open database connection
      * @param meshIMService link to service instance
      */
-    public RightMeshController(User user, MeshIMDatabase database,
+    public RightMeshController(User user, MeshIMDao dao,
                                MeshIMService meshIMService) {
         this.user = user;
-        this.dao = database.meshIMDao();
-        this.meshIMService  = meshIMService;
+        this.dao = dao;
+        this.meshIMService = meshIMService;
 
         new Thread(() -> {
             if (dao.fetchAllUsers().length == 0) {

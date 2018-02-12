@@ -85,7 +85,7 @@ public class MeshIMService extends Service {
                 .build();
 
         User user = User.fromDisk(this);
-        mMeshConnection = new RightMeshController(user, mDatabase,this);
+        mMeshConnection = new RightMeshController(user, mDatabase.meshIMDao(), this);
         mMeshConnection.connect(this);
     }
 
