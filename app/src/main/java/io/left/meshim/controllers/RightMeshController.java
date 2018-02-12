@@ -149,27 +149,23 @@ public class RightMeshController implements MeshStateListener {
     @Override
     public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
+            // Update stored user preferences with current MeshID.
             user.setMeshId(uuid);
             user.save();
             try {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(MESH_PORT);
-                // Subscribes handlers to receive events from the mesh.
-                meshManager.on(DATA_RECEIVED, this::handleDataReceived);
-                meshManager.on(PEER_CHANGED, this::handlePeerChanged);
-
-                // If connected to the main activity, tell it to enable its UI elements.
-                try {
-                    if (callback != null) {
-                        callback.updateInterface();
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
             } catch (RightMeshException e) {
-                e.printStackTrace();
+                // @TODO: App can't receive notifications. This needs to be alerted somehow.
             }
+
+            // Subscribes handlers to receive events from the mesh.
+            meshManager.on(DATA_RECEIVED, this::handleDataReceived);
+            meshManager.on(PEER_CHANGED, this::handlePeerChanged);
+
+            // Update the UI for the first time.
+            updateInterface();
         }
     }
 
