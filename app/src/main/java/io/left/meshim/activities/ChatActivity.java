@@ -28,8 +28,13 @@ public class ChatActivity extends ServiceConnectedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // Fetch the recipient from the intent and set up the message adapter.
+        // Null-check recipient.
         mRecipient = getIntent().getParcelableExtra("recipient");
+        if (mRecipient == null) {
+            finish();
+        }
+
+        // Set up the message adapter.
         mMessageListAdapter = new MessageListAdapter(mRecipient);
         try {
             mMessageListAdapter.updateList(this.mService);

@@ -103,9 +103,12 @@ public class MainActivity extends ServiceConnectedActivity {
         mOnlineUserListAdapter = new OnlineUserListAdapter(this, mUsers);
         listView.setAdapter(mOnlineUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-            intent.putExtra("recipient", mOnlineUserListAdapter.getItem(position));
-            startActivity(intent);
+            User peer = mOnlineUserListAdapter.getItem(position);
+            if (peer != null) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                intent.putExtra("recipient", peer);
+                startActivity(intent);
+            }
         });
     }
 
@@ -120,17 +123,20 @@ public class MainActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 ConversationSummary selected = mConversationListAdapter.getItem(position);
                 if (selected != null) {
+                    User peer = null;
                     try {
-                        User peer = mService.fetchUserById(selected.peerID);
-                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                        intent.putExtra("recipient", peer);
-                        startActivity(intent);
+                        peer = mService.fetchUserById(selected.peerID);
                     } catch (RemoteException e) {
                         if (e instanceof DeadObjectException) {
                             reconnectToService();
                         }
                         // TODO: Message list might conceivably grow too big for AIDL. This should
                         // be handled here.
+                    }
+                    if (peer != null) {
+                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                        intent.putExtra("recipient", peer);
+                        startActivity(intent);
                     }
                 }
             }
