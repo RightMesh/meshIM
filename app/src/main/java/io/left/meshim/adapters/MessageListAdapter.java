@@ -1,5 +1,6 @@
 package io.left.meshim.adapters;
 
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,19 +40,22 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     /**
      * Update the list of messages from the service.
      * @param service open connection to {@link MeshIMService}
+     * @throws DeadObjectException if service connection dies unexpectedly
      */
-    public void updateList(IMeshIMService service) {
+    public void updateList(IMeshIMService service) throws DeadObjectException {
         if (service == null) {
             return;
         }
+
         try {
+            List<Message> query = service.fetchMessagesForUser(this.mRecipient);
             this.mMessageList.clear();
-            List<Message> results = service.fetchMessagesForUser(this.mRecipient);
-            if (results != null) {
-                this.mMessageList.addAll(results);
-            }
+            this.mMessageList.addAll(query);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            // If the connection has died, propagate error, otherwise ignore it.
+            if (e instanceof DeadObjectException) {
+                throw (DeadObjectException) e;
+            }
         }
     }
 
@@ -133,15 +137,18 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
      * Checks whether the message was sent or received.
      * @param position index of message in list
      * @return message type, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
-     *         or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
+     *         or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}, or -1 for an invalid position
      */
     @Override
     public int getItemViewType(int position) {
         Message message = mMessageList.get(position);
-        if (message.isMyMessage()) {
-            return VIEW_TYPE_MESSAGE_SENT;
-        } else {
-            return VIEW_TYPE_MESSAGE_RECEIVED;
+        if (message != null) {
+            if (message.isMyMessage()) {
+                return VIEW_TYPE_MESSAGE_SENT;
+            } else {
+                return VIEW_TYPE_MESSAGE_RECEIVED;
+            }
         }
+        return -1;
     }
 }

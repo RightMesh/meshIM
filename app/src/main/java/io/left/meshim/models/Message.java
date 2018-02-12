@@ -163,11 +163,15 @@ public class Message implements Parcelable {
      * @return formatted timestamp
      */
     public Timestamp getDateAsTimestamp() {
-        long millis = date.getTime();
-        return Timestamp.newBuilder()
-                .setSeconds(millis / 1000)
-                .setNanos((int) ((millis % 1000) * 1000000))
-                .build();
+        if (date != null) {
+            long millis = date.getTime();
+            return Timestamp.newBuilder()
+                    .setSeconds(millis / 1000)
+                    .setNanos((int) ((millis % 1000) * 1000000))
+                    .build();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -176,7 +180,11 @@ public class Message implements Parcelable {
      * @return formatted date string
      */
     public String getDateAsString() {
-        return dateFormat.format(date);
+        if (date != null) {
+            return dateFormat.format(date);
+        } else {
+            return "";
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,18 +117,22 @@ public class MainActivity extends ServiceConnectedActivity {
         mConversationListAdapter = new ConversationListAdapter(this, mConversationSummaries);
         listView.setAdapter(mConversationListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            try {
-                if (mService != null) {
-                    ConversationSummary selected = mConversationListAdapter.getItem(position);
-                    if (selected != null) {
+            if (mService != null) {
+                ConversationSummary selected = mConversationListAdapter.getItem(position);
+                if (selected != null) {
+                    try {
                         User peer = mService.fetchUserById(selected.peerID);
                         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                         intent.putExtra("recipient", peer);
                         startActivity(intent);
+                    } catch (RemoteException e) {
+                        if (e instanceof DeadObjectException) {
+                            reconnectToService();
+                        }
+                        // TODO: Message list might conceivably grow too big for AIDL. This should
+                        // be handled here.
                     }
                 }
-            } catch (RemoteException ignored) {
-                // Service has crashed. We don't handle this right now. We should.
             }
         });
     }
@@ -138,10 +143,14 @@ public class MainActivity extends ServiceConnectedActivity {
     @Override
     public void updateInterface() {
         runOnUiThread(() -> {
-            mOnlineUserListAdapter.updateList(mService);
-            mOnlineUserListAdapter.notifyDataSetChanged();
-            mConversationListAdapter.updateList(mService);
-            mConversationListAdapter.notifyDataSetChanged();
+            try {
+                mOnlineUserListAdapter.updateList(mService);
+                mOnlineUserListAdapter.notifyDataSetChanged();
+                mConversationListAdapter.updateList(mService);
+                mConversationListAdapter.notifyDataSetChanged();
+            } catch (DeadObjectException doe) {
+                reconnectToService();
+            }
         });
     }
 
@@ -170,7 +179,10 @@ public class MainActivity extends ServiceConnectedActivity {
             try {
                 mService.showRightMeshSettings();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                if (e instanceof DeadObjectException) {
+                    reconnectToService();
+                }
+                // Otherwise, nothing we can do here.
             }
         });
 

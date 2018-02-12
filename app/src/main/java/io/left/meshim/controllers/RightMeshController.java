@@ -268,6 +268,10 @@ public class RightMeshController implements MeshStateListener {
      * @return payload to be broadcast
      */
     private byte[] createPeerUpdatePayloadFromUser(User user) {
+        if (user == null) {
+            return null;
+        }
+
         PeerUpdate peerUpdate = PeerUpdate.newBuilder()
                 .setUserName(user.getUsername())
                 .setAvatarId(user.getAvatar())
@@ -281,7 +285,16 @@ public class RightMeshController implements MeshStateListener {
         return message.toByteArray();
     }
 
+    /**
+     * Creates a byte array representing a {@link Message}, to be broadcast over the mesh.
+     * @param message message to be represented in bytes
+     * @return payload to be broadcast
+     */
     private byte[] createMessagePayloadFromMessage(Message message) {
+        if (message == null) {
+            return null;
+        }
+
         MeshIMMessages.Message protoMsg = MeshIMMessages.Message.newBuilder()
                 .setMessage(message.getMessage())
                 .setTime(message.getDateAsTimestamp())

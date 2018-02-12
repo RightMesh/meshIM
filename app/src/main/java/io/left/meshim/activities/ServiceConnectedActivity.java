@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -28,7 +29,10 @@ public abstract class ServiceConnectedActivity extends Activity {
                 mService.registerActivityCallback(mCallback);
                 mService.setForeground(false);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                // If the connection has died, attempt to reconnect, otherwise ignore it.
+                if (e instanceof DeadObjectException) {
+                    reconnectToService();
+                }
             }
         }
 
@@ -81,6 +85,16 @@ public abstract class ServiceConnectedActivity extends Activity {
     protected void onPause() {
         super.onPause();
         disconnectFromService();
+    }
+
+    /**
+     * To be called when the service connection has broken (e.g. an AIDL call has failed with a
+     * {@link DeadObjectException}. Disconnects and reconnects to the service.
+     */
+    public void reconnectToService() {
+        mService = null;
+        disconnectFromService();
+        connectToService();
     }
 
     /**
