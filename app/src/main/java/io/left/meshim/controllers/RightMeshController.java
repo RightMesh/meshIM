@@ -105,13 +105,15 @@ public class RightMeshController implements MeshStateListener {
     public void sendTextMessage(User recipient, String message) {
         Message messageObject = new Message(user, recipient, message, true);
         try {
-            meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT,
-                    createMessagePayloadFromMessage(messageObject));
-
-            dao.insertMessages(messageObject);
-            updateInterface();
-        } catch (RightMeshException e) {
-            e.printStackTrace();
+            byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
+            if (messagePayload != null) {
+                meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+                dao.insertMessages(messageObject);
+                updateInterface();
+            }
+        } catch (RightMeshException ignored) {
+            // Something has gone wrong sending the message.
+            // Don't store it in database or update UI.
         }
     }
 
@@ -129,9 +131,11 @@ public class RightMeshController implements MeshStateListener {
      */
     public void disconnect() {
         try {
-            meshManager.stop();
-        } catch (MeshService.ServiceDisconnectedException e) {
-            e.printStackTrace();
+            if (meshManager != null) {
+                meshManager.stop();
+            }
+        } catch (MeshService.ServiceDisconnectedException ignored) {
+            // Error encountered shutting down service - nothing we can do from here.
         }
     }
 
@@ -177,8 +181,8 @@ public class RightMeshController implements MeshStateListener {
             if (callback != null) {
                 callback.updateInterface();
             }
-        } catch (RemoteException | NullPointerException ignored) {
-            // Just keep swimming.
+        } catch (RemoteException ignored) {
+            // Connection to interface has broken - nothing we can do from here.
         }
     }
 
@@ -251,9 +255,12 @@ public class RightMeshController implements MeshStateListener {
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
-                meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
-            } catch (RightMeshException rme) {
-                rme.printStackTrace();
+                if (message != null) {
+                    meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                }
+            } catch (RightMeshException ignored) {
+                // Message sending failed. Other user may have out of date information, but
+                // ultimately this isn't deal-breaking.
             }
         } else if (event.state == REMOVED) {
             discovered.remove(event.peerUuid);
@@ -314,8 +321,8 @@ public class RightMeshController implements MeshStateListener {
     public void showRightMeshSettings() {
         try {
             meshManager.showSettingsActivity();
-        } catch (RightMeshException e) {
-            e.printStackTrace();
+        } catch (RightMeshException ignored) {
+            // Service failed loading settings - nothing to be done.
         }
     }
 }

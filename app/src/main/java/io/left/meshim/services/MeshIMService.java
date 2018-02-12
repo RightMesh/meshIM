@@ -141,12 +141,12 @@ public class MeshIMService extends Service {
         }
 
         @Override
-        public List<ConversationSummary> fetchConversationSummaries() throws RemoteException {
+        public List<ConversationSummary> fetchConversationSummaries() {
             return Arrays.asList(mDatabase.meshIMDao().fetchConversationSummaries());
         }
 
         @Override
-        public List<Message> fetchMessagesForUser(User user) throws RemoteException {
+        public List<Message> fetchMessagesForUser(User user) {
             return mDatabase.meshIMDao().fetchMessagesForUser(user);
         }
 

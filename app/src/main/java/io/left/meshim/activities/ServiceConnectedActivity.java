@@ -113,12 +113,13 @@ public abstract class ServiceConnectedActivity extends Activity {
         if (mService != null) {
             try {
                 mService.setForeground(true);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } catch (RemoteException ignored) {
+                // As we are disconnecting, this isn't our problem.
+                // When we need the service again we will restart it if it doesn't exist.
             }
-            unbindService(mConnection);
             mService = null;
         }
+        unbindService(mConnection);
     }
 
     /**
