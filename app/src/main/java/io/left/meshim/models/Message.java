@@ -13,6 +13,7 @@ import com.google.protobuf.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @Entity(tableName = "Messages",
         indices = { @Index(value = {"RecipientID"}), @Index(value = {"SenderID"}) },
@@ -49,7 +50,8 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
+    public static SimpleDateFormat dateFormat
+            = new SimpleDateFormat("hh:mm a yyyy-M-dd", Locale.getDefault());
 
     public String getMessage() {
         return message;

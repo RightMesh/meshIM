@@ -13,6 +13,7 @@ import android.widget.TextView;
 import io.left.meshim.R;
 import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.ConversationSummary;
+import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText(conversationSummary.messageText);
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
-            time.setText(conversationSummary.messageTime.toString());
+            time.setText(Message.dateFormat.format(conversationSummary.messageTime));
         }
 
         return v;
