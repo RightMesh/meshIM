@@ -61,7 +61,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView mTime;
-        TextView mMessagaeBody;
+        TextView mMessageBody;
         ImageView mUserImage;
 
         /**
@@ -76,10 +76,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             super(view);
             if (messageType == VIEW_TYPE_MESSAGE_RECEIVED) {
                 mUserImage = view.findViewById(R.id.image_message_profile);
-                mMessagaeBody = view.findViewById(R.id.text_message_body);
+                mMessageBody = view.findViewById(R.id.text_message_body);
                 mTime = view.findViewById(R.id.text_message_time_recieved);
             } else {
-                mMessagaeBody = view.findViewById(R.id.text_message_body_sent);
+                mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
             }
         }
@@ -113,14 +113,19 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = mMessageList.get(position);
+        if (message != null) {
+            if (!(message.isMyMessage())) {
+                holder.mMessageBody.setText(message.getMessage());
+                holder.mTime.setText(message.getDateAsString());
 
-        if (!(message.isMyMessage())) {
-            holder.mMessagaeBody.setText(message.getMessage());
-            holder.mTime.setText(message.getDateAsString());
-            holder.mUserImage.setImageResource(message.getSender().getAvatar());
-        } else {
-            holder.mMessagaeBody.setText(message.getMessage());
-            holder.mTime.setText(message.getDateAsString());
+                User sender = message.getSender();
+                if (sender != null) {
+                    holder.mUserImage.setImageResource(sender.getAvatar());
+                }
+            } else {
+                holder.mMessageBody.setText(message.getMessage());
+                holder.mTime.setText(message.getDateAsString());
+            }
         }
     }
 
