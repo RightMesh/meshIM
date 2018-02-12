@@ -30,6 +30,7 @@ import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import protobuf.MeshIMMessages;
@@ -48,6 +49,7 @@ public class RightMeshController implements MeshStateListener {
     private AndroidMeshManager meshManager = null;
 
     // Set to keep track of peers connected to the mesh.
+    private HashSet<MeshID> discovered = new HashSet<>();
     private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
@@ -192,6 +194,10 @@ public class RightMeshController implements MeshStateListener {
             MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
             MeshID peerId = event.peerUuid;
 
+            if(peerId.equals(meshManager.getUuid())) {
+                return;
+            }
+
             MessageType messageType = messageWrapper.getMessageType();
             if (messageType == PEER_UPDATE) {
                 PeerUpdate peerUpdate = messageWrapper.getPeerUpdate();
@@ -236,11 +242,12 @@ public class RightMeshController implements MeshStateListener {
         PeerChangedEvent event = (PeerChangedEvent) e;
 
         // Ignore ourselves.
-        if (event.peerUuid == user.getMeshId()) {
+        if (event.peerUuid.equals(meshManager.getUuid())) {
             return;
         }
 
-        if (event.state == ADDED) {
+        if (event.state != REMOVED && !discovered.contains(event.peerUuid)) {
+            discovered.add(event.peerUuid);
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
@@ -249,6 +256,7 @@ public class RightMeshController implements MeshStateListener {
                 rme.printStackTrace();
             }
         } else if (event.state == REMOVED) {
+            discovered.remove(event.peerUuid);
             users.remove(event.peerUuid);
             updateInterface();
         }
