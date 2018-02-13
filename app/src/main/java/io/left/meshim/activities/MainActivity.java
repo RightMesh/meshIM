@@ -206,6 +206,8 @@ public class MainActivity extends ServiceConnectedActivity {
 
         //setup userAvatar
         if (user != null) {
+            TextView userNameText = findViewById(R.id.settings_username_text_view);
+            userNameText.setText(user.getUsername());
             ImageButton userAvatar = findViewById(R.id.settings_user_avatar);
             userAvatar.setImageResource(user.getAvatar());
             ImageButton button = findViewById(R.id.settings_user_avatar_edit_button);
