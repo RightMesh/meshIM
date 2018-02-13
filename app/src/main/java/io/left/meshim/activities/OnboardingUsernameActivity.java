@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,7 +17,6 @@ import io.left.meshim.models.User;
 public class OnboardingUsernameActivity extends Activity {
     private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
-    private User mUser = null;
     private boolean mIsUsernameValid = false;
 
     @Override
@@ -25,30 +24,29 @@ public class OnboardingUsernameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding_username);
 
-        configureFinishButton();
         configureUsernameWatcher();
     }
 
 
     /**
-     * Creates a User profile.
+     * Creates a User profile when the user presses the save button.
+     * @param view button that calls the method
      */
-    private void configureFinishButton() {
-        Button button = findViewById(R.id.saveUserNameButton);
-        button.setOnClickListener(v -> {
-            EditText userText = findViewById(R.id.userNameEditText);
-            String userName = userText.getText().toString();
-            if (mIsUsernameValid) {
-                mUser = new User(OnboardingUsernameActivity.this);
-                mUser.setUsername(userName);
-                mUser.setAvatar(1);
-                mUser.save();
-                Intent intent = new Intent(OnboardingUsernameActivity.this,
-                        ChooseAvatarActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    public void saveUsername(View view) {
+        EditText userText = findViewById(R.id.userNameEditText);
+        String userName = userText.getText().toString();
+        if (mIsUsernameValid) {
+            User user = new User(OnboardingUsernameActivity.this);
+            user.setUsername(userName);
+            user.setAvatar(1);
+            user.save();
+
+            Intent intent = new Intent(OnboardingUsernameActivity.this, ChooseAvatarActivity.class);
+            intent.setAction(ChooseAvatarActivity.ONBOARDING_ACTION);
+            startActivity(intent);
+
+            finish();
+        }
     }
 
     /**
@@ -59,9 +57,7 @@ public class OnboardingUsernameActivity extends Activity {
         TextView errorText = findViewById(R.id.errrorText);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -72,9 +68,9 @@ public class OnboardingUsernameActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    mIsUsernameValid = false;
                     errorText.setText(R.string.username_warning_message_length);
                     errorText.setTextColor(Color.RED);
+                    mIsUsernameValid = false;
                 } else if (s.length() < 1) {
                     errorText.setText(R.string.username_warning_message_empty);
                     errorText.setTextColor(Color.RED);
@@ -89,5 +85,4 @@ public class OnboardingUsernameActivity extends Activity {
         EditText editText = findViewById(R.id.userNameEditText);
         editText.addTextChangedListener(textWatcher);
     }
-
 }

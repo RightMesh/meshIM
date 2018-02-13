@@ -29,8 +29,7 @@ public class LaunchActivity extends Activity {
             intent = new Intent(LaunchActivity.this, MainActivity.class);
         } else {
             // Launch first time activity to create a new profile
-            intent = new Intent(LaunchActivity.this,
-                    OnboardingUsernameActivity.class);
+            intent = new Intent(LaunchActivity.this, OnboardingUsernameActivity.class);
         }
         startActivity(intent);
         finish();
