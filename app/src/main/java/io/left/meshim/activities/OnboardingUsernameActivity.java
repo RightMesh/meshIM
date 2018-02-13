@@ -65,21 +65,22 @@ public class OnboardingUsernameActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                charecterCount.setText(String.valueOf(s.length()) + "/20");
+                String message = getResources().getString(R.string.username_length, s.length());
+                charecterCount.setText(message);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
                     mIsUsernameValid = false;
-                    errorText.setText("Username over 20 characters");
+                    errorText.setText(R.string.username_warning_message_length);
                     errorText.setTextColor(Color.RED);
                 } else if (s.length() < 1) {
-                    errorText.setText("Username cannot be empty");
+                    errorText.setText(R.string.username_warning_message_empty);
                     errorText.setTextColor(Color.RED);
                     mIsUsernameValid = false;
                 } else {
-                    errorText.setText("Change it anytime");
+                    errorText.setText(R.string.username_sub_prompt);
                     errorText.setTextColor(Color.BLACK);
                     mIsUsernameValid = true;
                 }

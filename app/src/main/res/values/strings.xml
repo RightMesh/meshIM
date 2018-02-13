@@ -14,9 +14,14 @@
     <string name="in_range">IN RANGE</string>
     <string name="user_avatar_description">User avatar</string>
     <string name="tab_icon_description">Tab icon</string>
-    <string name="username">Username</string>
-    <string name="username_prompt">Create a user name</string>
-    <string name="username_length">0/20</string>
     <string name="save">SAVE</string>
-    <string name="change_it_anytime">Change it anytime</string>
+
+    <!-- Username editing messages -->
+    <string name="username">Username</string>
+    <string name="username_length">%d/20</string>
+    <string name="username_length_empty">0/20</string>
+    <string name="username_prompt">Create a user name</string>
+    <string name="username_sub_prompt">Change it anytime</string>
+    <string name="username_warning_message_empty">Username cannot be empty</string>
+    <string name="username_warning_message_length">Username over 20 characters</string>
 </resources>
