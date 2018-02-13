@@ -55,14 +55,6 @@ public class MainActivity extends ServiceConnectedActivity {
         configureUserList();
         configureMessageList();
         setupSettingTab();
-        Button bttn = findViewById(R.id.chatTestButton);
-        bttn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ChatActivity.class);
-                startActivity(intent);
-            }
-        });
         setupActionBar();
     }
 
@@ -254,10 +246,10 @@ public class MainActivity extends ServiceConnectedActivity {
             getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             String title = "MeshIM";
-            SpannableString s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, title.length(),
+            SpannableString spannableTittle = new SpannableString(title);
+            spannableTittle.setSpan(new ForegroundColorSpan(Color.WHITE), 0, title.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            getSupportActionBar().setTitle(s);
+            getSupportActionBar().setTitle(spannableTittle);
         }
     }
 }
