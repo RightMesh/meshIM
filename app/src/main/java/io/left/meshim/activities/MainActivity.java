@@ -198,12 +198,10 @@ public class MainActivity extends ServiceConnectedActivity {
                 // Otherwise, nothing we can do here.
             }
         });
-        User user = User.fromDisk(this);
-        TextView usernameText = findViewById(R.id.usernameTextViewSetting);
-        usernameText.setText(user.getUsername());
         TextView userNameButton = findViewById(R.id.settings_username_button);
         userNameButton.setOnClickListener(v -> alertDialog());
 
+        User user = User.fromDisk(this);
         //setup userAvatar
         if (user != null) {
             TextView userNameText = findViewById(R.id.settings_username_text_view);
@@ -225,7 +223,7 @@ public class MainActivity extends ServiceConnectedActivity {
     private void alertDialog() {
         final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter username");
+        builder.setTitle(R.string.title_onboarding_username_activity);
 
         final EditText input = new EditText(MainActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -235,7 +233,7 @@ public class MainActivity extends ServiceConnectedActivity {
         builder.setView(input);
 
         User user = User.fromDisk(this);
-        builder.setPositiveButton("SAVE", (dialog, which) -> {
+        builder.setPositiveButton(R.string.save, (dialog, which) -> {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
                 if (user != null && username.length() <= 20) {
@@ -244,15 +242,15 @@ public class MainActivity extends ServiceConnectedActivity {
                     TextView textView = findViewById(R.id.settings_username_text_view);
                     textView.setText(username);
                 } else if (username.length() > 20) {
-                    Toast.makeText(MainActivity.this, "Username longer than 20"
-                            + " characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.username_warning_message_length, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this, "Empty username not allowed!",
+                Toast.makeText(MainActivity.this, R.string.username_warning_message_empty,
                         Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
     }

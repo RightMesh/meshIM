@@ -29,6 +29,7 @@
     <string name="selected_avatar_description">Current selected user avatar</string>
     <string name="tab_icon_description">Tab icon</string>
     <string name="save">SAVE</string>
+    <string name="cancel">CANCEL</string>
     <string name="online_available">Available</string>
     <string name="edit">Edit</string>
 </resources>
