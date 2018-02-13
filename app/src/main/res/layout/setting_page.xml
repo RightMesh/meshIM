@@ -1,4 +1,5 @@
 <TableLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,6 +10,15 @@
         android:id="@+id/x"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/editUserAvatarButton"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/edit"
+            app:layout_constraintBottom_toBottomOf="@+id/userSettingAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/userSettingAvatar" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -25,53 +35,6 @@
             app:layout_constraintVertical_bias="0.0">
 
         </LinearLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/frameLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            android:elevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout5">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:lineSpacingExtra="14sp"
-                android:text="Blocked users"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="8dp" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text=">"
-                android:textAlignment="viewEnd"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.947"
-                app:layout_constraintStart_toEndOf="@+id/textView14"
-                app:layout_constraintTop_toTopOf="parent"
-                android:gravity="end" />
-        </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/frameLayout5"
@@ -126,24 +89,23 @@
             android:elevation="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout3">
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
 
             <Button
                 android:id="@+id/rightmeshSettingButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
                 android:background="@color/white"
+                android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+                android:gravity="end"
                 android:text=">"
                 android:textAlignment="textEnd"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginRight="16dp"
-                android:gravity="end" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -165,40 +127,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
-                android:text="RightMesh settings"
+                android:text="RightMesh Wallet"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/frameLayout3"
-            android:layout_width="0dp"
-            android:layout_height="131dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            android:elevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="56dp"
-                android:text="WALLET STUFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
@@ -272,25 +205,15 @@
 
         <ImageButton
             android:id="@+id/userSettingAvatar"
-            android:layout_width="wrap_content"
+            android:layout_width="72dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@mipmap/avatar1"
-            android:elevation="3dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/linearLayout" />
-
-        <Button
-            android:id="@+id/editUserAvatarButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/avatar_select"
-            android:elevation="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/userSettingAvatar"
-            app:layout_constraintEnd_toEndOf="@+id/userSettingAvatar" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/frameLayout2"
@@ -320,6 +243,7 @@
 
             <Button
                 android:id="@+id/editUsernameButtonSetting"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:layout_marginBottom="8dp"

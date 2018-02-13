@@ -1,13 +1,17 @@
 package io.left.meshim.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
 import io.left.meshim.models.User;
@@ -19,6 +23,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     private RecyclerView mMessageListView;
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
+
 
     /**
      * {@inheritDoc}.
@@ -68,6 +73,24 @@ public class ChatActivity extends ServiceConnectedActivity {
                 }
             }
         });
+        setupActionBar();
+
+    }
+
+    /**
+     * Sets up the action bar to display user name and back button.
+     */
+    private void setupActionBar() {
+        if (mRecipient != null && getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back_white_24dp);
+            String title = mRecipient.getUsername();
+            SpannableString s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, title.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            getSupportActionBar().setTitle(s);
+        }
     }
 
     /**
@@ -87,5 +110,14 @@ public class ChatActivity extends ServiceConnectedActivity {
                 reconnectToService();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
