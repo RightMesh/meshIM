@@ -1,6 +1,5 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;

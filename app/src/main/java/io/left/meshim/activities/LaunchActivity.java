@@ -1,8 +1,8 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
@@ -11,7 +11,7 @@ import io.left.meshim.models.User;
  * Class that launches the application. Checks whether the user needs to be onboarded or not,
  * and launches the next appropriate Activity.
  */
-public class LaunchActivity extends Activity {
+public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

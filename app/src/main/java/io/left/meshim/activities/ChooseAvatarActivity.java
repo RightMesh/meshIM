@@ -1,8 +1,8 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,7 +16,7 @@ import io.left.meshim.models.User;
 /**
  * User avatar selection interface.
  */
-public class ChooseAvatarActivity extends Activity {
+public class ChooseAvatarActivity extends AppCompatActivity {
     public static final String ONBOARDING_ACTION = "from onboarding";
 
     //used for the table layout

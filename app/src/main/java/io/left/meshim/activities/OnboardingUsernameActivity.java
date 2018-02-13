@@ -1,9 +1,9 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,7 +14,7 @@ import io.left.meshim.R;
 import io.left.meshim.models.User;
 
 
-public class OnboardingUsernameActivity extends Activity {
+public class OnboardingUsernameActivity extends AppCompatActivity {
     private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
     private boolean mIsUsernameValid = false;
