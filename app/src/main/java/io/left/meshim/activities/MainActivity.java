@@ -211,7 +211,6 @@ public class MainActivity extends ServiceConnectedActivity {
             button.setOnClickListener(v -> {
                 Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
-                avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
                 startActivity(avatarChooseIntent);
             });
         }
