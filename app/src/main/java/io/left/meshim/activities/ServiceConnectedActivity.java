@@ -118,8 +118,8 @@ public abstract class ServiceConnectedActivity extends Activity {
                 // When we need the service again we will restart it if it doesn't exist.
             }
             mService = null;
+            unbindService(mConnection);
         }
-        unbindService(mConnection);
     }
 
     /**
