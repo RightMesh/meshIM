@@ -4,6 +4,7 @@ import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static io.left.rightmesh.mesh.MeshManager.UPDATED;
 import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
@@ -255,7 +256,8 @@ public class RightMeshController implements MeshStateListener {
             return;
         }
 
-        if (event.state != REMOVED && !discovered.contains(event.peerUuid)) {
+        if (!discovered.contains(event.peerUuid)
+                && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
