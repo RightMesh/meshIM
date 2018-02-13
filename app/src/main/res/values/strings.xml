@@ -10,6 +10,13 @@
     <string name="username_warning_message_empty">Username cannot be empty</string>
     <string name="username_warning_message_length">Username over 20 characters</string>
 
+    <!-- Settings page -->
+    <string name="settings_notifications_description">New message notifications</string>
+    <string name="settings_online_description">Send and receive messages.</string>
+    <string name="settings_online_icon_content_description">meshIM online indicator</string>
+    <string name="settings_rightmesh_description">RightMesh wallet</string>
+    <string name="settings_rightmesh_icon_content_description">RightMesh logo</string>
+
     <string name="title_onboarding_username_activity">Create a username</string>
     <string name="title_choose_avatar">Select your avatar </string>
     <string name="tab_text_1">Tab 1</string>
@@ -22,8 +29,6 @@
     <string name="selected_avatar_description">Current selected user avatar</string>
     <string name="tab_icon_description">Tab icon</string>
     <string name="save">SAVE</string>
-    <string name="meshim_online_indicator_description">meshIM online indicator</string>
     <string name="online_available">Available</string>
-    <string name="settings_online_description">Send and receive messages.</string>
     <string name="edit">Edit</string>
 </resources>

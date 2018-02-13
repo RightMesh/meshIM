@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
+import android.support.constraint.ConstraintLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -173,7 +174,7 @@ public class MainActivity extends ServiceConnectedActivity {
         Settings settings = Settings.fromDisk(this);
         if (settings != null) {
             //turn notification on/off
-            Switch notificationSwitch = findViewById(R.id.userSettingNotification);
+            Switch notificationSwitch = findViewById(R.id.settings_notifications_switch);
             notificationSwitch.setChecked(settings.isShowNotifications());
             notificationSwitch.setOnClickListener(view -> {
                 if (notificationSwitch.isChecked()) {
@@ -186,7 +187,7 @@ public class MainActivity extends ServiceConnectedActivity {
         }
 
         //show rightmesh services
-        Button fl = findViewById(R.id.rightmeshSettingButton);
+        ConstraintLayout fl = findViewById(R.id.settings_rightmesh);
         fl.setOnClickListener(v -> {
             try {
                 mService.showRightMeshSettings();
@@ -200,14 +201,14 @@ public class MainActivity extends ServiceConnectedActivity {
         User user = User.fromDisk(this);
         TextView usernameText = findViewById(R.id.usernameTextViewSetting);
         usernameText.setText(user.getUsername());
-        Button userNameButton = findViewById(R.id.settings_username_button);
+        TextView userNameButton = findViewById(R.id.settings_username_button);
         userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
         if (user != null) {
             ImageButton userAvatar = findViewById(R.id.settings_user_avatar);
             userAvatar.setImageResource(user.getAvatar());
-            Button button = findViewById(R.id.editUserAvatarButton);
+            ImageButton button = findViewById(R.id.settings_user_avatar_edit_button);
             button.setOnClickListener(v -> {
                 Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
