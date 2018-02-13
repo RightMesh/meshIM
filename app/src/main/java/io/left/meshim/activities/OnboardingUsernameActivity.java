@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import io.left.meshim.R;
-import io.left.meshim.models.Settings;
 import io.left.meshim.models.User;
 
 
@@ -26,8 +25,6 @@ public class OnboardingUsernameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding_username);
 
-        Settings settings = new Settings(true);
-        settings.save(this);
         configureFinishButton();
         configureUsernameWatcher();
     }
@@ -37,7 +34,6 @@ public class OnboardingUsernameActivity extends Activity {
      * Creates a User profile.
      */
     private void configureFinishButton() {
-
         Button button = findViewById(R.id.saveUserNameButton);
         button.setOnClickListener(v -> {
             EditText userText = findViewById(R.id.userNameEditText);

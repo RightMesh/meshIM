@@ -1,6 +1,7 @@
 package io.left.meshim.adapters;
 
 import android.content.Context;
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -15,6 +16,7 @@ import io.left.meshim.models.User;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter that fetches online users from the app service to populate the list of online users in
@@ -41,15 +43,23 @@ public class OnlineUserListAdapter extends ArrayAdapter<User> {
     /**
      * Updates the list of users.
      * @param service service connection to fetch users from
+     * @throws DeadObjectException if service connection dies unexpectedly
      */
-    public void updateList(IMeshIMService service) {
+    public void updateList(IMeshIMService service) throws DeadObjectException {
         if (service == null) {
             return;
         }
+
         try {
+            List<User> query = service.getOnlineUsers();
             this.clear();
-            this.addAll(service.getOnlineUsers());
-        } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
+            this.addAll(query);
+        } catch (RemoteException e) {
+            // If the connection has died, propagate error, otherwise ignore it.
+            if (e instanceof DeadObjectException) {
+                throw (DeadObjectException) e;
+            }
+        }
     }
 
     /**

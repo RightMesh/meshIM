@@ -1,5 +1,6 @@
 package io.left.meshim.adapters;
 
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,25 +40,28 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     /**
      * Update the list of messages from the service.
      * @param service open connection to {@link MeshIMService}
+     * @throws DeadObjectException if service connection dies unexpectedly
      */
-    public void updateList(IMeshIMService service) {
+    public void updateList(IMeshIMService service) throws DeadObjectException {
         if (service == null) {
             return;
         }
+
         try {
+            List<Message> query = service.fetchMessagesForUser(this.mRecipient);
             this.mMessageList.clear();
-            List<Message> results = service.fetchMessagesForUser(this.mRecipient);
-            if (results != null) {
-                this.mMessageList.addAll(results);
-            }
+            this.mMessageList.addAll(query);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            // If the connection has died, propagate error, otherwise ignore it.
+            if (e instanceof DeadObjectException) {
+                throw (DeadObjectException) e;
+            }
         }
     }
 
     class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView mTime;
-        TextView mMessagaeBody;
+        TextView mMessageBody;
         ImageView mUserImage;
 
         /**
@@ -72,10 +76,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             super(view);
             if (messageType == VIEW_TYPE_MESSAGE_RECEIVED) {
                 mUserImage = view.findViewById(R.id.image_message_profile);
-                mMessagaeBody = view.findViewById(R.id.text_message_body);
+                mMessageBody = view.findViewById(R.id.text_message_body);
                 mTime = view.findViewById(R.id.text_message_time_recieved);
             } else {
-                mMessagaeBody = view.findViewById(R.id.text_message_body_sent);
+                mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
             }
         }
@@ -109,14 +113,19 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = mMessageList.get(position);
+        if (message != null) {
+            if (!(message.isMyMessage())) {
+                holder.mMessageBody.setText(message.getMessage());
+                holder.mTime.setText(message.getDateAsString());
 
-        if (!(message.isMyMessage())) {
-            holder.mMessagaeBody.setText(message.getMessage());
-            holder.mTime.setText(message.getDateAsString());
-            holder.mUserImage.setImageResource(message.getSender().getAvatar());
-        } else {
-            holder.mMessagaeBody.setText(message.getMessage());
-            holder.mTime.setText(message.getDateAsString());
+                User sender = message.getSender();
+                if (sender != null) {
+                    holder.mUserImage.setImageResource(sender.getAvatar());
+                }
+            } else {
+                holder.mMessageBody.setText(message.getMessage());
+                holder.mTime.setText(message.getDateAsString());
+            }
         }
     }
 
@@ -133,15 +142,18 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
      * Checks whether the message was sent or received.
      * @param position index of message in list
      * @return message type, either {@link MessageListAdapter#VIEW_TYPE_MESSAGE_RECEIVED}
-     *         or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}
+     *         or {@link MessageListAdapter#VIEW_TYPE_MESSAGE_SENT}, or -1 for an invalid position
      */
     @Override
     public int getItemViewType(int position) {
         Message message = mMessageList.get(position);
-        if (message.isMyMessage()) {
-            return VIEW_TYPE_MESSAGE_SENT;
-        } else {
-            return VIEW_TYPE_MESSAGE_RECEIVED;
+        if (message != null) {
+            if (message.isMyMessage()) {
+                return VIEW_TYPE_MESSAGE_SENT;
+            } else {
+                return VIEW_TYPE_MESSAGE_RECEIVED;
+            }
         }
+        return -1;
     }
 }

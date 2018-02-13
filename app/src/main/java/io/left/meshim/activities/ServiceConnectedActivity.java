@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -28,7 +29,10 @@ public abstract class ServiceConnectedActivity extends Activity {
                 mService.registerActivityCallback(mCallback);
                 mService.setForeground(false);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                // If the connection has died, attempt to reconnect, otherwise ignore it.
+                if (e instanceof DeadObjectException) {
+                    reconnectToService();
+                }
             }
         }
 
@@ -84,6 +88,16 @@ public abstract class ServiceConnectedActivity extends Activity {
     }
 
     /**
+     * To be called when the service connection has broken (e.g. an AIDL call has failed with a
+     * {@link DeadObjectException}. Disconnects and reconnects to the service.
+     */
+    public void reconnectToService() {
+        mService = null;
+        disconnectFromService();
+        connectToService();
+    }
+
+    /**
      * Handle creating the service intent and binding to it in a reusable function.
      */
     private void connectToService() {
@@ -99,11 +113,12 @@ public abstract class ServiceConnectedActivity extends Activity {
         if (mService != null) {
             try {
                 mService.setForeground(true);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } catch (RemoteException ignored) {
+                // As we are disconnecting, this isn't our problem.
+                // When we need the service again we will restart it if it doesn't exist.
             }
-            unbindService(mConnection);
             mService = null;
+            unbindService(mConnection);
         }
     }
 

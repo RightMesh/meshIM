@@ -32,6 +32,10 @@ public class ChooseAvatarActivity extends Activity {
         setupAvatars();
 
         mUser = User.fromDisk(this);
+        if (mUser == null) {
+            // Initialize if not found, so we can still save the user's selection.
+            mUser = new User(this);
+        }
         mUserAvatarId = R.mipmap.account_default;
 
         Intent prevIntent = getIntent();

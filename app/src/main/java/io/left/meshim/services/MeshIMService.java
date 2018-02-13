@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 
 import io.left.meshim.R;
@@ -86,7 +85,7 @@ public class MeshIMService extends Service {
                 .build();
 
         User user = User.fromDisk(this);
-        mMeshConnection = new RightMeshController(user, mDatabase,this);
+        mMeshConnection = new RightMeshController(user, mDatabase.meshIMDao(), this);
         mMeshConnection.connect(this);
     }
 
@@ -97,7 +96,10 @@ public class MeshIMService extends Service {
     public void onDestroy() {
         super.onDestroy();
         mMeshConnection.disconnect();
+        mMeshConnection = null;
+
         mDatabase.close();
+        mDatabase = null;
 
         // We need to ensure the service is recreated every time we think it is dead.
         // If this doesn't happen, RightMesh doesn't always start up again.
@@ -142,12 +144,12 @@ public class MeshIMService extends Service {
         }
 
         @Override
-        public List<ConversationSummary> fetchConversationSummaries() throws RemoteException {
+        public List<ConversationSummary> fetchConversationSummaries() {
             return Arrays.asList(mDatabase.meshIMDao().fetchConversationSummaries());
         }
 
         @Override
-        public List<Message> fetchMessagesForUser(User user) throws RemoteException {
+        public List<Message> fetchMessagesForUser(User user) {
             return mDatabase.meshIMDao().fetchMessagesForUser(user);
         }
 

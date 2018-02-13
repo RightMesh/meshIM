@@ -13,6 +13,7 @@ import com.google.protobuf.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @Entity(tableName = "Messages",
         indices = { @Index(value = {"RecipientID"}), @Index(value = {"SenderID"}) },
@@ -49,7 +50,8 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a yyyy-M-dd");
+    public static SimpleDateFormat dateFormat
+            = new SimpleDateFormat("hh:mm a yyyy-M-dd", Locale.getDefault());
 
     public String getMessage() {
         return message;
@@ -163,11 +165,15 @@ public class Message implements Parcelable {
      * @return formatted timestamp
      */
     public Timestamp getDateAsTimestamp() {
-        long millis = date.getTime();
-        return Timestamp.newBuilder()
-                .setSeconds(millis / 1000)
-                .setNanos((int) ((millis % 1000) * 1000000))
-                .build();
+        if (date != null) {
+            long millis = date.getTime();
+            return Timestamp.newBuilder()
+                    .setSeconds(millis / 1000)
+                    .setNanos((int) ((millis % 1000) * 1000000))
+                    .build();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -176,7 +182,11 @@ public class Message implements Parcelable {
      * @return formatted date string
      */
     public String getDateAsString() {
-        return dateFormat.format(date);
+        if (date != null) {
+            return dateFormat.format(date);
+        } else {
+            return "";
+        }
     }
 
     /**

@@ -37,6 +37,9 @@ public abstract class MeshIMDao {
     @Query("SELECT * FROM Users WHERE UserID = :id")
     public abstract User fetchUserById(int id);
 
+    @Query("SELECT * FROM Users WHERE MeshID = :meshId")
+    public abstract User fetchUserByMeshId(MeshID meshId);
+
     @Insert()
     public abstract void insertMessages(Message... messages);
 

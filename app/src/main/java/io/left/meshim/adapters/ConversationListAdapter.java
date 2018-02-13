@@ -1,6 +1,7 @@
 package io.left.meshim.adapters;
 
 import android.content.Context;
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -12,9 +13,11 @@ import android.widget.TextView;
 import io.left.meshim.R;
 import io.left.meshim.activities.MainActivity;
 import io.left.meshim.models.ConversationSummary;
+import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter that fetches conversations from the app service to populate the list of stored
@@ -37,15 +40,22 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
     /**
      * Updates the list of conversation summaries.
      * @param service service connection to fetch users from
+     * @throws DeadObjectException if service connection dies unexpectedly
      */
-    public void updateList(IMeshIMService service) {
+    public void updateList(IMeshIMService service) throws DeadObjectException {
         if (service == null) {
             return;
         }
         try {
+            List<ConversationSummary> query = service.fetchConversationSummaries();
             this.clear();
-            this.addAll(service.fetchConversationSummaries());
-        } catch (RemoteException ignored) { /* Leave the list untouched on failure. */ }
+            this.addAll(query);
+        } catch (RemoteException e) {
+            // If the connection has died, propagate error, otherwise ignore it.
+            if (e instanceof DeadObjectException) {
+                throw (DeadObjectException) e;
+            }
+        }
     }
 
     /**
@@ -65,7 +75,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText(conversationSummary.messageText);
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
-            time.setText(conversationSummary.messageTime.toString());
+            time.setText(Message.dateFormat.format(conversationSummary.messageTime));
         }
 
         return v;

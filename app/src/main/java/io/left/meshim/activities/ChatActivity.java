@@ -1,6 +1,7 @@
 package io.left.meshim.activities;
 
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,10 +28,19 @@ public class ChatActivity extends ServiceConnectedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // Fetch the recipient from the intent and set up the message adapter.
+        // Null-check recipient.
         mRecipient = getIntent().getParcelableExtra("recipient");
+        if (mRecipient == null) {
+            finish();
+        }
+
+        // Set up the message adapter.
         mMessageListAdapter = new MessageListAdapter(mRecipient);
-        mMessageListAdapter.updateList(this.mService);
+        try {
+            mMessageListAdapter.updateList(this.mService);
+        } catch (DeadObjectException e) {
+            reconnectToService();
+        }
 
         // Initialize the list view for the messages.
         mMessageListView = findViewById(R.id.reyclerview_message_list);
@@ -49,8 +59,12 @@ public class ChatActivity extends ServiceConnectedActivity {
                         mService.sendTextMessage(mRecipient, message);
                         messageText.setText("");
                     }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                } catch (RemoteException re) {
+                    if (re instanceof DeadObjectException) {
+                        reconnectToService();
+                    }
+                    // Otherwise ignore - we don't clear the message out, so the user can attempt
+                    // to re-send it if they would like.
                 }
             }
         });
@@ -62,11 +76,15 @@ public class ChatActivity extends ServiceConnectedActivity {
     @Override
     void updateInterface() {
         runOnUiThread(() -> {
-            mMessageListAdapter.updateList(mService);
-            mMessageListAdapter.notifyDataSetChanged();
-            int index = mMessageListAdapter.getItemCount() - 1;
-            if (index > -1) {
-                mMessageListView.smoothScrollToPosition(index);
+            try {
+                mMessageListAdapter.updateList(mService);
+                mMessageListAdapter.notifyDataSetChanged();
+                int index = mMessageListAdapter.getItemCount() - 1;
+                if (index > -1) {
+                    mMessageListView.smoothScrollToPosition(index);
+                }
+            } catch (DeadObjectException e) {
+                reconnectToService();
             }
         });
     }
