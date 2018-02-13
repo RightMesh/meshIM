@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">meshIM</string>
 
-    <string name="title_FirstTimeUsernameActivity">Create a username</string>
-    <string name="title_activity_main_screen">MainScreenActivity</string>
+    <!-- Username editing messages -->
+    <string name="username">Username</string>
+    <string name="username_length">%d/20</string>
+    <string name="username_length_empty">0/20</string>
+    <string name="username_prompt">Create a username</string>
+    <string name="username_sub_prompt">Change it anytime</string>
+    <string name="username_warning_message_empty">Username cannot be empty</string>
+    <string name="username_warning_message_length">Username over 20 characters</string>
+
+    <string name="title_onboarding_username_activity">Create a username</string>
     <string name="title_choose_avatar">Select your avatar </string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
@@ -14,13 +22,8 @@
     <string name="selected_avatar_description">Current selected user avatar</string>
     <string name="tab_icon_description">Tab icon</string>
     <string name="save">SAVE</string>
-
-    <!-- Username editing messages -->
-    <string name="username">Username</string>
-    <string name="username_length">%d/20</string>
-    <string name="username_length_empty">0/20</string>
-    <string name="username_prompt">Create a user name</string>
-    <string name="username_sub_prompt">Change it anytime</string>
-    <string name="username_warning_message_empty">Username cannot be empty</string>
-    <string name="username_warning_message_length">Username over 20 characters</string>
+    <string name="meshim_online_indicator_description">meshIM online indicator</string>
+    <string name="online_available">Available</string>
+    <string name="settings_online_description">Send and receive messages.</string>
+    <string name="edit">Edit</string>
 </resources>

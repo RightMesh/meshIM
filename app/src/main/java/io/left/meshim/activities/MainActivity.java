@@ -200,12 +200,12 @@ public class MainActivity extends ServiceConnectedActivity {
         User user = User.fromDisk(this);
         TextView usernameText = findViewById(R.id.usernameTextViewSetting);
         usernameText.setText(user.getUsername());
-        Button userNameButton = findViewById(R.id.editUsernameButtonSetting);
+        Button userNameButton = findViewById(R.id.settings_username_button);
         userNameButton.setOnClickListener(v -> alertDialog());
 
         //setup userAvatar
         if (user != null) {
-            ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
+            ImageButton userAvatar = findViewById(R.id.settings_user_avatar);
             userAvatar.setImageResource(user.getAvatar());
             Button button = findViewById(R.id.editUserAvatarButton);
             button.setOnClickListener(v -> {
@@ -238,7 +238,7 @@ public class MainActivity extends ServiceConnectedActivity {
                 if (user != null && username.length() <= 20) {
                     user.setUsername(username);
                     user.save();
-                    TextView textView = findViewById(R.id.usernameTextViewSetting);
+                    TextView textView = findViewById(R.id.settings_username_text_view);
                     textView.setText(username);
                 } else if (username.length() > 20) {
                     Toast.makeText(MainActivity.this, "Username longer than 20"

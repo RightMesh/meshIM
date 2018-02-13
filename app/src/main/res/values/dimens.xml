@@ -1,5 +1,7 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="meshim_margin_small">8dp</dimen>
+    <dimen name="meshim_margin_medium">16dp</dimen>
+    <dimen name="meshim_margin_large">32dp</dimen>
+    <dimen name="onboarding_textedit_horizontal_offset">3dp</dimen>
+    <dimen name="onboarding_textedit_vertical_offset">124dp</dimen>
 </resources>

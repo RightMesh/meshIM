@@ -33,7 +33,7 @@ public class OnboardingUsernameActivity extends AppCompatActivity {
      * @param view button that calls the method
      */
     public void saveUsername(View view) {
-        EditText userText = findViewById(R.id.userNameEditText);
+        EditText userText = findViewById(R.id.onboarding_username_text_edit);
         String userName = userText.getText().toString();
         if (mIsUsernameValid) {
             User user = new User(OnboardingUsernameActivity.this);
@@ -53,8 +53,8 @@ public class OnboardingUsernameActivity extends AppCompatActivity {
      * Checks for valid usernames.
      */
     private void configureUsernameWatcher() {
-        TextView charecterCount = findViewById(R.id.characterCountText);
-        TextView errorText = findViewById(R.id.errrorText);
+        TextView charecterCount = findViewById(R.id.onboarding_username_character_count_text);
+        TextView errorText = findViewById(R.id.onboarding_username_error_text);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -82,7 +82,7 @@ public class OnboardingUsernameActivity extends AppCompatActivity {
                 }
             }
         };
-        EditText editText = findViewById(R.id.userNameEditText);
+        EditText editText = findViewById(R.id.onboarding_username_text_edit);
         editText.addTextChangedListener(textWatcher);
     }
 }
