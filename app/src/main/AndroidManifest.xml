@@ -18,11 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service
             android:name="io.left.meshim.services.MeshIMService"
             android:process=":MeshIMService" />
-
         <activity
             android:name="io.left.meshim.activities.OnboardingUsernameActivity"
             android:label="@string/title_FirstTimeUsernameActivity" />
@@ -34,7 +32,6 @@
             android:label="@string/app_name" />
         <activity android:name="io.left.meshim.activities.ChatActivity">
         </activity>
-
         />
     </application>
 
