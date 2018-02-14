@@ -9,9 +9,12 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.database.MeshIMDatabase;
@@ -123,7 +126,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
     }
 
     /**
@@ -200,6 +203,7 @@ public class RightMeshController implements MeshStateListener {
 
             MessageType messageType = messageWrapper.getMessageType();
             if (messageType == PEER_UPDATE) {
+                Log.d("bug1","data recieved");
                 PeerUpdate peerUpdate = messageWrapper.getPeerUpdate();
 
                 // Initialize peer with info from update packet.
@@ -257,11 +261,16 @@ public class RightMeshController implements MeshStateListener {
 
         if (event.state != REMOVED && !discovered.contains(event.peerUuid)) {
             discovered.add(event.peerUuid);
+            Log.d("bug1","data changed");
+            User tempUser = new User("Getting user details", R.mipmap.account_default);
+            users.put(event.peerUuid,tempUser);
+            updateInterface();
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
                     meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                    Log.d("bug1","data sent");
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
