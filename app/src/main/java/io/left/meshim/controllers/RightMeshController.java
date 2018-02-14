@@ -323,6 +323,25 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
+     * Load the updated user profile and broadcast it to all connected peers.
+     */
+    public void broadcastProfile() {
+        if (user.load(meshIMService)) {
+            byte[] message = createPeerUpdatePayloadFromUser(user);
+            if (message != null) {
+                for (MeshID id : users.keySet()) {
+                    try {
+                        meshManager.sendDataReliable(id, MESH_PORT, message);
+                    } catch (RightMeshException e) {
+                        // Message sending failed. Other user may have out of date information, but
+                        // ultimately this isn't deal-breaking.
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Displays Rightmesh setting page.
      */
     public void showRightMeshSettings() {

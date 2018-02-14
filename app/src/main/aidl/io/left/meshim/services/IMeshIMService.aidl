@@ -13,6 +13,8 @@ interface IMeshIMService {
 
     // RightMesh funcionality.
 
+    void broadcastUpdatedProfile();
+
     List<User> getOnlineUsers();
 
     void registerActivityCallback(in IActivity callback);

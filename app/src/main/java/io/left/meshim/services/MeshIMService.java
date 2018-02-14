@@ -136,6 +136,11 @@ public class MeshIMService extends Service {
         }
 
         @Override
+        public void broadcastUpdatedProfile() {
+            mMeshConnection.broadcastProfile();
+        }
+
+        @Override
         public List<User> getOnlineUsers() {
             return mMeshConnection.getUserList();
         }

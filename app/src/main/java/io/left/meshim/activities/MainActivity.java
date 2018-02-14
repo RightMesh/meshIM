@@ -43,6 +43,7 @@ public class MainActivity extends ServiceConnectedActivity {
     ArrayList<User> mUsers = new ArrayList<>();
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     ConversationListAdapter mConversationListAdapter;
+    boolean mShouldBroadcast = false;
 
     /**
      * Initializes UI elements.
@@ -64,6 +65,19 @@ public class MainActivity extends ServiceConnectedActivity {
     protected void onResume() {
         super.onResume();
         setupSettingTab();
+        if (mShouldBroadcast) {
+            if (mService != null) {
+                try {
+                    mService.broadcastUpdatedProfile();
+                } catch (RemoteException e) {
+                    if (e instanceof DeadObjectException) {
+                        reconnectToService();
+                    }
+                    // Otherwise, the change will be saved just not propagated now.
+                }
+            }
+            mShouldBroadcast = false;
+        }
     }
 
     /**
@@ -210,6 +224,7 @@ public class MainActivity extends ServiceConnectedActivity {
             userAvatar.setImageResource(user.getAvatar());
             ImageButton button = findViewById(R.id.settings_user_avatar_edit_button);
             button.setOnClickListener(v -> {
+                MainActivity.this.mShouldBroadcast = true;
                 Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
                 startActivity(avatarChooseIntent);
@@ -240,6 +255,17 @@ public class MainActivity extends ServiceConnectedActivity {
                     user.save(this);
                     TextView textView = findViewById(R.id.settings_username_text_view);
                     textView.setText(username);
+
+                    if (mService != null) {
+                        try {
+                            mService.broadcastUpdatedProfile();
+                        } catch (RemoteException e) {
+                            if (e instanceof DeadObjectException) {
+                                reconnectToService();
+                            }
+                            // Otherwise, the change will be saved just not propagated now.
+                        }
+                    }
                 } else if (username.length() > 20) {
                     Toast.makeText(MainActivity.this,
                             R.string.username_warning_message_length, Toast.LENGTH_SHORT).show();
