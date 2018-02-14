@@ -48,10 +48,10 @@ public class ChooseAvatarActivity extends AppCompatActivity {
         User user = User.fromDisk(this);
         if (user == null) {
             // Initialize if not found, so we can still save the user's selection.
-            user = new User(this);
+            user = new User();
         }
         user.setAvatar(mUserAvatarId);
-        user.save();
+        user.save(this);
 
         // Launch app if called from onboarding activity.
         String action = getIntent().getAction();

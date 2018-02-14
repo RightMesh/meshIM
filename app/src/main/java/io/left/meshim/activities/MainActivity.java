@@ -182,7 +182,7 @@ public class MainActivity extends ServiceConnectedActivity {
                 } else {
                     settings.setShowNotifications(false);
                 }
-                settings.save(MainActivity.this);
+                settings.save(this);
             });
         }
 
@@ -231,14 +231,13 @@ public class MainActivity extends ServiceConnectedActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(lp);
         builder.setView(input);
-
-        User user = User.fromDisk(this);
         builder.setPositiveButton(R.string.save, (dialog, which) -> {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
+                User user = User.fromDisk(this);
                 if (user != null && username.length() <= 20) {
                     user.setUsername(username);
-                    user.save();
+                    user.save(this);
                     TextView textView = findViewById(R.id.settings_username_text_view);
                     textView.setText(username);
                 } else if (username.length() > 20) {

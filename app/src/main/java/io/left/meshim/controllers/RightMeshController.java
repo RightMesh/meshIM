@@ -152,7 +152,7 @@ public class RightMeshController implements MeshStateListener {
         if (state == MeshStateListener.SUCCESS) {
             // Update stored user preferences with current MeshID.
             user.setMeshId(uuid);
-            user.save();
+            user.save(meshIMService);
             try {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.

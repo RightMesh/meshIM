@@ -36,10 +36,10 @@ public class OnboardingUsernameActivity extends AppCompatActivity {
         EditText userText = findViewById(R.id.onboarding_username_text_edit);
         String userName = userText.getText().toString();
         if (mIsUsernameValid) {
-            User user = new User(OnboardingUsernameActivity.this);
+            User user = new User();
             user.setUsername(userName);
             user.setAvatar(1);
-            user.save();
+            user.save(OnboardingUsernameActivity.this);
 
             Intent intent = new Intent(OnboardingUsernameActivity.this, ChooseAvatarActivity.class);
             intent.setAction(ChooseAvatarActivity.ONBOARDING_ACTION);
