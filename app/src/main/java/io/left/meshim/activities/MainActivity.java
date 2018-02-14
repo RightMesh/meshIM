@@ -1,5 +1,7 @@
 package io.left.meshim.activities;
 
+import static io.left.meshim.activities.OnboardingUsernameActivity.MAX_LENGTH_USERNAME_CHARACTERS;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -249,7 +251,7 @@ public class MainActivity extends ServiceConnectedActivity {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
                 User user = User.fromDisk(this);
-                if (user != null && username.length() <= 20) {
+                if (user != null && username.length() <= MAX_LENGTH_USERNAME_CHARACTERS) {
                     user.setUsername(username);
                     user.save(this);
                     TextView textView = findViewById(R.id.settings_username_text_view);

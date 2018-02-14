@@ -15,7 +15,7 @@ import io.left.meshim.models.User;
 
 
 public class OnboardingUsernameActivity extends AppCompatActivity {
-    private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
+    public static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
     private boolean mIsUsernameValid = false;
 
