@@ -35,7 +35,7 @@ import io.left.meshim.models.User;
 import java.util.ArrayList;
 
 /**
- * Main interface for MeshIM. Displays tabs for viewing online users, conversations, and the
+ * Main interface for meshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
 public class MainActivity extends ServiceConnectedActivity {
@@ -289,7 +289,7 @@ public class MainActivity extends ServiceConnectedActivity {
             getSupportActionBar().setLogo(R.mipmap.ic_launcher);
             getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            String title = "MeshIM";
+            String title = getResources().getString(R.string.app_name);
             SpannableString spannableTittle = new SpannableString(title);
             spannableTittle.setSpan(new ForegroundColorSpan(Color.WHITE), 0, title.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

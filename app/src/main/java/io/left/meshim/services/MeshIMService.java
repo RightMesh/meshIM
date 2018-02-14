@@ -81,7 +81,7 @@ public class MeshIMService extends Service {
                 .setNumber(100)
                 .build();
 
-        mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "MeshIM")
+        mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "meshIM")
                 .addMigrations(Migrations.ALL_MIGRATIONS)
                 .build();
 

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A collection of queries for accessing data types for MeshIM.
+ * A collection of queries for accessing data types for meshIM.
  */
 @Dao
 public abstract class MeshIMDao {

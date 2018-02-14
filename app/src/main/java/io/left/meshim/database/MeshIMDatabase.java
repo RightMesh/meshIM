@@ -8,7 +8,7 @@ import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 
 /**
- * Manages versioning and exposed queries for the database for MeshIM.
+ * Manages versioning and exposed queries for the database for meshIM.
  */
 @Database(entities = {User.class, Message.class}, version = 3)
 @TypeConverters({Converters.class})
