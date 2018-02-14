@@ -8,6 +8,7 @@ import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -71,10 +72,11 @@ public class MeshIMService extends Service {
             //noinspection deprecation
             builder = new NotificationCompat.Builder(this);
         }
+        Resources resources = getResources();
         mServiceNotification = builder.setAutoCancel(false)
-                .setTicker("Mesh IM")
-                .setContentTitle("Mesh IM is Running")
-                .setContentText("Tap to go offline.")
+                .setTicker(resources.getString(R.string.app_name))
+                .setContentTitle(resources.getString(R.string.notification_title))
+                .setContentText(resources.getString(R.string.notification_text))
                 .setSmallIcon(R.mipmap.available_icon)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
