@@ -22,7 +22,7 @@
 
     <style name="MyTabs">
         <item name="android:background">@color/white</item>
-        <item name="android:backgroundStacked">@color/colorPrimary</item>
+        <item name="android:backgroundStacked">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 </resources>

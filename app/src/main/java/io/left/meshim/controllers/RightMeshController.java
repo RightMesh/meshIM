@@ -15,7 +15,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
-import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
