@@ -25,15 +25,7 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
         // Called when the mConnection with the service is established
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = IMeshIMService.Stub.asInterface(service);
-            try {
-                mService.registerActivityCallback(mCallback);
-                mService.setForeground(false);
-            } catch (RemoteException e) {
-                // If the connection has died, attempt to reconnect, otherwise ignore it.
-                if (e instanceof DeadObjectException) {
-                    reconnectToService();
-                }
-            }
+            hideService();
         }
 
         // Called when the mConnection with the service disconnects unexpectedly
@@ -51,40 +43,39 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
     };
 
     /**
-     * Connects to service when activity starts.
-     * @param savedInstanceState passed by Android
+     * Connects to service when activity is created.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
         connectToService();
     }
 
     /**
-     * Disconnect from service when activity stops.
+     * Unbind from service when activity is destroyed.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
+    }
+
+    /**
+     * Hide service notification when activity starts.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideService();
+    }
+
+    /**
+     * Show service notification when activity stops.
      */
     @Override
     protected void onStop() {
         super.onStop();
-        disconnectFromService();
-    }
-
-    /**
-     * Reconnect to service when activity resumes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        connectToService();
-    }
-
-    /**
-     * Disconnect from service when activity isn't active on screen.
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        disconnectFromService();
+        showService();
     }
 
     /**
@@ -92,13 +83,13 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
      * {@link DeadObjectException}. Disconnects and reconnects to the service.
      */
     public void reconnectToService() {
-        mService = null;
-        disconnectFromService();
+        showService();
+        unbindService(mConnection);
         connectToService();
     }
 
     /**
-     * Handle creating the service intent and binding to it in a reusable function.
+     * Binds to and starts service.
      */
     private void connectToService() {
         Intent serviceIntent = new Intent(this, MeshIMService.class);
@@ -107,9 +98,9 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
     }
 
     /**
-     * Unbinds from app service and sets {@link this#mService} to null.
+     * Set service to run in foreground mode.
      */
-    private void disconnectFromService() {
+    private void showService() {
         if (mService != null) {
             try {
                 mService.setForeground(true);
@@ -117,8 +108,24 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
                 // As we are disconnecting, this isn't our problem.
                 // When we need the service again we will restart it if it doesn't exist.
             }
-            mService = null;
-            unbindService(mConnection);
+        }
+    }
+
+    /**
+     * Set service to run in background mode, and register this activity's callback to
+     * receive updates from the service.
+     */
+    private void hideService() {
+        if (mService != null) {
+            try {
+                mService.registerActivityCallback(mCallback);
+                mService.setForeground(false);
+            } catch (RemoteException e) {
+                // If the connection has died, attempt to reconnect, otherwise ignore it.
+                if (e instanceof DeadObjectException) {
+                    reconnectToService();
+                }
+            }
         }
     }
 
