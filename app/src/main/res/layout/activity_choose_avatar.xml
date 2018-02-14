@@ -11,14 +11,13 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="153dp"
-        android:background="@color/greenDark"
+        android:background="@color/colorPrimaryDark"
         android:gravity="top"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </LinearLayout>
 
     <ScrollView
@@ -37,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectedAvatar"
-        tools:backgroundTint="@color/greenDark">
+        tools:backgroundTint="@color/colorPrimaryDark">
 
     </ScrollView>
 
@@ -49,7 +48,8 @@
         android:clickable="false"
         android:elevation="5dp"
         android:fontFamily="sans-serif"
-        android:text="SAVE"
+        android:onClick="saveAvatar"
+        android:text="@string/save"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -61,6 +61,7 @@
 
     <ImageButton
         android:id="@+id/selectedAvatar"
+        android:contentDescription="@string/selected_avatar_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"

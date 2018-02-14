@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/colorAccent"/>
+    <item android:drawable="@color/white"/>
     <item>
         <bitmap android:src="@mipmap/splash_logo_main"
             android:gravity="center">
         </bitmap>
     </item>
     <item>
-
         <bitmap android:src="@mipmap/rightmesh_power"
-        android:gravity="bottom"
-            >
-        </bitmap>
-
+            android:gravity="bottom" />
     </item>
 </layer-list>
