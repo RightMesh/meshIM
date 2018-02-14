@@ -1,12 +1,12 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,10 +14,9 @@ import io.left.meshim.R;
 import io.left.meshim.models.User;
 
 
-public class OnboardingUsernameActivity extends Activity {
-    private static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
+public class OnboardingUsernameActivity extends AppCompatActivity {
+    public static final int MAX_LENGTH_USERNAME_CHARACTERS = 20;
 
-    private User mUser = null;
     private boolean mIsUsernameValid = false;
 
     @Override
@@ -25,68 +24,65 @@ public class OnboardingUsernameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding_username);
 
-        configureFinishButton();
         configureUsernameWatcher();
     }
 
 
     /**
-     * Creates a User profile.
+     * Creates a User profile when the user presses the save button.
+     * @param view button that calls the method
      */
-    private void configureFinishButton() {
-        Button button = findViewById(R.id.saveUserNameButton);
-        button.setOnClickListener(v -> {
-            EditText userText = findViewById(R.id.userNameEditText);
-            String userName = userText.getText().toString();
-            if (mIsUsernameValid) {
-                mUser = new User(OnboardingUsernameActivity.this);
-                mUser.setUsername(userName);
-                mUser.setAvatar(1);
-                mUser.save();
-                Intent intent = new Intent(OnboardingUsernameActivity.this,
-                        ChooseAvatarActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    public void saveUsername(View view) {
+        EditText userText = findViewById(R.id.onboarding_username_text_edit);
+        String userName = userText.getText().toString();
+        if (mIsUsernameValid) {
+            User user = new User();
+            user.setUsername(userName);
+            user.setAvatar(1);
+            user.save(OnboardingUsernameActivity.this);
+
+            Intent intent = new Intent(OnboardingUsernameActivity.this, ChooseAvatarActivity.class);
+            intent.setAction(ChooseAvatarActivity.ONBOARDING_ACTION);
+            startActivity(intent);
+
+            finish();
+        }
     }
 
     /**
      * Checks for valid usernames.
      */
     private void configureUsernameWatcher() {
-        TextView charecterCount = findViewById(R.id.characterCountText);
-        TextView errorText = findViewById(R.id.errrorText);
+        TextView charecterCount = findViewById(R.id.onboarding_username_character_count_text);
+        TextView errorText = findViewById(R.id.onboarding_username_error_text);
         final TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                charecterCount.setText(String.valueOf(s.length()) + "/20");
+                String message = getResources().getString(R.string.username_length, s.length());
+                charecterCount.setText(message);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_LENGTH_USERNAME_CHARACTERS) {
-                    mIsUsernameValid = false;
-                    errorText.setText("Username over 20 characters");
+                    errorText.setText(R.string.username_warning_message_length);
                     errorText.setTextColor(Color.RED);
+                    mIsUsernameValid = false;
                 } else if (s.length() < 1) {
-                    errorText.setText("Username cannot be empty");
+                    errorText.setText(R.string.username_warning_message_empty);
                     errorText.setTextColor(Color.RED);
                     mIsUsernameValid = false;
                 } else {
-                    errorText.setText("Change it anytime");
+                    errorText.setText(R.string.username_sub_prompt);
                     errorText.setTextColor(Color.BLACK);
                     mIsUsernameValid = true;
                 }
             }
         };
-        EditText editText = findViewById(R.id.userNameEditText);
+        EditText editText = findViewById(R.id.onboarding_username_text_edit);
         editText.addTextChangedListener(textWatcher);
     }
-
 }

@@ -1,5 +1,6 @@
 package io.left.meshim.models;
 
+import static android.content.Context.MODE_MULTI_PROCESS;
 import static android.content.Context.MODE_PRIVATE;
 import static io.left.meshim.BuildConfig.APPLICATION_ID;
 
@@ -10,6 +11,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -39,6 +41,11 @@ public class User implements Parcelable {
     @Ignore
     private static final String SAVE_VERSION = "UserDataSaveVersion_v1";
 
+    // Needed for older phones in order for SharedPreferences to cross the IPC barrier.
+    @Ignore
+    private static final int SAVE_MODE
+            = (Build.VERSION.SDK_INT > 23) ? MODE_PRIVATE : MODE_MULTI_PROCESS;
+
     // ID of the device's user, achieved by ensuring it is the first one inserted into the database.
     @Ignore
     public static final int DEVICE_USER_ID = 1;
@@ -55,12 +62,6 @@ public class User implements Parcelable {
 
     @ColumnInfo(name = "Avatar")
     private int avatar;
-
-    // SharedPreferences is a singleton - the same reference is always returned. It also updates
-    // itself in a threadsafe way, so might as well keep one version of it open.
-    // The transient qualifier makes Gson ignore it for serialization.
-    @Ignore
-    private transient SharedPreferences preferences;
 
     public User() {
         this("Anonymous", -1);
@@ -91,18 +92,6 @@ public class User implements Parcelable {
         this.username = username;
     }
 
-    /**
-     * Creating a user with a Context class means it can store a link to SharedPreferences, meaning
-     * {@link User#load()} and {@link User#save()} work.
-     *
-     * @param context to load SharedPreferences from
-     */
-    @Ignore
-    public User(Context context) {
-        this();
-        preferences = context.getSharedPreferences(APPLICATION_ID, MODE_PRIVATE);
-    }
-
     @Override
     public boolean equals(Object o) {
         return o instanceof User && ((User) o).id == this.id;
@@ -120,8 +109,8 @@ public class User implements Parcelable {
      * @return instance loaded from disk, or null
      */
     public static User fromDisk(Context context) {
-        User temp = new User(context);
-        if (!temp.load()) {
+        User temp = new User();
+        if (!temp.load(context)) {
             return null;
         }
         return temp;
@@ -204,12 +193,8 @@ public class User implements Parcelable {
      * This function loads data from SharedPreferences if it exists.
      * @return true if function was able to load else false
      */
-    public boolean load() {
-        // Can't load anything if preferences hasn't been initialized.
-        if (preferences == null) {
-            return false;
-        }
-
+    public boolean load(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, SAVE_MODE);
         Gson gson = new Gson();
         String user = preferences.getString(SAVE_VERSION, null);
         Type type = new TypeToken<User>() {}.getType();
@@ -227,13 +212,12 @@ public class User implements Parcelable {
     /**
      * This function saves data to SharedPreferences.
      */
-    public void save() {
-        if (preferences != null) {
-            SharedPreferences.Editor editor = preferences.edit();
-            Gson gsonModel = new Gson();
-            String savemodel = gsonModel.toJson(this);
-            editor.putString(SAVE_VERSION, savemodel);
-            editor.commit();
-        }
+    public void save(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, SAVE_MODE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gsonModel = new Gson();
+        String savemodel = gsonModel.toJson(this);
+        editor.putString(SAVE_VERSION, savemodel);
+        editor.commit();
     }
 }

@@ -4,6 +4,7 @@ import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static io.left.rightmesh.mesh.MeshManager.UPDATED;
 import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
@@ -17,7 +18,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
-import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.models.MeshIDTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
@@ -154,7 +154,7 @@ public class RightMeshController implements MeshStateListener {
         if (state == MeshStateListener.SUCCESS) {
             // Update stored user preferences with current MeshID.
             user.setMeshId(uuid);
-            user.save();
+            user.save(meshIMService);
             try {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
@@ -259,7 +259,8 @@ public class RightMeshController implements MeshStateListener {
             return;
         }
 
-        if (event.state != REMOVED && !discovered.contains(event.peerUuid)) {
+        if (!discovered.contains(event.peerUuid)
+                && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             Log.d("bug1","data changed");
             User tempUser = new User("Getting user details", R.mipmap.account_default);
@@ -327,6 +328,25 @@ public class RightMeshController implements MeshStateListener {
                 .build();
 
         return payload.toByteArray();
+    }
+
+    /**
+     * Load the updated user profile and broadcast it to all connected peers.
+     */
+    public void broadcastProfile() {
+        if (user.load(meshIMService)) {
+            byte[] message = createPeerUpdatePayloadFromUser(user);
+            if (message != null) {
+                for (MeshID id : users.keySet()) {
+                    try {
+                        meshManager.sendDataReliable(id, MESH_PORT, message);
+                    } catch (RightMeshException e) {
+                        // Message sending failed. Other user may have out of date information, but
+                        // ultimately this isn't deal-breaking.
+                    }
+                }
+            }
+        }
     }
 
     /**

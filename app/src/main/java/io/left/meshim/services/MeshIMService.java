@@ -47,6 +47,7 @@ public class MeshIMService extends Service {
     private Notification mServiceNotification;
     private boolean mIsBound = false;
     private boolean mIsForeground = false;
+    private int mVisibleActivities = 0;
 
     /**
      * Connects to RightMesh when service is started.
@@ -114,13 +115,29 @@ public class MeshIMService extends Service {
     private final IMeshIMService.Stub mBinder = new IMeshIMService.Stub() {
         @Override
         public void setForeground(boolean value) {
-            if (value) {
+            // As calls to show/hide the notification are asynchronous, keep count of calls to
+            // show vs hide.
+            if (value && mVisibleActivities > 0) {
+                mVisibleActivities--; // Activity is closing and signalling to show notification.
+            } else {
+                mVisibleActivities++; // Activity is opening and signalling to close notification.
+            }
+
+            if (mVisibleActivities == 0 && !mIsForeground) {
+                // If the calls to open are equal to the calls to close and we aren't already
+                // running in the foreground, start in foreground.
                 startInForeground();
                 mIsForeground = true;
-            } else {
+            } else if (mIsForeground) {
+                // Otherwise, if we're running in the foreground, stop running in foreground.
                 stopForeground(true);
                 mIsForeground = false;
             }
+        }
+
+        @Override
+        public void broadcastUpdatedProfile() {
+            mMeshConnection.broadcastProfile();
         }
 
         @Override

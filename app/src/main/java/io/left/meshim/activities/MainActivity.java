@@ -1,5 +1,7 @@
 package io.left.meshim.activities;
 
+import static io.left.meshim.activities.OnboardingUsernameActivity.MAX_LENGTH_USERNAME_CHARACTERS;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,12 +9,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
+import android.support.constraint.ConstraintLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,6 +44,7 @@ public class MainActivity extends ServiceConnectedActivity {
     ArrayList<User> mUsers = new ArrayList<>();
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     ConversationListAdapter mConversationListAdapter;
+    boolean mShouldBroadcast = false;
 
     /**
      * Initializes UI elements.
@@ -63,6 +66,19 @@ public class MainActivity extends ServiceConnectedActivity {
     protected void onResume() {
         super.onResume();
         setupSettingTab();
+        if (mShouldBroadcast) {
+            if (mService != null) {
+                try {
+                    mService.broadcastUpdatedProfile();
+                } catch (RemoteException e) {
+                    if (e instanceof DeadObjectException) {
+                        reconnectToService();
+                    }
+                    // Otherwise, the change will be saved just not propagated now.
+                }
+            }
+            mShouldBroadcast = false;
+        }
     }
 
     /**
@@ -173,7 +189,7 @@ public class MainActivity extends ServiceConnectedActivity {
         Settings settings = Settings.fromDisk(this);
         if (settings != null) {
             //turn notification on/off
-            Switch notificationSwitch = findViewById(R.id.userSettingNotification);
+            Switch notificationSwitch = findViewById(R.id.settings_notifications_switch);
             notificationSwitch.setChecked(settings.isShowNotifications());
             notificationSwitch.setOnClickListener(view -> {
                 if (notificationSwitch.isChecked()) {
@@ -181,12 +197,12 @@ public class MainActivity extends ServiceConnectedActivity {
                 } else {
                     settings.setShowNotifications(false);
                 }
-                settings.save(MainActivity.this);
+                settings.save(this);
             });
         }
 
         //show rightmesh services
-        Button fl = findViewById(R.id.rightmeshSettingButton);
+        ConstraintLayout fl = findViewById(R.id.settings_rightmesh);
         fl.setOnClickListener(v -> {
             try {
                 mService.showRightMeshSettings();
@@ -197,21 +213,21 @@ public class MainActivity extends ServiceConnectedActivity {
                 // Otherwise, nothing we can do here.
             }
         });
-        User user = User.fromDisk(this);
-        TextView usernameText = findViewById(R.id.usernameTextViewSetting);
-        usernameText.setText(user.getUsername());
-        Button userNameButton = findViewById(R.id.editUsernameButtonSetting);
+        TextView userNameButton = findViewById(R.id.settings_username_button);
         userNameButton.setOnClickListener(v -> alertDialog());
 
+        User user = User.fromDisk(this);
         //setup userAvatar
         if (user != null) {
-            ImageButton userAvatar = findViewById(R.id.userSettingAvatar);
+            TextView userNameText = findViewById(R.id.settings_username_text_view);
+            userNameText.setText(user.getUsername());
+            ImageButton userAvatar = findViewById(R.id.settings_user_avatar);
             userAvatar.setImageResource(user.getAvatar());
-            Button button = findViewById(R.id.editUserAvatarButton);
+            ImageButton button = findViewById(R.id.settings_user_avatar_edit_button);
             button.setOnClickListener(v -> {
+                MainActivity.this.mShouldBroadcast = true;
                 Intent avatarChooseIntent = new Intent(MainActivity.this,
                         ChooseAvatarActivity.class);
-                avatarChooseIntent.setAction(String.valueOf(R.string.ChangeAvatar));
                 startActivity(avatarChooseIntent);
             });
         }
@@ -223,7 +239,7 @@ public class MainActivity extends ServiceConnectedActivity {
     private void alertDialog() {
         final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter username");
+        builder.setTitle(R.string.title_onboarding_username_activity);
 
         final EditText input = new EditText(MainActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -231,26 +247,36 @@ public class MainActivity extends ServiceConnectedActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(lp);
         builder.setView(input);
-
-        User user = User.fromDisk(this);
-        builder.setPositiveButton("SAVE", (dialog, which) -> {
+        builder.setPositiveButton(R.string.save, (dialog, which) -> {
             String username = input.getText().toString();
             if (!username.isEmpty()) {
-                if (user != null && username.length() <= 20) {
+                User user = User.fromDisk(this);
+                if (user != null && username.length() <= MAX_LENGTH_USERNAME_CHARACTERS) {
                     user.setUsername(username);
-                    user.save();
-                    TextView textView = findViewById(R.id.usernameTextViewSetting);
+                    user.save(this);
+                    TextView textView = findViewById(R.id.settings_username_text_view);
                     textView.setText(username);
+
+                    if (mService != null) {
+                        try {
+                            mService.broadcastUpdatedProfile();
+                        } catch (RemoteException e) {
+                            if (e instanceof DeadObjectException) {
+                                reconnectToService();
+                            }
+                            // Otherwise, the change will be saved just not propagated now.
+                        }
+                    }
                 } else if (username.length() > 20) {
-                    Toast.makeText(MainActivity.this, "Username longer than 20"
-                            + " characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.username_warning_message_length, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this, "Empty username not allowed!",
+                Toast.makeText(MainActivity.this, R.string.username_warning_message_empty,
                         Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("CANCEL", (dialog, which) -> { /* Exit. */ });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
         levelDialog = builder.create();
         levelDialog.show();
     }

@@ -1,8 +1,9 @@
 package io.left.meshim.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -15,45 +16,51 @@ import io.left.meshim.models.User;
 /**
  * User avatar selection interface.
  */
-public class ChooseAvatarActivity extends Activity {
+public class ChooseAvatarActivity extends AppCompatActivity {
+    public static final String ONBOARDING_ACTION = "from onboarding";
+
     //used for the table layout
     private static final int ROWS = 9;
     private static final int COLUMNS = 3;
 
-    private User mUser;
-    private int mUserAvatarId = -1;
+    private Button mSaveButton;
+    private ImageButton mSelectedAvatar;
+    private int mUserAvatarId = R.mipmap.account_default;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Configure UI
         setContentView(R.layout.activity_choose_avatar);
+
+        // Populate list of avatars.
         setupAvatars();
 
-        mUser = User.fromDisk(this);
-        if (mUser == null) {
-            // Initialize if not found, so we can still save the user's selection.
-            mUser = new User(this);
-        }
-        mUserAvatarId = R.mipmap.account_default;
+        // Save reference to buttons for use when avatars are selected
+        mSaveButton = findViewById(R.id.saveUserAvatarButton);
+        mSelectedAvatar = findViewById(R.id.selectedAvatar);
+    }
 
-        Intent prevIntent = getIntent();
-        // Update user and launch app when save button is tapped.
-        Button saveButton = findViewById(R.id.saveUserAvatarButton);
-        saveButton.setOnClickListener(v -> {
-            mUser.setAvatar(mUserAvatarId);
-            mUser.save();
-            //if intent is launch from setting tab.
-            String action = prevIntent.getAction();
-            if (action != null && action.equals(getString(R.string.ChangeAvatar))) {
-                finish();
-            } else {
-                Intent intent = new Intent(ChooseAvatarActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    /**
+     * Update user and launch next activity when save button is tapped.
+     * @param view save button
+     */
+    public void saveAvatar(View view) {
+        User user = User.fromDisk(this);
+        if (user == null) {
+            // Initialize if not found, so we can still save the user's selection.
+            user = new User();
+        }
+        user.setAvatar(mUserAvatarId);
+        user.save(this);
+
+        // Launch app if called from onboarding activity.
+        String action = getIntent().getAction();
+        if (action != null && action.equals(ONBOARDING_ACTION)) {
+            Intent intent = new Intent(ChooseAvatarActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
+        finish();
     }
 
     /**
@@ -91,8 +98,8 @@ public class ChooseAvatarActivity extends Activity {
                 imageButton.setOnClickListener(v -> {
                     mUserAvatarId = getResources().getIdentifier(
                             "avatar" + finalAvatarNum, "mipmap", getPackageName());
-                    ImageButton button = findViewById(R.id.selectedAvatar);
-                    button.setImageResource(mUserAvatarId);
+                    mSelectedAvatar.setImageResource(mUserAvatarId);
+                    mSaveButton.setClickable(true);
                 });
                 avatarNum++;
             }
