@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">meshIM</string>
 
+    <!-- Notification text -->
+    <string name="notification_title">meshIM is Running</string>
+    <string name="notification_text">Tap to go offline.</string>
+
     <!-- Username editing messages -->
     <string name="username">Username</string>
     <string name="username_length">%d/20</string>
