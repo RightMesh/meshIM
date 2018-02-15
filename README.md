@@ -6,7 +6,7 @@ You can send messages to other meshIM users over the internet, or form automatic
 
 ## RightMesh
 
-RightMesh is a software-based, mobile mesh networking platform and protocol using blockchain technology and tokens to enhance global connectivity. Find out more at [RightMesh.io](https://rightmeseh.io)
+RightMesh is a software-based, mobile mesh networking platform and protocol using blockchain technology and tokens to enhance global connectivity. Find out more at [RightMesh.io](https://rightmesh.io)
 
 ## Building meshIM
 
