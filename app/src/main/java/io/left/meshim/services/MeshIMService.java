@@ -8,13 +8,13 @@ import android.app.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
@@ -68,23 +68,22 @@ public class MeshIMService extends Service {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(channel);
             builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-            Log.d("bug1","notification inside if statement");
         } else {
             //noinspection deprecation
             builder = new NotificationCompat.Builder(this);
-            Log.d("bug1","notification outside if statement");
         }
+        Resources resources = getResources();
         mServiceNotification = builder.setAutoCancel(false)
-                .setTicker("meshIM")
-                .setContentTitle("meshIM is Running")
-                .setContentText("Tap to go offline.")
+                .setTicker(resources.getString(R.string.app_name))
+                .setContentTitle(resources.getString(R.string.notification_title))
+                .setContentText(resources.getString(R.string.notification_text))
                 .setSmallIcon(R.mipmap.available_icon)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setNumber(100)
                 .build();
 
-        mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "MeshIM")
+        mDatabase = Room.databaseBuilder(getApplicationContext(), MeshIMDatabase.class, "meshIM")
                 .addMigrations(Migrations.ALL_MIGRATIONS)
                 .build();
 
