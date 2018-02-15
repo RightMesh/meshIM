@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
@@ -67,13 +68,15 @@ public class MeshIMService extends Service {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(channel);
             builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+            Log.d("bug1","notification inside if statement");
         } else {
             //noinspection deprecation
             builder = new NotificationCompat.Builder(this);
+            Log.d("bug1","notification outside if statement");
         }
         mServiceNotification = builder.setAutoCancel(false)
-                .setTicker("Mesh IM")
-                .setContentTitle("Mesh IM is Running")
+                .setTicker("meshIM")
+                .setContentTitle("meshIM is Running")
                 .setContentText("Tap to go offline.")
                 .setSmallIcon(R.mipmap.available_icon)
                 .setContentIntent(pendingIntent)

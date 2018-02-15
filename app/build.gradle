@@ -110,7 +110,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support:recyclerview-v7:27.0.2'
     implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'io.left.rightmesh:rightmesh-library-dev:0.4.2'
+    implementation 'io.left.rightmesh:rightmesh-library-dev:0.4.2-FRAZER-SNAPSHOT'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     androidTestImplementation 'com.android.support:support-annotations:27.0.2'

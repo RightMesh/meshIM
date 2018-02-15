@@ -263,7 +263,7 @@ public class RightMeshController implements MeshStateListener {
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             Log.d("bug1","data changed");
-            User tempUser = new User("Getting user details", R.mipmap.account_default);
+            User tempUser = new User("Getting user details...", R.mipmap.account_default);
             users.put(event.peerUuid,tempUser);
             updateInterface();
             // Send our information to a new or rejoining peer.
