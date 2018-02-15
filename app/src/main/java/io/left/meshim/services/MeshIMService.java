@@ -56,7 +56,6 @@ public class MeshIMService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Intent stopForegroundIntent = new Intent(this, MeshIMService.class);
         stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
         PendingIntent pendingIntent

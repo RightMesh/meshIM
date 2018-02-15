@@ -203,7 +203,6 @@ public class RightMeshController implements MeshStateListener {
 
             MessageType messageType = messageWrapper.getMessageType();
             if (messageType == PEER_UPDATE) {
-                Log.d("bug1","data recieved");
                 PeerUpdate peerUpdate = messageWrapper.getPeerUpdate();
 
                 // Initialize peer with info from update packet.
@@ -262,7 +261,7 @@ public class RightMeshController implements MeshStateListener {
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
-            Log.d("bug1","data changed");
+            // let the user know mesh has discovered a new user, and is getting information.
             User tempUser = new User("Getting user details...", R.mipmap.account_default);
             users.put(event.peerUuid,tempUser);
             updateInterface();
@@ -271,7 +270,6 @@ public class RightMeshController implements MeshStateListener {
             try {
                 if (message != null) {
                     meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
-                    Log.d("bug1","data sent");
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
