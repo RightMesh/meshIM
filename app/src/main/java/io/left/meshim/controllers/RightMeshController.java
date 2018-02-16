@@ -10,9 +10,6 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.R;
