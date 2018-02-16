@@ -14,4 +14,5 @@
     <!-- Settings screen dimensions -->
     <dimen name="settings_edit_button_height">24dp</dimen>
     <dimen name="settings_square_icon">32dp</dimen>
+
 </resources>
