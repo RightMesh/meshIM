@@ -261,7 +261,7 @@ public class RightMeshController implements MeshStateListener {
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
-            // let the user know mesh has discovered a new user, and is getting information.
+            // let the user know mesh has discovered a new user, and is getting details.
             User tempUser = new User("Getting user details...", R.mipmap.account_default);
             users.put(event.peerUuid,tempUser);
             updateInterface();
