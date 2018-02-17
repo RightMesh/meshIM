@@ -10,9 +10,9 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.models.MeshIDTuple;
@@ -258,6 +258,10 @@ public class RightMeshController implements MeshStateListener {
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
+            // let the user know mesh has discovered a new user, and is getting details.
+            User tempUser = new User("Getting user details...", R.mipmap.account_default);
+            users.put(event.peerUuid,tempUser);
+            updateInterface();
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {

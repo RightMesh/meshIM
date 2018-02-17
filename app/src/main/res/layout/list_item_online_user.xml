@@ -9,17 +9,14 @@
 
     <ImageView
         android:id="@+id/userMessageAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="@dimen/meshim_avatar_width"
+        android:layout_height="@dimen/meshim_avatar_height"
+        android:layout_marginBottom="@dimen/meshim_margin_small"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/user_avatar_description"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/userNameMessageText"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/user_avatar_description" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/userNameMessageText"

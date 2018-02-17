@@ -73,16 +73,14 @@ public class ChooseAvatarActivity extends AppCompatActivity {
 
         ScrollView scrollView = findViewById(R.id.avatarScrollView);
         TableLayout tableLayout = new TableLayout(this);
-
         for (int r = 0; r < ROWS; r++) {
             TableRow tableRow = new TableRow(this);
-            tableRow.setLayoutParams(new TableLayout.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.MATCH_PARENT, 1.0f));
-
+            TableLayout.LayoutParams tableRowParams=
+                    new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                            TableLayout.LayoutParams.MATCH_PARENT, 1.0f);
+            tableRow.setLayoutParams(tableRowParams);
             for (int c = 0; c < COLUMNS; c++) {
                 final ImageButton imageButton = new ImageButton(this);
-
                 //setting the avatar
                 int id = getResources().getIdentifier("avatar" + avatarNum, "mipmap",
                         getPackageName());

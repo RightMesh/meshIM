@@ -1,8 +1,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
     <FrameLayout
         android:id="@+id/settings_header"
@@ -15,8 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" >
-    </FrameLayout>
+        app:layout_constraintVertical_bias="0.0"></FrameLayout>
 
     <ImageButton
         android:id="@+id/settings_user_avatar_edit_button"
@@ -47,8 +48,8 @@
         android:id="@+id/settings_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/meshim_margin_large"
-        android:layout_marginStart="@dimen/meshim_margin_large"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_medium"
         android:background="@color/white"
         android:elevation="3dp"
@@ -90,8 +91,8 @@
         android:id="@+id/settings_online"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/meshim_margin_large"
-        android:layout_marginStart="@dimen/meshim_margin_large"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:background="@color/white"
         android:elevation="3dp"
@@ -101,7 +102,6 @@
 
         <ImageButton
             android:id="@+id/settings_online_icon"
-            android:contentDescription="@string/settings_online_icon_content_description"
             android:layout_width="@dimen/settings_square_icon"
             android:layout_height="@dimen/settings_square_icon"
             android:layout_marginBottom="@dimen/meshim_margin_medium"
@@ -109,6 +109,7 @@
             android:layout_marginStart="@dimen/meshim_margin_medium"
             android:layout_marginTop="@dimen/meshim_margin_medium"
             android:background="@mipmap/available_icon"
+            android:contentDescription="@string/settings_online_icon_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -148,6 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_medium"
+            android:layout_marginEnd="@dimen/meshim_margin_extra_large"
             android:checked="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -156,13 +158,13 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/settings_rightmesh"
-        android:background="@color/white"
-        android:clickable="true"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/meshim_margin_large"
-        android:layout_marginStart="@dimen/meshim_margin_large"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
+        android:background="@color/white"
+        android:clickable="true"
         android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -171,21 +173,22 @@
 
         <ImageView
             android:id="@+id/settings_rightmesh_icon"
-            android:contentDescription="@string/settings_rightmesh_icon_content_description"
             android:layout_width="@dimen/settings_square_icon"
             android:layout_height="@dimen/settings_square_icon"
             android:layout_margin="@dimen/meshim_margin_medium"
             android:background="@mipmap/rm_launcher"
+            android:contentDescription="@string/settings_rightmesh_icon_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/settings_rightmesh_description"
-            android:fontFamily="sans-serif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_small"
+            android:layout_marginStart="@dimen/meshim_margin_extra_large"
+            android:fontFamily="sans-serif"
             android:text="@string/settings_rightmesh_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/settings_rightmesh_icon"
@@ -193,11 +196,12 @@
 
         <ImageView
             android:id="@+id/settings_rightmesh_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/meshim_margin_medium"
+            android:layout_marginEnd="@dimen/meshim_margin_extra_large"
             android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
             android:contentDescription="@string/settings_rightmesh_icon_content_description"
-            android:layout_width="@dimen/settings_square_icon"
-            android:layout_height="@dimen/settings_square_icon"
-            android:layout_margin="@dimen/meshim_margin_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -205,12 +209,12 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/settings_settings"
-        android:background="@color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/meshim_margin_large"
-        android:layout_marginStart="@dimen/meshim_margin_large"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
+        android:background="@color/white"
         android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -221,6 +225,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_large"
+            android:layout_marginStart="@dimen/meshim_margin_extra_large"
             android:fontFamily="sans-serif"
             android:text="@string/settings_notifications_description"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -233,6 +238,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_medium"
+            android:layout_marginEnd="@dimen/meshim_margin_extra_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
