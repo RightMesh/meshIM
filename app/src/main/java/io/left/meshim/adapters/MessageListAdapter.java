@@ -116,7 +116,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         if (message != null) {
             if (!(message.isMyMessage())) {
                 holder.mMessageBody.setText(message.getMessage());
-                holder.mTime.setText(message.getDateAsString());
+                holder.mTime.setText(Message.dateFormat(message.getDate()));
 
                 User sender = message.getSender();
                 if (sender != null) {
@@ -124,7 +124,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 }
             } else {
                 holder.mMessageBody.setText(message.getMessage());
-                holder.mTime.setText(message.getDateAsString());
+                holder.mTime.setText(Message.dateFormat(message.getDate()));
             }
         }
     }
