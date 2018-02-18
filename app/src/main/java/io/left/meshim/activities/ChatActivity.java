@@ -73,6 +73,7 @@ public class ChatActivity extends ServiceConnectedActivity {
             }
         });
         setupActionBar();
+
     }
 
     /**

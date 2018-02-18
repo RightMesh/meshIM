@@ -14,7 +14,6 @@ import com.google.protobuf.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 @Entity(tableName = "Messages",
         indices = { @Index(value = {"RecipientID"}), @Index(value = {"SenderID"}) },
@@ -241,20 +240,20 @@ public class Message implements Parcelable {
 
     /**
      * Function to format the date as desired
-     * @param date needing to format
+     * @param date needing formatting
      * @return  the formatted date as a string
      */
     public static String dateFormat(Date date){
-        DateFormat dateFormmarter;
+        DateFormat dateFormatter;
         Date today = new Date();
         if (date.getDate()==today.getDate()){
-            dateFormmarter = new SimpleDateFormat("hh:mm a");
+            dateFormatter = new SimpleDateFormat("hh:mm a");
         }else if(date.getYear()==today.getYear()){
-            dateFormmarter = new SimpleDateFormat("MMMM dd hh:mm a");
+            dateFormatter = new SimpleDateFormat("MMMM dd hh:mm a");
         } else {
-            dateFormmarter = new SimpleDateFormat("MMMM d yyyy hh:mm a");
+            dateFormatter = new SimpleDateFormat("MMMM d yyyy hh:mm a");
         }
-        String dateString = dateFormmarter.format(date).toString();
+        String dateString = dateFormatter.format(date).toString();
         return dateString;
     }
 }
