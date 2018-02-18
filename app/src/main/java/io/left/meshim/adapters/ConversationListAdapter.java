@@ -16,9 +16,6 @@ import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;
 
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,7 +77,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             newMessage.setText(conversationSummary.messageText);
             Date currDate = conversationSummary.messageTime;
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
-            time.setText(Message.dateFormat(conversationSummary.messageTime));
+            time.setText(Message.formateDate(conversationSummary.messageTime));
         }
 
         return v;

@@ -2,8 +2,8 @@
     android:shape="rectangle" android:padding="10dp">
     <solid android:color="@color/colorAccent"/>
     <corners
-        android:bottomRightRadius="15dp"
-        android:bottomLeftRadius="15dp"
-        android:topLeftRadius="15dp"
-        android:topRightRadius="15dp"/>
+        android:bottomRightRadius="@dimen/meshim_margin_medium"
+        android:bottomLeftRadius="@dimen/meshim_margin_medium"
+        android:topLeftRadius="@dimen/meshim_margin_medium"
+        android:topRightRadius="@dimen/meshim_margin_medium"/>
 </shape>

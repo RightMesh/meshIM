@@ -243,7 +243,7 @@ public class Message implements Parcelable {
      * @param date needing formatting
      * @return  the formatted date as a string
      */
-    public static String dateFormat(Date date){
+    public static String formateDate(Date date){
         DateFormat dateFormatter;
         Date today = new Date();
         if (date.getDate()==today.getDate()){
