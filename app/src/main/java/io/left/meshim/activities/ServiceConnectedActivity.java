@@ -121,6 +121,8 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
                     reconnectToService();
                 }
             }
+        } else {
+            connectToService();
         }
     }
 
