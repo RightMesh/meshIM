@@ -38,7 +38,8 @@ public class OnboardingUsernameActivity extends AppCompatActivity {
         if (mIsUsernameValid) {
             User user = new User();
             user.setUsername(userName);
-            user.setAvatar(1);
+            //set a default avatar
+            user.setAvatar(R.mipmap.avatar2);
             user.save(OnboardingUsernameActivity.this);
 
             Intent intent = new Intent(OnboardingUsernameActivity.this, ChooseAvatarActivity.class);
