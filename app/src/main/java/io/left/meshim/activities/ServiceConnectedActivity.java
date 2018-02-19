@@ -52,15 +52,6 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
     }
 
     /**
-     * Unbind from service when activity is destroyed.
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mConnection);
-    }
-
-    /**
      * Hide service notification when activity starts.
      */
     @Override
@@ -70,12 +61,16 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
     }
 
     /**
-     * Show service notification when activity stops.
+     * Show service notification and unbind when activity stops.
      */
     @Override
     protected void onStop() {
         super.onStop();
         showService();
+        if (mService != null) {
+            unbindService(mConnection);
+            mService = null;
+        }
     }
 
     /**
