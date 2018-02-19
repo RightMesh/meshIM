@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationCompat;
 import io.left.meshim.R;
 import io.left.meshim.activities.ChatActivity;
 import io.left.meshim.activities.IActivity;
-import io.left.meshim.activities.MainActivity;
 import io.left.meshim.controllers.RightMeshController;
 import io.left.meshim.database.MeshIMDatabase;
 import io.left.meshim.database.Migrations;
