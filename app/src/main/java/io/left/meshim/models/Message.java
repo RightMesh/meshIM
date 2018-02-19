@@ -256,5 +256,4 @@ public class Message implements Parcelable {
         String dateString = dateFormatter.format(date).toString();
         return dateString;
     }
-
 }
