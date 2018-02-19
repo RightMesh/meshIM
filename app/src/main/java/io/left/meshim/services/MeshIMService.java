@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.ChatActivity;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.activities.MainActivity;
 import io.left.meshim.controllers.RightMeshController;
@@ -244,13 +245,13 @@ public class MeshIMService extends Service {
      */
     public void sendNotification(User user, Message message) {
         Settings settings = Settings.fromDisk(this);
-
         if (mIsForeground && (settings == null || settings.isShowNotifications())) {
             long time = Calendar.getInstance().getTimeInMillis();
             String notifContent =  message.getMessage();
             String notifTitle = user.getUsername();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getAvatar());
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra("recipient", user);
             intent.setData(Uri.parse("content://" + time));
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, intent, PendingIntent.FLAG_ONE_SHOT);

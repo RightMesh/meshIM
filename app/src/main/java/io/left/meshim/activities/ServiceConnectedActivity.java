@@ -134,5 +134,4 @@ public abstract class ServiceConnectedActivity extends AppCompatActivity {
      * to re-draw.
      */
     abstract void updateInterface();
-
 }
