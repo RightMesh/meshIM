@@ -46,7 +46,6 @@ public class MeshIMService extends Service {
     private MeshIMDatabase mDatabase;
     private RightMeshController mMeshConnection;
     private Notification mServiceNotification;
-    private boolean mIsBound = false;
     private boolean mIsForeground = false;
     private int mVisibleActivities = 0;
 
@@ -185,21 +184,7 @@ public class MeshIMService extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
-        mIsBound = true;
         return mBinder;
-    }
-
-    /**
-     * Keeps track of if this is actively bound.
-     *
-     * @param intent Intent that bound to the service
-     * @return false (don't call onRebind())
-     */
-    @Override
-    public boolean onUnbind(Intent intent) {
-        mIsBound = false;
-        mMeshConnection.setCallback(null);
-        return false;
     }
 
     /**
@@ -219,9 +204,11 @@ public class MeshIMService extends Service {
             action = intent.getAction();
         }
         if (action != null && action.equals(STOP_FOREGROUND_ACTION)) {
-            if (mIsBound) {
+            if (mIsForeground) {
                 stopForeground(true);
-            } else {
+                mIsForeground = false;
+            }
+            if (mVisibleActivities == 0) {
                 stopSelf();
             }
         } else if (action != null && action.equals(START_FOREGROUND_ACTION)) {
