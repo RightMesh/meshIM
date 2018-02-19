@@ -188,18 +188,6 @@ public class MeshIMService extends Service {
     }
 
     /**
-     * Keeps track of if this is actively bound.
-     *
-     * @param intent Intent that bound to the service
-     * @return false (don't call onRebind())
-     */
-    @Override
-    public boolean onUnbind(Intent intent) {
-        mMeshConnection.setCallback(null);
-        return false;
-    }
-
-    /**
      * Responds to events sent by the notification. Used to toggle foreground mode on/off.
      *
      * @param intent service intent.
