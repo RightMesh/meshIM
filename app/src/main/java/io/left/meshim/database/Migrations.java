@@ -2,6 +2,7 @@ package io.left.meshim.database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;
+import android.support.annotation.NonNull;
 
 //CHECKSTYLE IGNORE LineLengthCheck
 public class Migrations {
@@ -24,7 +25,15 @@ public class Migrations {
             database.execSQL("CREATE  INDEX `index_Messages_SenderID` ON `Messages` (`SenderID`)");
         }
     };
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+           // database.execSQL("ALTER TABLE Messages"+ "CREATE INDEX `index_Messages_isRead` (`isRead`) ");
+            /*database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN isRead INTEGER");*/
+        }
+    };
 
-    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3 };
+        public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

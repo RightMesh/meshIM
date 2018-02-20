@@ -50,6 +50,9 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
+    @ColumnInfo(name ="isRead")
+    private boolean isRead;
+
     public String getMessage() {
         return message;
     }
@@ -90,6 +93,14 @@ public class Message implements Parcelable {
         this.isMyMessage = isMyMessage;
     }
 
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
     /**
      * Simplest constructor for a new message created on a device to be sent. Starts with sender,
      * recipient, and message, then passes them along
@@ -117,6 +128,7 @@ public class Message implements Parcelable {
     @Ignore
     public Message(User sender, User recipient, String message, boolean isMyMessage) {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
+        this.isRead = false;
     }
 
     /**
@@ -131,6 +143,7 @@ public class Message implements Parcelable {
      */
     public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date) {
         this(null, senderId, null, recipientId, message, isMyMessage, date);
+        this.isRead = false;
     }
 
     /**
@@ -154,6 +167,7 @@ public class Message implements Parcelable {
         this.message = message;
         this.isMyMessage = isMyMessage;
         this.date = date;
+        this.isRead = false;
     }
 
     /**
@@ -189,6 +203,7 @@ public class Message implements Parcelable {
         recipient = in.readParcelable(User.class.getClassLoader());
         recipientId = in.readInt();
         isMyMessage = in.readByte() != 0;
+        this.isRead = false;
     }
 
     // Required by Parcelable, created by Android Studio.

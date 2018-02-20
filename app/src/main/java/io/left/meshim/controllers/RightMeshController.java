@@ -10,6 +10,8 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.R;
@@ -104,6 +106,7 @@ public class RightMeshController implements MeshStateListener {
      */
     public void sendTextMessage(User recipient, String message) {
         Message messageObject = new Message(user, recipient, message, true);
+        Log.d("bug",messageObject.isRead()+"");
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -123,7 +126,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
     }
 
     /**

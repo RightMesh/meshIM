@@ -2,6 +2,7 @@ package io.left.meshim.database;
 
 import static io.left.meshim.database.Migrations.MIGRATION_1_2;
 import static io.left.meshim.database.Migrations.MIGRATION_2_3;
+import static io.left.meshim.database.Migrations.MIGRATION_3_4;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
@@ -83,5 +84,10 @@ public class MigrationTest {
     public void migrate2To3() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 2);
         db = helper.runMigrationsAndValidate(TEST_DB, 3, true, MIGRATION_2_3);
+    }
+    @Test
+    public void migrate3To4() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 3);
+        db = helper.runMigrationsAndValidate(TEST_DB, 4, true, MIGRATION_3_4);
     }
 }
