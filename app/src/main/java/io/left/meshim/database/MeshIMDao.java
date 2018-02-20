@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.util.Log;
 import android.util.SparseArray;
 
 import io.left.meshim.activities.MainActivity;
@@ -39,6 +40,9 @@ public abstract class MeshIMDao {
 
     @Query("SELECT * FROM Users WHERE MeshID = :meshId")
     public abstract User fetchUserByMeshId(MeshID meshId);
+
+    @Query("UPDATE  Messages SET isRead = :val WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsRead(int messageID, boolean val);
 
     @Insert()
     public abstract void insertMessages(Message... messages);
@@ -79,9 +83,9 @@ public abstract class MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, isRead "
             + "FROM ("
-            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, MAX(Timestamp) AS Timestamp "
+            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, isRead, MAX(Timestamp) AS Timestamp "
             + "FROM Messages GROUP BY PeerID"
             + ") INNER JOIN Users ON PeerID = UserID "
             + "ORDER BY Timestamp DESC"
@@ -107,6 +111,8 @@ public abstract class MeshIMDao {
 
         // Populate messages with actual User classes.
         for (Message m : messages) {
+            //marks all the messages loading as read.
+            this.updateMessageIsRead(m.id,true);
             m.setSender(idUserMap.get(m.senderId));
             m.setRecipient(idUserMap.get(m.recipientId));
         }
