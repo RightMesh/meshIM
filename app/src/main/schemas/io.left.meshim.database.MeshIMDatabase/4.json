@@ -97,7 +97,6 @@
             "columnName": "isRead",
             "affinity": "INTEGER",
             "notNull": true
-
           }
         ],
         "primaryKey": {
