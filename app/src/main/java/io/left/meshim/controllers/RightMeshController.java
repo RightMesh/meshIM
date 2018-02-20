@@ -109,8 +109,13 @@ public class RightMeshController implements MeshStateListener {
         Message messageObject = new Message(user, recipient, message, true);
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
-            if (messagePayload != null) {
-                meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+            if (messagePayload != null && recipient != null) {
+                if (recipient.getIsEncrypted()) {
+                    meshManager.sendEncDataReliable(recipient.getMeshId(), MESH_PORT,
+                            messagePayload);
+                } else {
+                    meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+                }
                 dao.insertMessages(messageObject);
                 updateInterface();
             }
@@ -366,7 +371,11 @@ public class RightMeshController implements MeshStateListener {
             if (message != null) {
                 for (MeshID id : users.keySet()) {
                     try {
-                        meshManager.sendDataReliable(id, MESH_PORT, message);
+                        if (users.get(id).getIsEncrypted()) {
+                            meshManager.sendEncDataReliable(id, MESH_PORT, message);
+                        } else {
+                            meshManager.sendDataReliable(id, MESH_PORT, message);
+                        }
                     } catch (RightMeshException e) {
                         // Message sending failed. Other user may have out of date information, but
                         // ultimately this isn't deal-breaking.
