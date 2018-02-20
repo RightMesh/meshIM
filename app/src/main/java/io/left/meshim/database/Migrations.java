@@ -29,8 +29,8 @@ public class Migrations {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
            // database.execSQL("ALTER TABLE Messages"+ "CREATE INDEX `index_Messages_isRead` (`isRead`) ");
-            /*database.execSQL("ALTER TABLE Messages "
-                    + " ADD COLUMN isRead INTEGER");*/
+            database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN isRead INTEGER");
         }
     };
 
