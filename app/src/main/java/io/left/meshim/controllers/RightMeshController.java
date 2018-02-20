@@ -299,6 +299,7 @@ public class RightMeshController implements MeshStateListener {
                 if (message != null) {
                     meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
                 }
+                meshManager.exchangeKeys(event.peerUuid, MESH_PORT, 2000);
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
                 // ultimately this isn't deal-breaking.
