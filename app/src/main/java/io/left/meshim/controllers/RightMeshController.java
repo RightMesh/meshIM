@@ -192,9 +192,15 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
-     * Handles incoming data events from the mesh - toasts the contents of the data.
+     * Handles incoming data events from the mesh.
      *
-     * @param e event object from mesh
+     * <p>
+     *     All messages should be ProtoBuf {@link MeshIMMessage}s. If of type PEER_UPDATE, will
+     *     update the peer in the database with the newly supplied information. If of type MESSAGE,
+     *     adds the message to the database and sends a notification.
+     * </p>
+     *
+     * @param e event object from RightMesh
      */
     private void handleDataReceived(RightMeshEvent e) {
         DataReceivedEvent event = (DataReceivedEvent) e;
