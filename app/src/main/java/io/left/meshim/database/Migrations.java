@@ -28,10 +28,8 @@ public class Migrations {
     public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-           /*// database.execSQL("ALTER TABLE Messages"+ "CREATE INDEX `index_Messages_isRead` (`isRead`) ");
             database.execSQL("ALTER TABLE Messages "
-                    + " ADD COLUMN isRead INTEGER");*/
-
+                    + " ADD COLUMN isRead INTEGER  NOT NULL DEFAULT 1");
         }
     };
 

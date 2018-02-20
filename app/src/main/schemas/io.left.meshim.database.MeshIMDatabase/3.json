@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "2d8d5c31b46d57b6d9744179c811a7a6",
+    "identityHash": "27ba5f16e727328a3aad0aedd026d225",
     "entities": [
       {
         "tableName": "Users",
@@ -54,7 +54,7 @@
       },
       {
         "tableName": "Messages",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`MessageID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Contents` TEXT, `Timestamp` INTEGER, `SenderID` INTEGER NOT NULL, `RecipientID` INTEGER NOT NULL, `SentFromDevice` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, FOREIGN KEY(`SenderID`) REFERENCES `Users`(`UserID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`RecipientID`) REFERENCES `Users`(`UserID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`MessageID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Contents` TEXT, `Timestamp` INTEGER, `SenderID` INTEGER NOT NULL, `RecipientID` INTEGER NOT NULL, `SentFromDevice` INTEGER NOT NULL, FOREIGN KEY(`SenderID`) REFERENCES `Users`(`UserID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`RecipientID`) REFERENCES `Users`(`UserID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -89,12 +89,6 @@
           {
             "fieldPath": "isMyMessage",
             "columnName": "SentFromDevice",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isRead",
-            "columnName": "isRead",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -151,7 +145,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2d8d5c31b46d57b6d9744179c811a7a6\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"27ba5f16e727328a3aad0aedd026d225\")"
     ]
   }
 }
