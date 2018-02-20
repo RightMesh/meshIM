@@ -2,6 +2,7 @@ package io.left.meshim.controllers;
 
 import static io.left.rightmesh.mesh.MeshManager.ADDED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
+import static io.left.rightmesh.mesh.MeshManager.KEY_EXCHANGE_RESULT;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
 import static io.left.rightmesh.mesh.MeshManager.UPDATED;
@@ -22,7 +23,9 @@ import io.left.meshim.services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
+import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
+import io.left.rightmesh.mesh.MeshManager.KeyExchangeResultEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
@@ -106,8 +109,13 @@ public class RightMeshController implements MeshStateListener {
         Message messageObject = new Message(user, recipient, message, true);
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
-            if (messagePayload != null) {
-                meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+            if (messagePayload != null && recipient != null) {
+                if (recipient.getIsEncrypted()) {
+                    meshManager.sendEncDataReliable(recipient.getMeshId(), MESH_PORT,
+                            messagePayload);
+                } else {
+                    meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+                }
                 dao.insertMessages(messageObject);
                 updateInterface();
             }
@@ -162,6 +170,7 @@ public class RightMeshController implements MeshStateListener {
 
             // Subscribes handlers to receive events from the mesh.
             meshManager.on(DATA_RECEIVED, this::handleDataReceived);
+            meshManager.on(KEY_EXCHANGE_RESULT, this::handleKeyExchangedResult);
             meshManager.on(PEER_CHANGED, this::handlePeerChanged);
 
             // Update the UI for the first time.
@@ -183,9 +192,15 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
-     * Handles incoming data events from the mesh - toasts the contents of the data.
+     * Handles incoming data events from the mesh.
      *
-     * @param e event object from mesh
+     * <p>
+     *     All messages should be ProtoBuf {@link MeshIMMessage}s. If of type PEER_UPDATE, will
+     *     update the peer in the database with the newly supplied information. If of type MESSAGE,
+     *     adds the message to the database and sends a notification.
+     * </p>
+     *
+     * @param e event object from RightMesh
      */
     private void handleDataReceived(RightMeshEvent e) {
         DataReceivedEvent event = (DataReceivedEvent) e;
@@ -242,6 +257,33 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
+     * Handles a {@link KeyExchangeResultEvent} from RightMesh. Stores whether an online user can
+     * support encrypted messages if successful, or re-attempts the exchange if unsuccessful.
+     *
+     * @param e event passed from RightMesh
+     */
+    private void handleKeyExchangedResult(RightMeshEvent e) {
+        KeyExchangeResultEvent event = (KeyExchangeResultEvent) e;
+        if (event.status == MeshManager.SUCCESS) {
+            User user = users.get(event.peerUuid);
+            if (user != null) {
+                user.setIsEncrypted(true);
+                users.put(event.peerUuid, user);
+                updateInterface();
+            }
+        } else if (event.status == MeshManager.FAILURE) {
+            // Key exchange has timed out, try again.
+            try {
+                meshManager.exchangeKeys(event.peerUuid, MESH_PORT, 2000);
+            } catch (RightMeshException r) {
+                // Send failed. Unfortunately this means it will never try again, as this function
+                // won't get called again on timeout.
+                // TODO: Some kind of automated re-send here might be good.
+            }
+        }
+    }
+
+    /**
      * Handles peer update events from the mesh - maintains a list of peers and updates the display.
      *
      * @param e event object from mesh
@@ -268,6 +310,7 @@ public class RightMeshController implements MeshStateListener {
                 if (message != null) {
                     meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
                 }
+                meshManager.exchangeKeys(event.peerUuid, MESH_PORT, 2000);
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
                 // ultimately this isn't deal-breaking.
@@ -334,7 +377,11 @@ public class RightMeshController implements MeshStateListener {
             if (message != null) {
                 for (MeshID id : users.keySet()) {
                     try {
-                        meshManager.sendDataReliable(id, MESH_PORT, message);
+                        if (users.get(id).getIsEncrypted()) {
+                            meshManager.sendEncDataReliable(id, MESH_PORT, message);
+                        } else {
+                            meshManager.sendDataReliable(id, MESH_PORT, message);
+                        }
                     } catch (RightMeshException e) {
                         // Message sending failed. Other user may have out of date information, but
                         // ultimately this isn't deal-breaking.
