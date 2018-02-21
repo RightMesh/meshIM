@@ -85,6 +85,12 @@ public class MigrationTest {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 2);
         db = helper.runMigrationsAndValidate(TEST_DB, 3, true, MIGRATION_2_3);
     }
+
+    /**
+     * Addition of isRead column in the Messages table. sets the default values for isRead to true
+     * for messages before the migration.
+     * @throws IOException if the database cant open.
+     */
     @Test
     public void migrate3To4() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 3);

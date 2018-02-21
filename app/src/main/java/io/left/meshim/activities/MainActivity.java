@@ -99,7 +99,9 @@ public class MainActivity extends ServiceConnectedActivity {
         //Tab 2
         spec = host.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
-        spec.setIndicator(createTabIndicator(this,"Messages",R.mipmap.messages_default));
+        //reference for future when we need to indicate that there are new messages
+        mViewForMessageTab = createTabIndicator(this,"Messages",R.mipmap.messages_default);
+        spec.setIndicator(mViewForMessageTab);
         host.addTab(spec);
 
         //Tab 3
@@ -111,13 +113,7 @@ public class MainActivity extends ServiceConnectedActivity {
 
     private View createTabIndicator(Context context, String title, int icon) {
         View view;
-        if (title.equals("Messages")) {
-            view = LayoutInflater.from(context).inflate(R.layout.tab_layout_messages, null);
-            //reference for future when we need to indicate that there are new messages
-            mViewForMessageTab = view;
-        } else {
-            view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        }
+        view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
         ImageView iv = view.findViewById(R.id.imageView);
         iv.setImageResource(icon);
         TextView tv = view.findViewById(R.id.tabText);
@@ -188,6 +184,11 @@ public class MainActivity extends ServiceConnectedActivity {
                 //notify user of new messages.
                 TextView newMessageNotification =
                         mViewForMessageTab.findViewById(R.id.newMessageAvailable);
+                /*whenever the UI is updated, we check in the conversation summary list if there are
+                any unread messages. if there are unread messages, the notification badge in the
+                message tab pops up.
+                we only check the first item on the conversation summary list as they are arranged
+                by the newest message*/
                 if (!mConversationSummaries.isEmpty() && !mConversationSummaries.get(0).isRead) {
                     newMessageNotification.setVisibility(View.VISIBLE);
                 } else {

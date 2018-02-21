@@ -28,7 +28,7 @@ public class Migrations {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE Messages "
-                    + " ADD COLUMN isRead INTEGER  NOT NULL DEFAULT 1");
+                    + " ADD COLUMN IsRead INTEGER  NOT NULL DEFAULT 1");
         }
     };
     public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };

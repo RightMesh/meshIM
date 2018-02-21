@@ -30,11 +30,11 @@ public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "PeerID")
     public int peerID;
 
-    @ColumnInfo(name = "isRead")
+    @ColumnInfo(name = "IsRead")
     public boolean isRead;
 
-    @ColumnInfo(name = "numberOfUnreadMessages")
-    public int numberOfUnreadMessages;
+    @ColumnInfo(name = "UnreadMessages")
+    public int unreadMessages;
 
     /**
      * General purpose setter-constructor used by Room.
@@ -44,16 +44,16 @@ public class ConversationSummary implements Parcelable {
      * @param messageText contents of most recent message in conversation
      * @param messageTime time of most recent message in conversation
      * @param isRead a boolean to indicate if the last message was read
-     * @param numberOfUnreadMessages total number of unread message
+     * @param unreadMessages total number of unread message
      */
     public ConversationSummary(String username, int avatar, String messageText,
-                               Date messageTime, boolean isRead, int numberOfUnreadMessages) {
+                               Date messageTime, boolean isRead, int unreadMessages) {
         this.username = username;
         this.avatar = avatar;
         this.messageText = messageText;
         this.messageTime = messageTime;
         this.isRead = isRead;
-        this.numberOfUnreadMessages = numberOfUnreadMessages;
+        this.unreadMessages = unreadMessages;
     }
 
     /**
@@ -68,7 +68,7 @@ public class ConversationSummary implements Parcelable {
         messageTime = new Date(in.readLong());
         peerID = in.readInt();
         this.isRead = (in.readInt() == 1);
-        this.numberOfUnreadMessages = in.readInt();
+        this.unreadMessages = in.readInt();
     }
 
     // Auto-generated Parcelable stuff.
@@ -106,7 +106,7 @@ public class ConversationSummary implements Parcelable {
         dest.writeLong(messageTime.getTime());
         dest.writeInt(peerID);
         dest.writeInt(isRead ? 1 : 0);
-        dest.writeInt(numberOfUnreadMessages);
+        dest.writeInt(unreadMessages);
 
     }
 }

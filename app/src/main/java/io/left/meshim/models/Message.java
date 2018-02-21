@@ -50,7 +50,7 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
-    @ColumnInfo(name = "isRead")
+    @ColumnInfo(name = "IsRead")
     private boolean isRead;
 
     public String getMessage() {

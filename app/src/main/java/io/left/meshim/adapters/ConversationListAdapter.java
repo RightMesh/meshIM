@@ -82,7 +82,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
                 newMessageBadge.setVisibility(View.VISIBLE);
                 newMessage.setTypeface(null, Typeface.BOLD);
                 newMessage.setTextColor(Color.BLACK);
-                newMessageBadge.setText(conversationSummary.numberOfUnreadMessages + "");
+                newMessageBadge.setText(conversationSummary.unreadMessages + "");
             } else {
                 newMessageBadge.setVisibility(View.INVISIBLE);
                 newMessage.setTypeface(null, Typeface.NORMAL);
