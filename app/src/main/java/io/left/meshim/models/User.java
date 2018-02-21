@@ -63,6 +63,10 @@ public class User implements Parcelable {
     @ColumnInfo(name = "Avatar")
     private int avatar;
 
+    // Whether or not we have exchanged keys with this user and can send encrypted messages.
+    @Ignore
+    private boolean isEncrypted = false;
+
     public User() {
         this("Anonymous", -1);
     }
@@ -141,6 +145,14 @@ public class User implements Parcelable {
         this.username = username;
     }
 
+    public boolean getIsEncrypted() {
+        return isEncrypted;
+    }
+
+    public void setIsEncrypted(boolean isEncrypted) {
+        this.isEncrypted = isEncrypted;
+    }
+
     /**
      * A constructor for the parcel data type.
      *
@@ -156,6 +168,7 @@ public class User implements Parcelable {
         byte[] uuid = new byte[20];
         in.readByteArray(uuid);
         this.meshId = new MeshID(uuid);
+        this.isEncrypted = (in.readInt() == 1);
     }
 
 
@@ -187,6 +200,7 @@ public class User implements Parcelable {
         dest.writeString(this.getUsername());
         dest.writeInt(this.avatar);
         dest.writeByteArray(this.meshId.getRawUuid());
+        dest.writeInt(isEncrypted ? 1 : 0);
     }
 
     /**
