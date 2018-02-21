@@ -37,7 +37,7 @@ public class ChooseAvatarActivity extends AppCompatActivity {
 
         // Save reference to buttons for use when avatars are selected
         mSaveButton = findViewById(R.id.saveUserAvatarButton);
-        mSelectedAvatar = findViewById(R.id.selectedAvatar);
+        mSelectedAvatar = findViewById(R.id.choose_avatar_selected_avatar);
     }
 
     /**
@@ -73,29 +73,21 @@ public class ChooseAvatarActivity extends AppCompatActivity {
 
         ScrollView scrollView = findViewById(R.id.avatarScrollView);
         TableLayout tableLayout = new TableLayout(this);
-        for (int r = 0; r < ROWS; r++) {
-            TableRow tableRow = new TableRow(this);
-            TableLayout.LayoutParams tableRowParams =
-                    new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                            TableLayout.LayoutParams.MATCH_PARENT, 1.0f);
-            tableRow.setLayoutParams(tableRowParams);
-            for (int c = 0; c < COLUMNS; c++) {
-                final ImageButton imageButton = new ImageButton(this);
-                //setting the avatar
-                int id = getResources().getIdentifier("avatar" + avatarNum, "mipmap",
-                        getPackageName());
-                imageButton.setImageResource(id);
-                imageButton.setBackgroundResource(R.color.white);
-                imageButton.setLayoutParams(
-                        new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.MATCH_PARENT, 1.0f));
-                imageButton.setPadding(0, 0, 0, 0);
-                tableRow.addView(imageButton);
 
-                int finalAvatarNum = avatarNum;
+        // Populate table.
+        for (int r = 0; r < ROWS; r++) {
+            // Define a new row.
+            TableRow tableRow = (TableRow) getLayoutInflater()
+                    .inflate(R.layout.table_row_choose_avatar, tableLayout, false);
+
+            // Populate row with images.
+            for (int c = 0; c < COLUMNS; c++) {
+                final ImageButton imageButton = (ImageButton) tableRow.getChildAt(c);
+                final int id = getResources().getIdentifier("avatar" + avatarNum, "mipmap", getPackageName());
+                imageButton.setImageResource(id);
+
                 imageButton.setOnClickListener(v -> {
-                    mUserAvatarId = getResources().getIdentifier(
-                            "avatar" + finalAvatarNum, "mipmap", getPackageName());
+                    mUserAvatarId = id;
                     mSelectedAvatar.setImageResource(mUserAvatarId);
                     mSaveButton.setClickable(true);
                 });

@@ -36,4 +36,5 @@
     <string name="cancel">CANCEL</string>
     <string name="online_available">Available</string>
     <string name="edit">Edit</string>
+    <string name="choose_avatar_image_description">Avatar option.</string>
 </resources>

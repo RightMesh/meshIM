@@ -11,6 +11,10 @@
     <dimen name="onboarding_textedit_horizontal_offset">3dp</dimen>
     <dimen name="onboarding_textedit_vertical_offset">124dp</dimen>
 
+    <!-- Choose Avatar screen dimensions -->
+    <dimen name="choose_avatar_height_header">152dp</dimen>
+    <dimen name="choose_avatar_square_header_image">96dp</dimen>
+
     <!-- Settings screen dimensions -->
     <dimen name="settings_edit_button_height">24dp</dimen>
     <dimen name="settings_square_icon">32dp</dimen>

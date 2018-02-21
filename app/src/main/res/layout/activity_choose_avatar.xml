@@ -7,22 +7,35 @@
     android:clipToPadding="false"
     tools:context="io.left.meshim.activities.ChooseAvatarActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <FrameLayout
+        android:id="@+id/choose_avatar_header"
         android:layout_width="match_parent"
-        android:layout_height="153dp"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="top"
-        android:orientation="vertical"
+        android:layout_height="@dimen/choose_avatar_height_header"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <ImageButton
+        android:id="@+id/choose_avatar_selected_avatar"
+        android:layout_width="@dimen/choose_avatar_square_header_image"
+        android:layout_height="@dimen/choose_avatar_square_header_image"
+        android:layout_marginEnd="@dimen/meshim_margin_small"
+        android:layout_marginStart="@dimen/meshim_margin_small"
+        android:layout_marginTop="@dimen/meshim_margin_small"
+        android:background="@drawable/avatar_select"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/selected_avatar_description"
+        android:elevation="3dp"
+        android:translationZ="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/choose_avatar_header" />
 
     <ScrollView
         android:id="@+id/avatarScrollView"
-        style="@android:style/Widget.ScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/meshim_margin_medium"
@@ -31,50 +44,29 @@
         android:background="@drawable/scrollbar"
         android:elevation="3dp"
         android:fillViewport="false"
-        android:paddingHorizontal="@dimen/meshim_margin_large"
-        android:paddingVertical="@dimen/meshim_margin_extra_large"
-        android:visibility="visible"
+        android:paddingBottom="@dimen/meshim_margin_extra_large"
+        android:paddingLeft="@dimen/meshim_margin_large"
+        android:paddingRight="@dimen/meshim_margin_large"
+        android:paddingTop="@dimen/meshim_margin_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/saveUserAvatarButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedAvatar"
-        tools:backgroundTint="@color/colorPrimaryDark">
-
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/choose_avatar_selected_avatar" />
 
     <Button
         android:id="@+id/saveUserAvatarButton"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#FF01A076"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
         android:clickable="false"
         android:elevation="5dp"
         android:fontFamily="sans-serif"
         android:onClick="saveAvatar"
         android:text="@string/save"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:typeface="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/selectedAvatar"
-        android:contentDescription="@string/selected_avatar_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/avatar_select"
-        android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/avatarScrollView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.455"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.53" />
 </android.support.constraint.ConstraintLayout>
