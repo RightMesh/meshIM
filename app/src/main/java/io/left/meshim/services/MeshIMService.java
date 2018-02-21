@@ -59,11 +59,12 @@ public class MeshIMService extends Service {
         stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
         PendingIntent pendingIntent
                 = PendingIntent.getService(this,0,stopForegroundIntent,0);
-
         NotificationCompat.Builder builder;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager mNotificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(channel);
             builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         } else {
@@ -233,8 +234,6 @@ public class MeshIMService extends Service {
         Settings settings = Settings.fromDisk(this);
         if (mIsForeground && (settings == null || settings.isShowNotifications())) {
             long time = Calendar.getInstance().getTimeInMillis();
-            String notifContent =  message.getMessage();
-            String notifTitle = user.getUsername();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), user.getAvatar());
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra("recipient", user);
@@ -250,6 +249,8 @@ public class MeshIMService extends Service {
                 //noinspection deprecation
                 builder = new NotificationCompat.Builder(this);
             }
+            String notifContent =  message.getMessage();
+            String notifTitle = user.getUsername();
             builder.setWhen(time)
                    .setContentText(notifContent)
                    .setContentTitle(notifTitle)

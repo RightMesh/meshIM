@@ -33,7 +33,7 @@ public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "isRead")
     public boolean isRead;
 
-    @ColumnInfo(name ="numberOfUnreadMessages")
+    @ColumnInfo(name = "numberOfUnreadMessages")
     public int numberOfUnreadMessages;
 
     /**
@@ -43,6 +43,8 @@ public class ConversationSummary implements Parcelable {
      * @param avatar avatar of user conversation is with
      * @param messageText contents of most recent message in conversation
      * @param messageTime time of most recent message in conversation
+     * @param isRead a boolean to indicate if the last message was read
+     * @param numberOfUnreadMessages total number of unread message
      */
     public ConversationSummary(String username, int avatar, String messageText,
                                Date messageTime, boolean isRead, int numberOfUnreadMessages) {
@@ -65,7 +67,7 @@ public class ConversationSummary implements Parcelable {
         messageText = in.readString();
         messageTime = new Date(in.readLong());
         peerID = in.readInt();
-        this.isRead=(in.readInt() == 1);
+        this.isRead = (in.readInt() == 1);
         this.numberOfUnreadMessages = in.readInt();
     }
 

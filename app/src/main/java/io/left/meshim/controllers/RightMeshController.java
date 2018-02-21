@@ -133,7 +133,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**
@@ -211,7 +211,7 @@ public class RightMeshController implements MeshStateListener {
             MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
             MeshID peerId = event.peerUuid;
 
-            if(peerId.equals(meshManager.getUuid())) {
+            if (peerId.equals(meshManager.getUuid())) {
                 return;
             }
 

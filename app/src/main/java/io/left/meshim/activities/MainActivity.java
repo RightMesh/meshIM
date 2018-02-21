@@ -45,6 +45,8 @@ public class MainActivity extends ServiceConnectedActivity {
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     ConversationListAdapter mConversationListAdapter;
     boolean mShouldBroadcast = false;
+    //view to update message tab to show there are unread messages
+    View mViewForMessageTab;
 
     /**
      * Initializes UI elements.
@@ -109,10 +111,11 @@ public class MainActivity extends ServiceConnectedActivity {
 
     private View createTabIndicator(Context context, String title, int icon) {
         View view;
-        if(title.equals("Messages")){
-           view = LayoutInflater.from(context).inflate(R.layout.tab_layout_messages,null);
-        }
-        else {
+        if (title.equals("Messages")) {
+            view = LayoutInflater.from(context).inflate(R.layout.tab_layout_messages, null);
+            //reference for future when we need to indicate that there are new messages
+            mViewForMessageTab = view;
+        } else {
             view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
         }
         ImageView iv = view.findViewById(R.id.imageView);
@@ -182,6 +185,14 @@ public class MainActivity extends ServiceConnectedActivity {
                 mOnlineUserListAdapter.notifyDataSetChanged();
                 mConversationListAdapter.updateList(mService);
                 mConversationListAdapter.notifyDataSetChanged();
+                //notify user of new messages.
+                TextView newMessageNotification =
+                        mViewForMessageTab.findViewById(R.id.newMessageAvailable);
+                if (!mConversationSummaries.isEmpty() && !mConversationSummaries.get(0).isRead) {
+                    newMessageNotification.setVisibility(View.VISIBLE);
+                } else {
+                    newMessageNotification.setVisibility(View.INVISIBLE);
+                }
             } catch (DeadObjectException doe) {
                 reconnectToService();
             }

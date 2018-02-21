@@ -205,6 +205,7 @@ public class User implements Parcelable {
 
     /**
      * This function loads data from SharedPreferences if it exists.
+     * @param context context of the activity.
      * @return true if function was able to load else false
      */
     public boolean load(Context context) {
@@ -225,6 +226,7 @@ public class User implements Parcelable {
 
     /**
      * This function saves data to SharedPreferences.
+     * @param context context of the activity.
      */
     public void save(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APPLICATION_ID, SAVE_MODE);

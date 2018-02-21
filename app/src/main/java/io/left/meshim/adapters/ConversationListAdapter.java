@@ -30,7 +30,7 @@ import java.util.List;
 public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
     // Used to inflate views for the list.
     private Context mContext;
-    private MeshIMDao dao;
+
     /**
      * Stores context so we can inflate views.
      * @param context context of activity
@@ -79,12 +79,12 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText(conversationSummary.messageText);
             TextView newMessageBadge = v.findViewById(R.id.newMessageNotificationBadge);
-            if(!conversationSummary.isRead){
+            if (!conversationSummary.isRead) {
                 //show how many unread messages there are.
                 newMessageBadge.setVisibility(View.VISIBLE);
                 newMessage.setTypeface(null, Typeface.BOLD);
                 newMessage.setTextColor(Color.BLACK);
-                newMessageBadge.setText(conversationSummary.numberOfUnreadMessages+"");
+                newMessageBadge.setText(conversationSummary.numberOfUnreadMessages + "");
             } else {
                 newMessageBadge.setVisibility(View.INVISIBLE);
                 newMessage.setTypeface(null, Typeface.NORMAL);

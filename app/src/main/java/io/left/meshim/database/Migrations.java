@@ -32,7 +32,6 @@ public class Migrations {
                     + " ADD COLUMN isRead INTEGER  NOT NULL DEFAULT 1");
         }
     };
-
-        public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };
+    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

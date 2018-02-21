@@ -50,7 +50,7 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "SentFromDevice")
     private boolean isMyMessage;
 
-    @ColumnInfo(name ="isRead")
+    @ColumnInfo(name = "isRead")
     private boolean isRead;
 
     public String getMessage() {
@@ -254,16 +254,16 @@ public class Message implements Parcelable {
     }
 
     /**
-     * Function to format the date as desired
+     * Function to format the date as desired.
      * @param date needing formatting
      * @return  the formatted date as a string
      */
-    public static String formateDate(Date date){
+    public static String formateDate(Date date) {
         DateFormat dateFormatter;
         Date today = new Date();
-        if (date.getDate()==today.getDate()){
+        if (date.getDate() == today.getDate()) {
             dateFormatter = new SimpleDateFormat("hh:mm a");
-        }else if(date.getYear()==today.getYear()){
+        } else if (date.getYear() == today.getYear()) {
             dateFormatter = new SimpleDateFormat("MMMM dd hh:mm a");
         } else {
             dateFormatter = new SimpleDateFormat("MMMM d yyyy hh:mm a");
