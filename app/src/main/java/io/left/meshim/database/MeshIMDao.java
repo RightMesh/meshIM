@@ -40,7 +40,7 @@ public abstract class MeshIMDao {
     @Query("SELECT * FROM Users WHERE MeshID = :meshId")
     public abstract User fetchUserByMeshId(MeshID meshId);
 
-    @Query("UPDATE  Messages SET isRead = :val WHERE MessageID=:messageID ")
+    @Query("UPDATE  Messages SET IsRead = :val WHERE MessageID=:messageID ")
     public abstract void updateMessageIsRead(int messageID, boolean val);
 
     @Insert()
