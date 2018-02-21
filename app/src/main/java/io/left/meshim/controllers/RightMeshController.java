@@ -106,7 +106,6 @@ public class RightMeshController implements MeshStateListener {
      */
     public void sendTextMessage(User recipient, String message) {
         Message messageObject = new Message(user, recipient, message, true);
-        Log.d("bug",messageObject.isRead()+"");
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -126,7 +125,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**

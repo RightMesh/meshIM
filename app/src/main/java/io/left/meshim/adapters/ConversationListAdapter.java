@@ -2,6 +2,7 @@ package io.left.meshim.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
@@ -79,19 +80,15 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText(conversationSummary.messageText);
             TextView newMessageBadge = v.findViewById(R.id.newMessageNotificationBadge);
-            Log.d("bug","convAdapter "+conversationSummary.isRead);
             if(!conversationSummary.isRead){
-                Log.d("bug","convAdapter inside if statement "+conversationSummary.isRead);
-
-                newMessageBadge.setBackgroundColor(Color.RED);
-             //   newMessage.setTextColor(Color.BLACK);
+                //show how many unread messages there are.
+                newMessageBadge.setVisibility(View.VISIBLE);
+                newMessage.setTypeface(null, Typeface.BOLD);
+                newMessage.setTextColor(Color.BLACK);
+            } else {
+                newMessageBadge.setVisibility(View.INVISIBLE);
+                newMessage.setTypeface(null, Typeface.NORMAL);
             }
-            else{
-                newMessageBadge.setBackgroundColor(Color.WHITE);
-                Log.d("bug","convAdapter outside "+conversationSummary.isRead);
-
-            }
-            Date currDate = conversationSummary.messageTime;
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
             time.setText(Message.formateDate(conversationSummary.messageTime));
         }
