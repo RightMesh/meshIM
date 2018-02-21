@@ -1,14 +1,13 @@
 <resources>
     <!-- Global dimensions -->
+    <dimen name="meshim_margin_mini">4dp</dimen>
     <dimen name="meshim_margin_small">8dp</dimen>
     <dimen name="meshim_margin_medium">16dp</dimen>
     <dimen name="meshim_margin_large">24dp</dimen>
     <dimen name="meshim_margin_extra_large">32dp</dimen>
-    <dimen name="meshim_avatar_height">40dp</dimen>
-    <dimen name="meshim_avatar_width">40dp</dimen>
+    <dimen name="meshim_square_avatar">40dp</dimen>
 
     <!-- Onboarding screen dimensions -->
-    <dimen name="onboarding_textedit_horizontal_offset">3dp</dimen>
     <dimen name="onboarding_textedit_vertical_offset">124dp</dimen>
 
     <!-- Choose Avatar screen dimensions -->

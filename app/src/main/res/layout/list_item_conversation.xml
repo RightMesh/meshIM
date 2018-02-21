@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/userMessageAvatar"
-        android:layout_width="@dimen/meshim_avatar_width"
-        android:layout_height="@dimen/meshim_avatar_height"
+        android:layout_width="@dimen/meshim_square_avatar"
+        android:layout_height="@dimen/meshim_square_avatar"
         android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:contentDescription="@string/user_avatar_description"

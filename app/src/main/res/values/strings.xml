@@ -37,4 +37,5 @@
     <string name="online_available">Available</string>
     <string name="edit">Edit</string>
     <string name="choose_avatar_image_description">Avatar option.</string>
+    <string name="chat_send_button_description">Send icon.</string>
 </resources>

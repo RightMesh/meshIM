@@ -2,7 +2,6 @@
 
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabHost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -39,10 +38,11 @@
                     android:id="@+id/userListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/meshim_margin_small"
+                    android:layout_marginLeft="@dimen/meshim_margin_small"
+                    android:layout_marginTop="@dimen/meshim_margin_small"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent" >
 
                 </ListView>
 
@@ -83,5 +83,4 @@
             </ScrollView>
         </FrameLayout>
     </RelativeLayout>
-
 </TabHost>
