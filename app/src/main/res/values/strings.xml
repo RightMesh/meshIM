@@ -38,4 +38,5 @@
     <string name="edit">Edit</string>
     <string name="choose_avatar_image_description">Avatar option.</string>
     <string name="chat_send_button_description">Send icon.</string>
+    <string name="settings_edit_avatar_desription">Change user avatar.</string>
 </resources>

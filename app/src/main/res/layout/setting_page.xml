@@ -22,9 +22,9 @@
         android:id="@+id/settings_user_avatar_edit_button"
         android:layout_width="@dimen/settings_square_icon"
         android:layout_height="@dimen/settings_square_icon"
-        android:src="@mipmap/edit"
-        android:scaleType="fitCenter"
+        android:contentDescription="@string/settings_edit_avatar_desription"
         android:elevation="5dp"
+        android:src="@mipmap/edit"
         android:translationZ="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/settings_user_avatar"
         app:layout_constraintEnd_toEndOf="@+id/settings_user_avatar" />
