@@ -33,6 +33,9 @@ public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "isRead")
     public boolean isRead;
 
+    @ColumnInfo(name ="numberOfUnreadMessages")
+    public int numberOfUnreadMessages;
+
     /**
      * General purpose setter-constructor used by Room.
      *
@@ -42,12 +45,13 @@ public class ConversationSummary implements Parcelable {
      * @param messageTime time of most recent message in conversation
      */
     public ConversationSummary(String username, int avatar, String messageText,
-                               Date messageTime, boolean isRead) {
+                               Date messageTime, boolean isRead, int numberOfUnreadMessages) {
         this.username = username;
         this.avatar = avatar;
         this.messageText = messageText;
         this.messageTime = messageTime;
         this.isRead = isRead;
+        this.numberOfUnreadMessages = numberOfUnreadMessages;
     }
 
     /**
@@ -62,6 +66,7 @@ public class ConversationSummary implements Parcelable {
         messageTime = new Date(in.readLong());
         peerID = in.readInt();
         this.isRead=(in.readInt() == 1);
+        this.numberOfUnreadMessages = in.readInt();
     }
 
     // Auto-generated Parcelable stuff.
@@ -99,6 +104,7 @@ public class ConversationSummary implements Parcelable {
         dest.writeLong(messageTime.getTime());
         dest.writeInt(peerID);
         dest.writeInt(isRead ? 1 : 0);
+        dest.writeInt(numberOfUnreadMessages);
 
     }
 }

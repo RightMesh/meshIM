@@ -83,9 +83,10 @@ public abstract class MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, isRead "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, isRead, numberOfUnreadMessages "
             + "FROM ("
-            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, isRead, MAX(Timestamp) AS Timestamp "
+            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,isRead, " +
+            "sum(case when isRead =0 then 1 else 0 end) as numberOfUnreadMessages  , MAX(Timestamp) AS Timestamp "
             + "FROM Messages GROUP BY PeerID"
             + ") INNER JOIN Users ON PeerID = UserID "
             + "ORDER BY Timestamp DESC"

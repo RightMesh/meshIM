@@ -21,7 +21,6 @@ import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,6 +84,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
                 newMessageBadge.setVisibility(View.VISIBLE);
                 newMessage.setTypeface(null, Typeface.BOLD);
                 newMessage.setTextColor(Color.BLACK);
+                newMessageBadge.setText(conversationSummary.numberOfUnreadMessages+"");
             } else {
                 newMessageBadge.setVisibility(View.INVISIBLE);
                 newMessage.setTypeface(null, Typeface.NORMAL);
