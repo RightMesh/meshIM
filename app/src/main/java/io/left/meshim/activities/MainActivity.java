@@ -5,6 +5,7 @@ import static io.left.meshim.activities.OnboardingUsernameActivity.MAX_LENGTH_US
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
@@ -106,6 +107,8 @@ public class MainActivity extends ServiceConnectedActivity
      * Configure the content and UI of the tabs.
      */
     private void configureTabs() {
+        Resources resources = getResources();
+
         mTabs = findViewById(R.id.tabHost);
         mTabs.setOnTabChangedListener(this);
         mTabs.setup();
@@ -113,21 +116,24 @@ public class MainActivity extends ServiceConnectedActivity
         //Tab 1
         TabHost.TabSpec spec = mTabs.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator(createTabIndicator(this,"In Range", DEFAULT_TAB_ICONS[0]));
+        spec.setIndicator(createTabIndicator(this, resources.getString(R.string.tab_in_range),
+                DEFAULT_TAB_ICONS[0]));
         mTabs.addTab(spec);
 
         //Tab 2
         spec = mTabs.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
         //reference for future when we need to indicate that there are new messages
-        mViewForMessageTab = createTabIndicator(this,"Messages", DEFAULT_TAB_ICONS[1]);
+        mViewForMessageTab = createTabIndicator(this, resources.getString(R.string.tab_messages),
+                DEFAULT_TAB_ICONS[1]);
         spec.setIndicator(mViewForMessageTab);
         mTabs.addTab(spec);
 
         //Tab 3
         spec = mTabs.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator(createTabIndicator(this,"Account", DEFAULT_TAB_ICONS[2]));
+        spec.setIndicator(createTabIndicator(this,resources.getString(R.string.tab_account),
+                DEFAULT_TAB_ICONS[2]));
         mTabs.addTab(spec);
     }
 

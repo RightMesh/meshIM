@@ -5,6 +5,11 @@
     <string name="notification_title">meshIM is Running</string>
     <string name="notification_text">Tap to go offline.</string>
 
+    <!-- Tab titles -->
+    <string name="tab_in_range">In Range</string>
+    <string name="tab_messages">Messages</string>
+    <string name="tab_account">Account</string>
+
     <!-- Username editing messages -->
     <string name="username">Username</string>
     <string name="username_length">%d/20</string>
