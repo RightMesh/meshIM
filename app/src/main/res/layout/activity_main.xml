@@ -14,13 +14,11 @@
 
         <TabWidget
             android:id="@android:id/tabs"
-            style="@style/MyTabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal">
-
-        </TabWidget>
+            android:gravity="center_horizontal"
+            android:background="@color/white"/>
 
         <FrameLayout
             android:id="@android:id/tabcontent"

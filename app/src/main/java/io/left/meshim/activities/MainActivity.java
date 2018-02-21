@@ -38,7 +38,8 @@ import java.util.ArrayList;
  * Main interface for meshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
-public class MainActivity extends ServiceConnectedActivity {
+public class MainActivity extends ServiceConnectedActivity
+        implements TabHost.OnTabChangeListener {
     // Adapter that populates the online user list with user information from the app service.
     OnlineUserListAdapter mOnlineUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
@@ -47,6 +48,15 @@ public class MainActivity extends ServiceConnectedActivity {
     boolean mShouldBroadcast = false;
     //view to update message tab to show there are unread messages
     View mViewForMessageTab;
+
+    // Tab management
+    private TabHost mTabs;
+    private static final int[] DEFAULT_TAB_ICONS = { R.mipmap.in_range_default,
+            R.mipmap.messages_default, R.mipmap.account_default};
+    private static final int[] ACTIVE_TAB_ICONS = { R.drawable.ic_in_range_active,
+            R.drawable.ic_message_active, R.drawable.ic_account_active };
+    private View mActiveTabView = null;
+    private int mActiveTabPosition;
 
     /**
      * Initializes UI elements.
@@ -87,37 +97,52 @@ public class MainActivity extends ServiceConnectedActivity {
      * Configure the content and UI of the tabs.
      */
     private void configureTabs() {
-        TabHost host = findViewById(R.id.tabHost);
-        host.setup();
+        mTabs = findViewById(R.id.tabHost);
+        mTabs.setOnTabChangedListener(this);
+        mTabs.setup();
 
         //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Tab One");
+        TabHost.TabSpec spec = mTabs.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator(createTabIndicator(this,"In Range",R.mipmap.in_range_default));
-        host.addTab(spec);
+        spec.setIndicator(createTabIndicator(this,"In Range", DEFAULT_TAB_ICONS[0]));
+        mTabs.addTab(spec);
 
         //Tab 2
-        spec = host.newTabSpec("Tab Two");
+        spec = mTabs.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
         //reference for future when we need to indicate that there are new messages
-        mViewForMessageTab = createTabIndicator(this,"Messages",R.mipmap.messages_default);
+        mViewForMessageTab = createTabIndicator(this,"Messages", DEFAULT_TAB_ICONS[1]);
         spec.setIndicator(mViewForMessageTab);
-        host.addTab(spec);
+        mTabs.addTab(spec);
 
         //Tab 3
-        spec = host.newTabSpec("Tab Three");
+        spec = mTabs.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
-        host.addTab(spec);
+        spec.setIndicator(createTabIndicator(this,"Account", DEFAULT_TAB_ICONS[2]));
+        mTabs.addTab(spec);
     }
 
     private View createTabIndicator(Context context, String title, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        ImageView iv = view.findViewById(R.id.imageView);
+        ImageView iv = view.findViewById(R.id.tab_image);
         iv.setImageResource(icon);
-        TextView tv = view.findViewById(R.id.tabText);
+        TextView tv = view.findViewById(R.id.tab_text);
         tv.setText(title);
         return view;
+    }
+
+    @Override
+    public void onTabChanged(String s) {
+        ImageView icon;
+        if (mActiveTabView != null) {
+            icon = mActiveTabView.findViewById(R.id.tab_image);
+            icon.setImageResource(DEFAULT_TAB_ICONS[mActiveTabPosition]);
+        }
+
+        mActiveTabView = mTabs.getCurrentTabView();
+        mActiveTabPosition = mTabs.getCurrentTab();
+        icon = mActiveTabView.findViewById(R.id.tab_image);
+        icon.setImageResource(ACTIVE_TAB_ICONS[mActiveTabPosition]);
     }
 
     /**
