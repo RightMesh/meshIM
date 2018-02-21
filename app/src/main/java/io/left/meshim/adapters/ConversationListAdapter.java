@@ -1,6 +1,8 @@
 package io.left.meshim.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
@@ -17,7 +19,6 @@ import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,7 +76,17 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
             userName.setText(conversationSummary.username);
             TextView newMessage = v.findViewById(R.id.userNewestMessageText);
             newMessage.setText(conversationSummary.messageText);
-            Date currDate = conversationSummary.messageTime;
+            TextView newMessageBadge = v.findViewById(R.id.newMessageNotificationBadge);
+            if (!conversationSummary.isRead) {
+                //show how many unread messages there are.
+                newMessageBadge.setVisibility(View.VISIBLE);
+                newMessage.setTypeface(null, Typeface.BOLD);
+                newMessage.setTextColor(Color.BLACK);
+                newMessageBadge.setText(conversationSummary.unreadMessages + "");
+            } else {
+                newMessageBadge.setVisibility(View.INVISIBLE);
+                newMessage.setTypeface(null, Typeface.NORMAL);
+            }
             TextView time = v.findViewById(R.id.userNewestMessageTimeText);
             time.setText(Message.formateDate(conversationSummary.messageTime));
         }

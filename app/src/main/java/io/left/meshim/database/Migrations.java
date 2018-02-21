@@ -24,7 +24,13 @@ public class Migrations {
             database.execSQL("CREATE  INDEX `index_Messages_SenderID` ON `Messages` (`SenderID`)");
         }
     };
-
-    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3 };
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN IsRead INTEGER  NOT NULL DEFAULT 1");
+        }
+    };
+    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

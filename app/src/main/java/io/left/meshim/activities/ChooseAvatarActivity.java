@@ -75,7 +75,7 @@ public class ChooseAvatarActivity extends AppCompatActivity {
         TableLayout tableLayout = new TableLayout(this);
         for (int r = 0; r < ROWS; r++) {
             TableRow tableRow = new TableRow(this);
-            TableLayout.LayoutParams tableRowParams=
+            TableLayout.LayoutParams tableRowParams =
                     new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.MATCH_PARENT, 1.0f);
             tableRow.setLayoutParams(tableRowParams);

@@ -40,6 +40,9 @@ public abstract class MeshIMDao {
     @Query("SELECT * FROM Users WHERE MeshID = :meshId")
     public abstract User fetchUserByMeshId(MeshID meshId);
 
+    @Query("UPDATE  Messages SET IsRead = :val WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsRead(int messageID, boolean val);
+
     @Insert()
     public abstract void insertMessages(Message... messages);
 
@@ -79,10 +82,11 @@ public abstract class MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, IsRead, UnreadMessages "
             + "FROM ("
-            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents, MAX(Timestamp) AS Timestamp "
-            + "FROM Messages GROUP BY PeerID"
+            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,IsRead, "
+            + "SUM(CASE WHEN IsRead =0 THEN 1 ELSE 0 END) AS UnreadMessages  , "
+            + "MAX(Timestamp) AS Timestamp FROM Messages GROUP BY PeerID"
             + ") INNER JOIN Users ON PeerID = UserID "
             + "ORDER BY Timestamp DESC"
     )
@@ -107,6 +111,8 @@ public abstract class MeshIMDao {
 
         // Populate messages with actual User classes.
         for (Message m : messages) {
+            //marks all the messages loading into chat activity as read.
+            this.updateMessageIsRead(m.id,true);
             m.setSender(idUserMap.get(m.senderId));
             m.setRecipient(idUserMap.get(m.recipientId));
         }

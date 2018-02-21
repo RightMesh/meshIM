@@ -38,6 +38,7 @@
         android:layout_marginEnd="@dimen/meshim_margin_small"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/userNameMessageText"
         app:layout_constraintTop_toBottomOf="@+id/userNameMessageText" />
@@ -50,5 +51,20 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="@+id/userNameMessageText"
         app:layout_constraintTop_toBottomOf="@+id/userNewestMessageText" />
+
+    <TextView
+        android:id="@+id/newMessageNotificationBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:background="@drawable/round_corner"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:paddingHorizontal="@dimen/meshim_margin_small"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/userNewestMessageText"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

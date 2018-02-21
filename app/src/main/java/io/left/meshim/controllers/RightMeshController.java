@@ -11,6 +11,7 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.R;
@@ -209,7 +210,7 @@ public class RightMeshController implements MeshStateListener {
             MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
             MeshID peerId = event.peerUuid;
 
-            if(peerId.equals(meshManager.getUuid())) {
+            if (peerId.equals(meshManager.getUuid())) {
                 return;
             }
 

@@ -45,6 +45,8 @@ public class MainActivity extends ServiceConnectedActivity {
     ArrayList<ConversationSummary> mConversationSummaries = new ArrayList<>();
     ConversationListAdapter mConversationListAdapter;
     boolean mShouldBroadcast = false;
+    //view to update message tab to show there are unread messages
+    View mViewForMessageTab;
 
     /**
      * Initializes UI elements.
@@ -97,7 +99,9 @@ public class MainActivity extends ServiceConnectedActivity {
         //Tab 2
         spec = host.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
-        spec.setIndicator(createTabIndicator(this,"Messages",R.mipmap.messages_default));
+        //reference for future when we need to indicate that there are new messages
+        mViewForMessageTab = createTabIndicator(this,"Messages",R.mipmap.messages_default);
+        spec.setIndicator(mViewForMessageTab);
         host.addTab(spec);
 
         //Tab 3
@@ -176,6 +180,19 @@ public class MainActivity extends ServiceConnectedActivity {
                 mOnlineUserListAdapter.notifyDataSetChanged();
                 mConversationListAdapter.updateList(mService);
                 mConversationListAdapter.notifyDataSetChanged();
+                //notify user of new messages.
+                TextView newMessageNotification =
+                        mViewForMessageTab.findViewById(R.id.newMessageAvailable);
+                /*whenever the UI is updated, we check in the conversation summary list if there are
+                any unread messages. if there are unread messages, the notification badge in the
+                message tab pops up.
+                we only check the first item on the conversation summary list as they are arranged
+                by the newest message*/
+                if (!mConversationSummaries.isEmpty() && !mConversationSummaries.get(0).isRead) {
+                    newMessageNotification.setVisibility(View.VISIBLE);
+                } else {
+                    newMessageNotification.setVisibility(View.INVISIBLE);
+                }
             } catch (DeadObjectException doe) {
                 reconnectToService();
             }
