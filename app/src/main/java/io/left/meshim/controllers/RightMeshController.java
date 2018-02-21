@@ -11,7 +11,6 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 

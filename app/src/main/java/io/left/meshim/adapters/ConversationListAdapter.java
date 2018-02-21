@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import io.left.meshim.R;
 import io.left.meshim.activities.MainActivity;
-import io.left.meshim.database.MeshIMDao;
 import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.Message;
 import io.left.meshim.services.IMeshIMService;

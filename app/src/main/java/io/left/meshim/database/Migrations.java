@@ -2,7 +2,6 @@ package io.left.meshim.database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;
-import android.support.annotation.NonNull;
 
 //CHECKSTYLE IGNORE LineLengthCheck
 public class Migrations {

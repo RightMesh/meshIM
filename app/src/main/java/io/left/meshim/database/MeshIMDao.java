@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
-import android.util.Log;
 import android.util.SparseArray;
 
 import io.left.meshim.activities.MainActivity;
@@ -81,7 +80,7 @@ public abstract class MeshIMDao {
      *     direction because we will not have exchanged a message with every user in the
      *     Users table.
      * </p>
-     * @return a summary of every conversation the device's user has started
+     * @return a summary of every conversation the device's user has started, and number of unread messages
      */
     @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, isRead, numberOfUnreadMessages "
             + "FROM ("
@@ -112,7 +111,7 @@ public abstract class MeshIMDao {
 
         // Populate messages with actual User classes.
         for (Message m : messages) {
-            //marks all the messages loading as read.
+            //marks all the messages loading into chat activity as read.
             this.updateMessageIsRead(m.id,true);
             m.setSender(idUserMap.get(m.senderId));
             m.setRecipient(idUserMap.get(m.recipientId));
