@@ -93,6 +93,15 @@ public class MainActivity extends ServiceConnectedActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mActiveTabPosition > 0) {
+            mTabs.setCurrentTab(0);
+        } else if (mActiveTabPosition == 0) {
+            super.onBackPressed();
+        }
+    }
+
     /**
      * Configure the content and UI of the tabs.
      */
