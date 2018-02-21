@@ -112,8 +112,7 @@ public class MainActivity extends ServiceConnectedActivity {
     }
 
     private View createTabIndicator(Context context, String title, int icon) {
-        View view;
-        view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
         ImageView iv = view.findViewById(R.id.imageView);
         iv.setImageResource(icon);
         TextView tv = view.findViewById(R.id.tabText);

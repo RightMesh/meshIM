@@ -87,7 +87,7 @@ public class MigrationTest {
     }
 
     /**
-     * Addition of isRead column in the Messages table. sets the default values for isRead to true
+     * Addition of IsRead column in the Messages table. sets the default values for IsRead to true
      * for messages before the migration.
      * @throws IOException if the database cant open.
      */
