@@ -1,7 +1,5 @@
 package io.left.meshim.activities;
 
-import static io.left.meshim.activities.OnboardingUsernameActivity.MAX_LENGTH_USERNAME_CHARACTERS;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,14 +17,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.OnboardingUsernameActivity.UsernameTextWatcher;
 import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.models.ConversationSummary;
@@ -294,48 +291,57 @@ public class MainActivity extends ServiceConnectedActivity
      * creates an alert dialog box to change username.
      */
     private void alertDialog() {
-        final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_onboarding_username_activity);
+        builder.setTitle(R.string.username);
 
-        final EditText input = new EditText(MainActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        builder.setView(input);
+        // Set view of dialog.
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_change_username, null);
+        builder.setView(view);
+        EditText input = view.findViewById(R.id.dialog_username_text_edit);
+
+        // Load user and initialize username
+        User user = User.fromDisk(this);
+        if (user == null) {
+            return;
+        }
+        String username = user.getUsername();
+        input.setText(username);
+        input.requestFocus();
+
+        // Configure validity checker for username.
+        TextView characterCount = view.findViewById(R.id.dialog_username_character_count_text);
+        TextView errorText = view.findViewById(R.id.dialog_username_error_text);
+        characterCount.setText(getResources().getString(R.string.username_length,
+                username.length()));
+        UsernameTextWatcher validWatcher = new UsernameTextWatcher(characterCount, errorText, this);
+        input.addTextChangedListener(validWatcher);
+
+        // Check validity and attempt to save new username when save button pressed.
         builder.setPositiveButton(R.string.save, (dialog, which) -> {
-            String username = input.getText().toString();
-            if (!username.isEmpty()) {
-                User user = User.fromDisk(this);
-                if (user != null && username.length() <= MAX_LENGTH_USERNAME_CHARACTERS) {
-                    user.setUsername(username);
-                    user.save(this);
-                    TextView textView = findViewById(R.id.settings_username_text_view);
-                    textView.setText(username);
+            String newUsername = input.getText().toString();
+            if (validWatcher.getIsUsernameValid()) {
+                user.setUsername(newUsername);
+                user.save(this);
+                TextView textView = findViewById(R.id.settings_username_text_view);
+                textView.setText(newUsername);
 
-                    if (mService != null) {
-                        try {
-                            mService.broadcastUpdatedProfile();
-                        } catch (RemoteException e) {
-                            if (e instanceof DeadObjectException) {
-                                reconnectToService();
-                            }
-                            // Otherwise, the change will be saved just not propagated now.
+                if (mService != null) {
+                    try {
+                        mService.broadcastUpdatedProfile();
+                    } catch (RemoteException e) {
+                        if (e instanceof DeadObjectException) {
+                            reconnectToService();
                         }
+                        // Otherwise, the change will be saved just not propagated now.
                     }
-                } else if (username.length() > 20) {
-                    Toast.makeText(MainActivity.this,
-                            R.string.username_warning_message_length, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(MainActivity.this, R.string.username_warning_message_empty,
-                        Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
-        levelDialog = builder.create();
-        levelDialog.show();
+
+        final  AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
