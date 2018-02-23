@@ -7,6 +7,15 @@
     <dimen name="meshim_margin_extra_large">32dp</dimen>
     <dimen name="meshim_square_avatar">40dp</dimen>
 
+    <!-- Global Elevations -->
+    <!-- For details on where these numbers came from, or future elevation needs, see the table on
+         https://material.io/guidelines/material-design/elevation-shadows.html -->
+    <dimen name="elevation_card">1dp</dimen>
+    <dimen name="elevation_refresh_indicator">3dp</dimen>
+    <dimen name="elevation_app_bar">4dp</dimen>
+    <dimen name="elevation_snack_bar">6dp</dimen>
+    <dimen name="elevation_bottom_nav">8dp</dimen>
+
     <!-- Onboarding screen dimensions -->
     <dimen name="onboarding_textedit_vertical_offset">124dp</dimen>
 
