@@ -14,6 +14,7 @@
         android:layout_width="@dimen/meshim_square_avatar"
         android:layout_height="@dimen/meshim_square_avatar"
         android:contentDescription="@string/user_avatar_description"
+        android:elevation="@dimen/elevation_card"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +26,7 @@
         android:layout_marginStart="@dimen/meshim_margin_small"
         android:background="@drawable/chat_bubble_rec"
         android:padding="@dimen/meshim_margin_small"
+        android:elevation="@dimen/elevation_card"
         android:textColor="@color/white"
         app:layout_constraintStart_toEndOf="@id/image_message_profile"
         app:layout_constraintLeft_toRightOf="@+id/image_message_profile"

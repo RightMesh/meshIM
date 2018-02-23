@@ -73,9 +73,9 @@ public class OnlineUserListAdapter extends ArrayAdapter<User> {
         // Null-check the user at this position.
         User user = this.getItem(position);
         if (user != null) {
-            ImageView userAvatar = v.findViewById(R.id.userMessageAvatar);
+            ImageView userAvatar = v.findViewById(R.id.conversation_avatar);
             userAvatar.setImageResource(user.getAvatar());
-            TextView userName = v.findViewById(R.id.userNameMessageText);
+            TextView userName = v.findViewById(R.id.conversation_username);
             userName.setText(user.getUsername());
         }
 

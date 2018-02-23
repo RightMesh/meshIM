@@ -19,16 +19,6 @@
         app:layout_constraintVertical_bias="0.0"/>
 
     <ImageButton
-        android:id="@+id/settings_user_avatar_edit_button"
-        android:layout_width="@dimen/settings_square_icon"
-        android:layout_height="@dimen/settings_square_icon"
-        android:contentDescription="@string/settings_edit_avatar_desription"
-        android:elevation="@dimen/elevation_snack_bar"
-        android:src="@mipmap/edit"
-        app:layout_constraintBottom_toBottomOf="@+id/settings_user_avatar"
-        app:layout_constraintEnd_toEndOf="@+id/settings_user_avatar" />
-
-    <ImageButton
         android:id="@+id/settings_user_avatar"
         android:layout_width="@dimen/settings_square_header_image"
         android:layout_height="@dimen/settings_square_header_image"
@@ -43,6 +33,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/settings_root" />
+
+    <!-- Must be below avatar ImageButton so that it appears above it on devices that are too old
+         for elevation. -->
+    <ImageButton
+        android:id="@+id/settings_user_avatar_edit_button"
+        android:layout_width="@dimen/settings_square_icon"
+        android:layout_height="@dimen/settings_square_icon"
+        android:contentDescription="@string/settings_edit_avatar_desription"
+        android:elevation="@dimen/elevation_snack_bar"
+        android:src="@mipmap/edit"
+        app:layout_constraintBottom_toBottomOf="@+id/settings_user_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/settings_user_avatar" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/settings_username"

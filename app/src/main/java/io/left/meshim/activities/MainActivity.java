@@ -224,7 +224,7 @@ public class MainActivity extends ServiceConnectedActivity
                 mConversationListAdapter.notifyDataSetChanged();
                 //notify user of new messages.
                 TextView newMessageNotification =
-                        mViewForMessageTab.findViewById(R.id.newMessageAvailable);
+                        mViewForMessageTab.findViewById(R.id.tab_badge);
                 /*whenever the UI is updated, we check in the conversation summary list if there are
                 any unread messages. if there are unread messages, the notification badge in the
                 message tab pops up.

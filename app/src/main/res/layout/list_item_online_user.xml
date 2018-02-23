@@ -5,10 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/meshim_margin_small"
+    android:paddingLeft="@dimen/meshim_margin_medium"
+    android:paddingRight="@dimen/meshim_margin_medium"
     android:paddingTop="@dimen/meshim_margin_small">
 
     <ImageView
-        android:id="@+id/userMessageAvatar"
+        android:id="@+id/conversation_avatar"
         android:layout_width="@dimen/meshim_square_avatar"
         android:layout_height="@dimen/meshim_square_avatar"
         android:layout_marginBottom="@dimen/meshim_margin_small"
@@ -19,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/userNameMessageText"
+        android:id="@+id/conversation_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/meshim_margin_small"
@@ -30,7 +33,7 @@
         android:paddingBottom="@dimen/meshim_margin_mini"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/userMessageAvatar"
+        app:layout_constraintLeft_toRightOf="@+id/conversation_avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -52,6 +55,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/userNameMessageText"
+        app:layout_constraintStart_toEndOf="@+id/conversation_username"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
