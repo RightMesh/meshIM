@@ -14,6 +14,9 @@
     <dimen name="choose_avatar_height_header">152dp</dimen>
     <dimen name="choose_avatar_square_header_image">96dp</dimen>
 
+    <!-- Main activity dimensions -->
+    <dimen name="main_tab_height">56dp</dimen>
+
     <!-- Settings screen dimensions -->
     <dimen name="settings_edit_button_height">24dp</dimen>
     <dimen name="settings_square_icon">32dp</dimen>

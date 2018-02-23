@@ -146,15 +146,20 @@ public class MainActivity extends ServiceConnectedActivity
     @Override
     public void onTabChanged(String s) {
         ImageView icon;
+        TextView text;
         if (mActiveTabView != null) {
             icon = mActiveTabView.findViewById(R.id.tab_image);
             icon.setImageResource(DEFAULT_TAB_ICONS[mActiveTabPosition]);
+            text = mActiveTabView.findViewById(R.id.tab_text);
+            text.setTextSize(14);
         }
 
         mActiveTabView = mTabs.getCurrentTabView();
         mActiveTabPosition = mTabs.getCurrentTab();
         icon = mActiveTabView.findViewById(R.id.tab_image);
         icon.setImageResource(ACTIVE_TAB_ICONS[mActiveTabPosition]);
+        text = mActiveTabView.findViewById(R.id.tab_text);
+        text.setTextSize(15);
     }
 
     /**
