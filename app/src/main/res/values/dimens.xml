@@ -31,4 +31,7 @@
     <dimen name="settings_square_icon">32dp</dimen>
     <dimen name="settings_height_header">128dp</dimen>
     <dimen name="settings_square_header_image">72dp</dimen>
+
+    <!-- Chat activity dimensions -->
+    <dimen name="chat_square_send_button">40dp</dimen>
 </resources>
