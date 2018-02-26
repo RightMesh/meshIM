@@ -2,15 +2,16 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp">
+    android:paddingTop="@dimen/meshim_margin_small"
+    android:paddingBottom="@dimen/meshim_margin_mini">
 
     <ImageView
-        android:id="@+id/userMessageAvatar"
-        android:layout_width="@dimen/meshim_avatar_width"
-        android:layout_height="@dimen/meshim_avatar_height"
+        android:id="@+id/conversation_avatar"
+        android:layout_width="@dimen/meshim_square_avatar"
+        android:layout_height="@dimen/meshim_square_avatar"
+        android:layout_marginLeft="@dimen/meshim_margin_medium"
         android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:contentDescription="@string/user_avatar_description"
@@ -19,52 +20,67 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/userNameMessageText"
+        android:id="@+id/conversation_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="12dp"
-        android:padding="8dp"
-        android:paddingBottom="3dp"
+        android:layout_marginLeft="@dimen/meshim_margin_medium"
+        android:layout_marginStart="@dimen/meshim_margin_medium"
+        android:layout_marginTop="@dimen/meshim_margin_small"
+        android:layout_marginBottom="0dp"
+        android:gravity="start"
         android:textAlignment="viewStart"
-        android:textColor="#000"
-        app:layout_constraintLeft_toRightOf="@+id/userMessageAvatar"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@+id/conversation_avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/userNewestMessageText"
+        android:id="@+id/conversation_newest_message_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/meshim_margin_small"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginRight="@dimen/meshim_margin_medium"
+        android:layout_marginTop="@dimen/meshim_margin_small"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/userNameMessageText"
-        app:layout_constraintTop_toBottomOf="@+id/userNameMessageText" />
+        app:layout_constraintLeft_toLeftOf="@+id/conversation_username"
+        app:layout_constraintTop_toBottomOf="@+id/conversation_username" />
 
     <TextView
-        android:id="@+id/userNewestMessageTimeText"
+        android:id="@+id/conversation_newest_message_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="@+id/userNameMessageText"
-        app:layout_constraintTop_toBottomOf="@+id/userNewestMessageText" />
+        android:layout_marginTop="@dimen/meshim_margin_small"
+        app:layout_constraintLeft_toLeftOf="@+id/conversation_username"
+        app:layout_constraintTop_toBottomOf="@+id/conversation_newest_message_text" />
 
     <TextView
-        android:id="@+id/newMessageNotificationBadge"
+        android:id="@+id/conversation_notification_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/meshim_margin_medium"
+        android:layout_marginRight="@dimen/meshim_margin_medium"
         android:background="@drawable/round_corner"
+        android:gravity="start"
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:paddingHorizontal="@dimen/meshim_margin_small"
+        android:paddingRight="@dimen/meshim_margin_small"
+        android:paddingLeft="@dimen/meshim_margin_small"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/userNewestMessageText"
+        app:layout_constraintBottom_toTopOf="@+id/conversation_newest_message_text"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/meshim_margin_small"
+        android:layout_marginTop="@dimen/meshim_margin_small"
+        android:layout_marginRight="@dimen/meshim_margin_mini"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/conversation_username"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/conversation_newest_message_time" />
 
 </android.support.constraint.ConstraintLayout>

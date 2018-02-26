@@ -70,13 +70,13 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
 
         ConversationSummary conversationSummary = this.getItem(position);
         if (conversationSummary != null) {
-            ImageView userAvatar = v.findViewById(R.id.userMessageAvatar);
+            ImageView userAvatar = v.findViewById(R.id.conversation_avatar);
             userAvatar.setImageResource(conversationSummary.avatar);
-            TextView userName = v.findViewById(R.id.userNameMessageText);
+            TextView userName = v.findViewById(R.id.conversation_username);
             userName.setText(conversationSummary.username);
-            TextView newMessage = v.findViewById(R.id.userNewestMessageText);
+            TextView newMessage = v.findViewById(R.id.conversation_newest_message_text);
             newMessage.setText(conversationSummary.messageText);
-            TextView newMessageBadge = v.findViewById(R.id.newMessageNotificationBadge);
+            TextView newMessageBadge = v.findViewById(R.id.conversation_notification_badge);
             if (!conversationSummary.isRead) {
                 //show how many unread messages there are.
                 newMessageBadge.setVisibility(View.VISIBLE);
@@ -87,7 +87,7 @@ public class ConversationListAdapter extends ArrayAdapter<ConversationSummary> {
                 newMessageBadge.setVisibility(View.INVISIBLE);
                 newMessage.setTypeface(null, Typeface.NORMAL);
             }
-            TextView time = v.findViewById(R.id.userNewestMessageTimeText);
+            TextView time = v.findViewById(R.id.conversation_newest_message_time);
             time.setText(Message.formateDate(conversationSummary.messageTime));
         }
 
