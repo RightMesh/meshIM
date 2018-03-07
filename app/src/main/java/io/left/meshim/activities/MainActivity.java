@@ -185,6 +185,7 @@ public class MainActivity extends ServiceConnectedActivity
      */
     private void configureMessageList() {
         ListView listView = findViewById(R.id.multiUserMessageListView);
+        listView.setEmptyView(findViewById(R.id.empty_message_view));
         mConversationListAdapter = new ConversationListAdapter(this, mConversationSummaries);
         listView.setAdapter(mConversationListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
