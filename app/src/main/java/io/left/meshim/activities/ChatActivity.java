@@ -10,8 +10,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
 import io.left.meshim.models.User;
@@ -53,7 +54,7 @@ public class ChatActivity extends ServiceConnectedActivity {
         mMessageListView.setAdapter(mMessageListAdapter);
 
         // Connect the send button to the service.
-        Button sendButton = findViewById(R.id.sendButton);
+        ImageButton sendButton = findViewById(R.id.sendButton);
         EditText messageText = findViewById(R.id.myMessageEditText);
         sendButton.setOnClickListener(view -> {
             if (mService != null) {

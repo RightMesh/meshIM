@@ -1,19 +1,37 @@
 <resources>
     <!-- Global dimensions -->
+    <dimen name="meshim_margin_mini">4dp</dimen>
     <dimen name="meshim_margin_small">8dp</dimen>
     <dimen name="meshim_margin_medium">16dp</dimen>
     <dimen name="meshim_margin_large">24dp</dimen>
     <dimen name="meshim_margin_extra_large">32dp</dimen>
-    <dimen name="meshim_height_header">128dp</dimen>
-    <dimen name="meshim_square_header_image">32dp</dimen>
-    <dimen name="meshim_avatar_height">40dp</dimen>
-    <dimen name="meshim_avatar_width">40dp</dimen>
+    <dimen name="meshim_square_avatar">40dp</dimen>
+
+    <!-- Global Elevations -->
+    <!-- For details on where these numbers came from, or future elevation needs, see the table on
+         https://material.io/guidelines/material-design/elevation-shadows.html -->
+    <dimen name="elevation_card">1dp</dimen>
+    <dimen name="elevation_refresh_indicator">3dp</dimen>
+    <dimen name="elevation_app_bar">4dp</dimen>
+    <dimen name="elevation_snack_bar">6dp</dimen>
+    <dimen name="elevation_bottom_nav">8dp</dimen>
+
     <!-- Onboarding screen dimensions -->
-    <dimen name="onboarding_textedit_horizontal_offset">3dp</dimen>
     <dimen name="onboarding_textedit_vertical_offset">124dp</dimen>
+
+    <!-- Choose Avatar screen dimensions -->
+    <dimen name="choose_avatar_height_header">152dp</dimen>
+    <dimen name="choose_avatar_square_header_image">96dp</dimen>
+
+    <!-- Main activity dimensions -->
+    <dimen name="main_tab_height">56dp</dimen>
 
     <!-- Settings screen dimensions -->
     <dimen name="settings_edit_button_height">24dp</dimen>
     <dimen name="settings_square_icon">32dp</dimen>
+    <dimen name="settings_height_header">128dp</dimen>
+    <dimen name="settings_square_header_image">72dp</dimen>
 
+    <!-- Chat activity dimensions -->
+    <dimen name="chat_square_send_button">40dp</dimen>
 </resources>

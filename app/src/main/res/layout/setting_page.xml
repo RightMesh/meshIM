@@ -1,6 +1,5 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
     <FrameLayout
         android:id="@+id/settings_header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/meshim_height_header"
+        android:layout_height="@dimen/settings_height_header"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,32 +16,35 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></FrameLayout>
-
-    <ImageButton
-        android:id="@+id/settings_user_avatar_edit_button"
-        android:layout_width="@dimen/meshim_square_header_image"
-        android:layout_height="@dimen/meshim_square_header_image"
-        android:background="@mipmap/edit"
-        android:elevation="5dp"
-        android:translationZ="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/settings_user_avatar"
-        app:layout_constraintEnd_toEndOf="@+id/settings_user_avatar" />
+        app:layout_constraintVertical_bias="0.0"/>
 
     <ImageButton
         android:id="@+id/settings_user_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/settings_square_header_image"
+        android:layout_height="@dimen/settings_square_header_image"
         android:layout_marginEnd="@dimen/meshim_margin_small"
         android:layout_marginStart="@dimen/meshim_margin_small"
         android:layout_marginTop="@dimen/meshim_margin_small"
-        android:background="@mipmap/avatar1"
+        android:background="@color/colorPrimary"
         android:contentDescription="@string/selected_avatar_description"
-        android:elevation="3dp"
-        android:translationZ="3dp"
+        android:elevation="@dimen/elevation_card"
+        android:src="@mipmap/avatar1"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/settings_root" />
+
+    <!-- Must be below avatar ImageButton so that it appears above it on devices that are too old
+         for elevation. -->
+    <ImageButton
+        android:id="@+id/settings_user_avatar_edit_button"
+        android:layout_width="@dimen/settings_square_icon"
+        android:layout_height="@dimen/settings_square_icon"
+        android:contentDescription="@string/settings_edit_avatar_desription"
+        android:elevation="@dimen/elevation_snack_bar"
+        android:src="@mipmap/edit"
+        app:layout_constraintBottom_toBottomOf="@+id/settings_user_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/settings_user_avatar" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/settings_username"
@@ -52,7 +54,7 @@
         android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_medium"
         android:background="@color/white"
-        android:elevation="3dp"
+        android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_user_avatar">
@@ -95,7 +97,7 @@
         android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:background="@color/white"
-        android:elevation="3dp"
+        android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_username">
@@ -108,8 +110,10 @@
             android:layout_marginLeft="@dimen/meshim_margin_medium"
             android:layout_marginStart="@dimen/meshim_margin_medium"
             android:layout_marginTop="@dimen/meshim_margin_medium"
-            android:background="@mipmap/available_icon"
+            android:background="@color/white"
             android:contentDescription="@string/settings_online_icon_content_description"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/available_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -150,6 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_medium"
             android:layout_marginEnd="@dimen/meshim_margin_extra_large"
+            android:layout_marginRight="@dimen/meshim_margin_extra_large"
             android:checked="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -165,18 +170,21 @@
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:background="@color/white"
         android:clickable="true"
-        android:elevation="3dp"
+        android:focusable="true"
+        android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_online">
+        app:layout_constraintTop_toBottomOf="@+id/settings_online" >
 
         <ImageView
             android:id="@+id/settings_rightmesh_icon"
             android:layout_width="@dimen/settings_square_icon"
             android:layout_height="@dimen/settings_square_icon"
             android:layout_margin="@dimen/meshim_margin_medium"
-            android:background="@mipmap/rm_launcher"
+            android:background="@color/white"
+            android:src="@mipmap/rm_launcher"
+            android:scaleType="fitCenter"
             android:contentDescription="@string/settings_rightmesh_icon_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -187,6 +195,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_small"
+            android:layout_marginLeft="@dimen/meshim_margin_extra_large"
             android:layout_marginStart="@dimen/meshim_margin_extra_large"
             android:fontFamily="sans-serif"
             android:text="@string/settings_rightmesh_description"
@@ -200,6 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_medium"
             android:layout_marginEnd="@dimen/meshim_margin_extra_large"
+            android:layout_marginRight="@dimen/meshim_margin_extra_large"
             android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
             android:contentDescription="@string/settings_rightmesh_icon_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -215,7 +225,7 @@
         android:layout_marginStart="@dimen/meshim_margin_medium"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:background="@color/white"
-        android:elevation="3dp"
+        android:elevation="@dimen/elevation_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_rightmesh">
@@ -225,6 +235,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_large"
+            android:layout_marginLeft="@dimen/meshim_margin_extra_large"
             android:layout_marginStart="@dimen/meshim_margin_extra_large"
             android:fontFamily="sans-serif"
             android:text="@string/settings_notifications_description"
@@ -239,6 +250,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/meshim_margin_medium"
             android:layout_marginEnd="@dimen/meshim_margin_extra_large"
+            android:layout_marginRight="@dimen/meshim_margin_extra_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -1,10 +1,9 @@
 package io.left.meshim.activities;
 
-import static io.left.meshim.activities.OnboardingUsernameActivity.MAX_LENGTH_USERNAME_CHARACTERS;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
@@ -18,14 +17,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.OnboardingUsernameActivity.UsernameTextWatcher;
 import io.left.meshim.adapters.ConversationListAdapter;
 import io.left.meshim.adapters.OnlineUserListAdapter;
 import io.left.meshim.models.ConversationSummary;
@@ -38,7 +36,8 @@ import java.util.ArrayList;
  * Main interface for meshIM. Displays tabs for viewing online users, conversations, and the
  * user's account.
  */
-public class MainActivity extends ServiceConnectedActivity {
+public class MainActivity extends ServiceConnectedActivity
+        implements TabHost.OnTabChangeListener {
     // Adapter that populates the online user list with user information from the app service.
     OnlineUserListAdapter mOnlineUserListAdapter;
     ArrayList<User> mUsers = new ArrayList<>();
@@ -47,6 +46,15 @@ public class MainActivity extends ServiceConnectedActivity {
     boolean mShouldBroadcast = false;
     //view to update message tab to show there are unread messages
     View mViewForMessageTab;
+
+    // Tab management
+    private TabHost mTabs;
+    private static final int[] DEFAULT_TAB_ICONS = { R.mipmap.in_range_default,
+            R.mipmap.messages_default, R.mipmap.account_default};
+    private static final int[] ACTIVE_TAB_ICONS = { R.drawable.ic_in_range_active,
+            R.drawable.ic_message_active, R.drawable.ic_account_active };
+    private View mActiveTabView = null;
+    private int mActiveTabPosition;
 
     /**
      * Initializes UI elements.
@@ -83,41 +91,75 @@ public class MainActivity extends ServiceConnectedActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mActiveTabPosition > 0) {
+            mTabs.setCurrentTab(0);
+        } else if (mActiveTabPosition == 0) {
+            super.onBackPressed();
+        }
+    }
+
     /**
      * Configure the content and UI of the tabs.
      */
     private void configureTabs() {
-        TabHost host = findViewById(R.id.tabHost);
-        host.setup();
+        Resources resources = getResources();
+
+        mTabs = findViewById(R.id.tabHost);
+        mTabs.setOnTabChangedListener(this);
+        mTabs.setup();
 
         //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Tab One");
+        TabHost.TabSpec spec = mTabs.newTabSpec("Tab One");
         spec.setContent(R.id.tab1);
-        spec.setIndicator(createTabIndicator(this,"In Range",R.mipmap.in_range_default));
-        host.addTab(spec);
+        spec.setIndicator(createTabIndicator(this, resources.getString(R.string.tab_in_range),
+                DEFAULT_TAB_ICONS[0]));
+        mTabs.addTab(spec);
 
         //Tab 2
-        spec = host.newTabSpec("Tab Two");
+        spec = mTabs.newTabSpec("Tab Two");
         spec.setContent(R.id.tab2);
         //reference for future when we need to indicate that there are new messages
-        mViewForMessageTab = createTabIndicator(this,"Messages",R.mipmap.messages_default);
+        mViewForMessageTab = createTabIndicator(this, resources.getString(R.string.tab_messages),
+                DEFAULT_TAB_ICONS[1]);
         spec.setIndicator(mViewForMessageTab);
-        host.addTab(spec);
+        mTabs.addTab(spec);
 
         //Tab 3
-        spec = host.newTabSpec("Tab Three");
+        spec = mTabs.newTabSpec("Tab Three");
         spec.setContent(R.id.tab3);
-        spec.setIndicator(createTabIndicator(this,"Account",R.mipmap.account_default));
-        host.addTab(spec);
+        spec.setIndicator(createTabIndicator(this,resources.getString(R.string.tab_account),
+                DEFAULT_TAB_ICONS[2]));
+        mTabs.addTab(spec);
     }
 
     private View createTabIndicator(Context context, String title, int icon) {
         View view = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        ImageView iv = view.findViewById(R.id.imageView);
+        ImageView iv = view.findViewById(R.id.tab_image);
         iv.setImageResource(icon);
-        TextView tv = view.findViewById(R.id.tabText);
+        TextView tv = view.findViewById(R.id.tab_text);
         tv.setText(title);
         return view;
+    }
+
+    @Override
+    public void onTabChanged(String s) {
+        ImageView icon;
+        TextView text;
+        if (mActiveTabView != null) {
+            icon = mActiveTabView.findViewById(R.id.tab_image);
+            icon.setImageResource(DEFAULT_TAB_ICONS[mActiveTabPosition]);
+            text = mActiveTabView.findViewById(R.id.tab_text);
+            text.setTextSize(14);
+        }
+
+        mActiveTabView = mTabs.getCurrentTabView();
+        mActiveTabPosition = mTabs.getCurrentTab();
+        icon = mActiveTabView.findViewById(R.id.tab_image);
+        icon.setImageResource(ACTIVE_TAB_ICONS[mActiveTabPosition]);
+        text = mActiveTabView.findViewById(R.id.tab_text);
+        text.setTextSize(15);
     }
 
     /**
@@ -182,7 +224,7 @@ public class MainActivity extends ServiceConnectedActivity {
                 mConversationListAdapter.notifyDataSetChanged();
                 //notify user of new messages.
                 TextView newMessageNotification =
-                        mViewForMessageTab.findViewById(R.id.newMessageAvailable);
+                        mViewForMessageTab.findViewById(R.id.tab_badge);
                 /*whenever the UI is updated, we check in the conversation summary list if there are
                 any unread messages. if there are unread messages, the notification badge in the
                 message tab pops up.
@@ -254,48 +296,57 @@ public class MainActivity extends ServiceConnectedActivity {
      * creates an alert dialog box to change username.
      */
     private void alertDialog() {
-        final  AlertDialog levelDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_onboarding_username_activity);
+        builder.setTitle(R.string.username);
 
-        final EditText input = new EditText(MainActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        builder.setView(input);
+        // Set view of dialog.
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_change_username, null);
+        builder.setView(view);
+        EditText input = view.findViewById(R.id.dialog_username_text_edit);
+
+        // Load user and initialize username
+        User user = User.fromDisk(this);
+        if (user == null) {
+            return;
+        }
+        String username = user.getUsername();
+        input.setText(username);
+        input.requestFocus();
+
+        // Configure validity checker for username.
+        TextView characterCount = view.findViewById(R.id.dialog_username_character_count_text);
+        TextView errorText = view.findViewById(R.id.dialog_username_error_text);
+        characterCount.setText(getResources().getString(R.string.username_length,
+                username.length()));
+        UsernameTextWatcher validWatcher = new UsernameTextWatcher(characterCount, errorText, this);
+        input.addTextChangedListener(validWatcher);
+
+        // Check validity and attempt to save new username when save button pressed.
         builder.setPositiveButton(R.string.save, (dialog, which) -> {
-            String username = input.getText().toString();
-            if (!username.isEmpty()) {
-                User user = User.fromDisk(this);
-                if (user != null && username.length() <= MAX_LENGTH_USERNAME_CHARACTERS) {
-                    user.setUsername(username);
-                    user.save(this);
-                    TextView textView = findViewById(R.id.settings_username_text_view);
-                    textView.setText(username);
+            String newUsername = input.getText().toString();
+            if (validWatcher.getIsUsernameValid()) {
+                user.setUsername(newUsername);
+                user.save(this);
+                TextView textView = findViewById(R.id.settings_username_text_view);
+                textView.setText(newUsername);
 
-                    if (mService != null) {
-                        try {
-                            mService.broadcastUpdatedProfile();
-                        } catch (RemoteException e) {
-                            if (e instanceof DeadObjectException) {
-                                reconnectToService();
-                            }
-                            // Otherwise, the change will be saved just not propagated now.
+                if (mService != null) {
+                    try {
+                        mService.broadcastUpdatedProfile();
+                    } catch (RemoteException e) {
+                        if (e instanceof DeadObjectException) {
+                            reconnectToService();
                         }
+                        // Otherwise, the change will be saved just not propagated now.
                     }
-                } else if (username.length() > 20) {
-                    Toast.makeText(MainActivity.this,
-                            R.string.username_warning_message_length, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(MainActivity.this, R.string.username_warning_message_empty,
-                        Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
-        levelDialog = builder.create();
-        levelDialog.show();
+
+        final  AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
