@@ -46,7 +46,8 @@
 
                 </ListView>
 
-                <ProgressBar
+
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/empty_list_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,9 +55,10 @@
                     app:layout_constraintBottom_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                </ProgressBar>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_fileName="in_range_loading_animation.json"
+                    app:lottie_loop="true" />
 
 
             </android.support.constraint.ConstraintLayout>
