@@ -7,8 +7,10 @@
             android:gravity="center">
         </bitmap>
     </item>
-    <item>
+    <item
+        android:bottom="@dimen/meshim_margin_large">
         <bitmap android:src="@mipmap/rightmesh_power"
             android:gravity="bottom" />
     </item>
+
 </layer-list>
