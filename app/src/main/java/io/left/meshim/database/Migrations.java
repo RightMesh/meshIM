@@ -39,6 +39,6 @@ public class Migrations {
                     + " ADD COLUMN IsDelivered INTEGER  NOT NULL DEFAULT 1");
         }
     };
-    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_4_5 };
+    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,MIGRATION_4_5 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

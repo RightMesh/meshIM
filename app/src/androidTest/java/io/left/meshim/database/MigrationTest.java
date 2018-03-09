@@ -97,6 +97,7 @@ public class MigrationTest {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 3);
         db = helper.runMigrationsAndValidate(TEST_DB, 4, true, MIGRATION_3_4);
     }
+
     @Test
     public void migrate4To5() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 4);
