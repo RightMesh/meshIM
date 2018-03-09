@@ -30,7 +30,15 @@ public class Migrations {
             database.execSQL("ALTER TABLE Messages "
                     + " ADD COLUMN IsRead INTEGER  NOT NULL DEFAULT 1");
         }
+
     };
-    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_3_4 };
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN IsDelivered INTEGER  NOT NULL DEFAULT 1");
+        }
+    };
+    public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3,MIGRATION_4_5 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

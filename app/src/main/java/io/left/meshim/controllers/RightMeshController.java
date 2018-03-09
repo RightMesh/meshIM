@@ -1,6 +1,7 @@
 package io.left.meshim.controllers;
 
 import static io.left.rightmesh.mesh.MeshManager.ADDED;
+import static io.left.rightmesh.mesh.MeshManager.DATA_DELIVERED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
@@ -9,7 +10,14 @@ import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -23,15 +31,18 @@ import io.left.meshim.services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshID;
+import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
+import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import protobuf.MeshIMMessages;
@@ -61,6 +72,10 @@ public class RightMeshController implements MeshStateListener {
     private IActivity callback = null;
     //reference to service
     private MeshIMService meshIMService;
+
+
+
+    HashMap<Integer, Message> myMap = new HashMap<Integer, Message>();
 
     /**
      * Constructor.
@@ -108,7 +123,9 @@ public class RightMeshController implements MeshStateListener {
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
-                meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+                int data_id = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+               Log.d("good","its in the hashmap");
+                myMap.put(data_id,messageObject);
                 dao.insertMessages(messageObject);
                 updateInterface();
             }
@@ -124,7 +141,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"RATURI");
     }
 
     /**
@@ -164,6 +181,7 @@ public class RightMeshController implements MeshStateListener {
             // Subscribes handlers to receive events from the mesh.
             meshManager.on(DATA_RECEIVED, this::handleDataReceived);
             meshManager.on(PEER_CHANGED, this::handlePeerChanged);
+            meshManager.on(DATA_DELIVERED, this::dataSent);
 
             // Update the UI for the first time.
             updateInterface();
@@ -359,6 +377,16 @@ public class RightMeshController implements MeshStateListener {
             meshManager.showSettingsActivity();
         } catch (RightMeshException ignored) {
             // Service failed loading settings - nothing to be done.
+        }
+    }
+    void dataSent(RightMeshEvent e) {
+        MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
+        final int data_id = event.data_id;
+        //add the data id to a hashmap along with the message?
+        if(myMap.containsKey(data_id)){
+            //todo mark the message as read;
+            Log.d("good",data_id+" has been delivered");
+            myMap.remove(data_id);
         }
     }
 }
