@@ -47,4 +47,5 @@
     <string name="emty_message_text2">Start a conversation with anyone in Range.</string>
     <string name="empty_message_text1">No messages yet.</string>
     <string name="empty_inrange_text">Looking for people In Range.</string>
+    <string name="get_user_details">Getting user details...</string>
 </resources>

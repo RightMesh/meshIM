@@ -38,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:text="\u2713"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/text_message_time_sent"
         app:layout_constraintTop_toTopOf="@+id/text_message_time_sent" />

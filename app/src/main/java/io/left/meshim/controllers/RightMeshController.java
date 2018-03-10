@@ -10,14 +10,8 @@ import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -36,13 +30,11 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 
 import protobuf.MeshIMMessages;
@@ -72,10 +64,8 @@ public class RightMeshController implements MeshStateListener {
     private IActivity callback = null;
     //reference to service
     private MeshIMService meshIMService;
-
-
-
-    HashMap<Integer, Message> myMap = new HashMap<Integer, Message>();
+    // keeps track of all the undeliveredMessages
+    private HashMap<Integer, Message> unDeliveredMessages = new HashMap<Integer, Message>();
 
     /**
      * Constructor.
@@ -125,7 +115,7 @@ public class RightMeshController implements MeshStateListener {
             if (messagePayload != null) {
                 int data_id = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
                Log.d("good","its in the hashmap");
-                myMap.put(data_id,messageObject);
+                unDeliveredMessages.put(data_id,messageObject);
                 dao.insertMessages(messageObject);
                 updateInterface();
             }
@@ -181,7 +171,7 @@ public class RightMeshController implements MeshStateListener {
             // Subscribes handlers to receive events from the mesh.
             meshManager.on(DATA_RECEIVED, this::handleDataReceived);
             meshManager.on(PEER_CHANGED, this::handlePeerChanged);
-            meshManager.on(DATA_DELIVERED, this::dataSent);
+            meshManager.on(DATA_DELIVERED, this::handleDataDelivery);
 
             // Update the UI for the first time.
             updateInterface();
@@ -258,6 +248,8 @@ public class RightMeshController implements MeshStateListener {
 
                 if (sender != null && user != null) {
                     Message message = new Message(sender, user, protoMessage.getMessage(), false);
+                   // message has been delivered
+                    message.setDelivered(true);
                     dao.insertMessages(message);
                     meshIMService.sendNotification(sender, message);
                     updateInterface();
@@ -284,7 +276,7 @@ public class RightMeshController implements MeshStateListener {
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             // let the user know mesh has discovered a new user, and is getting details.
-            User tempUser = new User("Getting user details...", R.mipmap.account_default);
+            User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
             users.put(event.peerUuid,tempUser);
             updateInterface();
             // Send our information to a new or rejoining peer.
@@ -379,14 +371,15 @@ public class RightMeshController implements MeshStateListener {
             // Service failed loading settings - nothing to be done.
         }
     }
-    void dataSent(RightMeshEvent e) {
+    void handleDataDelivery(RightMeshEvent e) {
         MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
         final int data_id = event.data_id;
         //add the data id to a hashmap along with the message?
-        if(myMap.containsKey(data_id)){
-            //todo mark the message as read;
+        if(unDeliveredMessages.containsKey(data_id)){
             Log.d("good",data_id+" has been delivered");
-            myMap.remove(data_id);
+            //updating the message delivery status in the database
+            dao.updateMessageIsDelivered(unDeliveredMessages.get(data_id).id,true);
+            unDeliveredMessages.remove(data_id);
         }
     }
 }

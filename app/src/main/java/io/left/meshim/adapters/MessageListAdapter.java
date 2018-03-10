@@ -3,6 +3,8 @@ package io.left.meshim.adapters;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         TextView mTime;
         TextView mMessageBody;
         ImageView mUserImage;
+        TextView mDeliveryStatus;
 
         /**
          * Checks whether the message should be displayed in send or received layout.
@@ -81,6 +84,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
+                mDeliveryStatus = view.findViewById(R.id.text_message_delivery_text);
             }
         }
     }
@@ -125,6 +129,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 holder.mMessageBody.setText(message.getMessage());
                 holder.mTime.setText(Message.formateDate(message.getDate()));
+                String x = "&#x2713";
+                if(!message.isDelivered()) {
+                    Log.d("good"," not delivered" +" actual variable: "+message.isDelivered());
+
+                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+ "b");
+                } else {
+                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+"x"+Html.fromHtml(x));
+                }
             }
         }
     }

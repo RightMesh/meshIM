@@ -69,6 +69,9 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/src/main/schemas".toString())
         main { assets.srcDirs = ['src/main/assets', 'src/main/assets/2'] }
@@ -111,7 +114,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support:recyclerview-v7:27.0.2'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'io.left.rightmesh:rightmesh-library:0.4.4-SACHIN-SNAPSHOT'
+    implementation 'io.left.rightmesh:rightmesh-library:0.4.4'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     androidTestImplementation 'com.android.support:support-annotations:27.0.2'

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.util.Log;
 import android.util.SparseArray;
 
 import io.left.meshim.activities.MainActivity;
@@ -50,6 +51,9 @@ public abstract class MeshIMDao {
             + " ORDER BY Timestamp ASC")
     public abstract Message[] fetchMessagesBetweenUsers(int... userIds);
 
+    @Query("UPDATE  Messages SET IsDelivered = :val WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsDelivered(int messageID, boolean val);
+
     /**
      * This query is used by {@link ConversationListAdapter}. That adapter
      * populates a tab in {@link MainActivity} which shows a list of
@@ -82,9 +86,9 @@ public abstract class MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, IsRead, UnreadMessages "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, IsRead,IsDelivered, UnreadMessages "
             + "FROM ("
-            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,IsRead, "
+            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,IsRead,IsDelivered, "
             + "SUM(CASE WHEN IsRead =0 THEN 1 ELSE 0 END) AS UnreadMessages  , "
             + "MAX(Timestamp) AS Timestamp FROM Messages GROUP BY PeerID"
             + ") INNER JOIN Users ON PeerID = UserID "
