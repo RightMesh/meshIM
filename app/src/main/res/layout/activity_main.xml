@@ -39,7 +39,7 @@
                     android:elevation="@dimen/elevation_card"/>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/empty_list_item"
+                    android:id="@+id/emptyListItem"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
@@ -49,7 +49,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/empty_list_item1"
+                        android:id="@+id/emptyListItem1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/meshim_margin_small"
@@ -62,7 +62,7 @@
                         app:lottie_loop="true" />
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/emptyListItem2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/meshim_margin_small"
@@ -72,7 +72,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.502"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/empty_list_item1" />
+                        app:layout_constraintTop_toBottomOf="@+id/emptyListItem1" />
                 </android.support.constraint.ConstraintLayout>
 
                 </android.support.constraint.ConstraintLayout>
@@ -96,13 +96,13 @@
                 </ListView>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/empty_message_view"
+                    android:id="@+id/emptyMessageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone">
 
                     <ImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/emptyMessageImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +113,7 @@
                         app:srcCompat="@mipmap/no_messages" />
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/emptyMessageText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/meshim_margin_small"
@@ -121,19 +121,19 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                        app:layout_constraintTop_toBottomOf="@+id/emptyMessageImage" />
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/emptyMessageText1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/meshim_margin_small"
                         android:layout_marginStart="@dimen/meshim_margin_small"
                         android:layout_marginTop="@dimen/meshim_margin_small"
-                        android:text="@string/emty_message_text2"
+                        android:text="@string/empty_message_text2"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        app:layout_constraintTop_toBottomOf="@+id/emptyMessageText" />
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
 
