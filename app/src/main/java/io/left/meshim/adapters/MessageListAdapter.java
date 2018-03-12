@@ -65,7 +65,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         TextView mTime;
         TextView mMessageBody;
         ImageView mUserImage;
-        TextView mDeliveryStatus;
+        ImageView mDeliveryStatus;
 
         /**
          * Checks whether the message should be displayed in send or received layout.
@@ -84,7 +84,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
-                mDeliveryStatus = view.findViewById(R.id.text_message_delivery_text);
+                mDeliveryStatus = view.findViewById(R.id.text_message_delivery_image);
             }
         }
     }
@@ -129,14 +129,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 holder.mMessageBody.setText(message.getMessage());
                 holder.mTime.setText(Message.formateDate(message.getDate()));
-                String x = "&#x2713";
+                String x = "\u2713";
                 if(!message.isDelivered()) {
-                    Log.d("good"," not delivered: "+message.getMessage()
-                            +" "+message.id);
-
-                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+ "");
+                    holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
                 } else {
-                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+""+Html.fromHtml(x));
+                    holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_all_black_24dp);
                 }
             }
         }
