@@ -131,11 +131,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.mTime.setText(Message.formateDate(message.getDate()));
                 String x = "&#x2713";
                 if(!message.isDelivered()) {
-                    Log.d("good"," not delivered" +" actual variable: "+message.isDelivered());
+                    Log.d("good"," not delivered: "+message.getMessage()
+                            +" "+message.id);
 
-                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+ "b");
+                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+ "");
                 } else {
-                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+"x"+Html.fromHtml(x));
+                    holder.mDeliveryStatus.setText(Html.fromHtml(x)+""+Html.fromHtml(x));
                 }
             }
         }

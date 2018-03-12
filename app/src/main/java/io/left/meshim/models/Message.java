@@ -210,6 +210,7 @@ public class Message implements Parcelable {
      */
     @Ignore
     protected Message(Parcel in) {
+        id = in.readInt();
         message = in.readString();
         date = new Date(in.readLong());
         sender = in.readParcelable(User.class.getClassLoader());
@@ -218,7 +219,7 @@ public class Message implements Parcelable {
         recipientId = in.readInt();
         isMyMessage = in.readByte() != 0;
         this.isRead = false;
-        this.isDelivered = false;
+        this.isDelivered = in.readByte()!=0;
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -259,6 +260,7 @@ public class Message implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(message);
         dest.writeLong(date.getTime());
         dest.writeParcelable(sender, flags);
@@ -266,6 +268,7 @@ public class Message implements Parcelable {
         dest.writeParcelable(recipient, flags);
         dest.writeInt(recipientId);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
+        dest.writeInt((byte)(isDelivered?1:0));
     }
 
     /**

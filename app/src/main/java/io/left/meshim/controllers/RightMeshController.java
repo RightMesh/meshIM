@@ -65,7 +65,7 @@ public class RightMeshController implements MeshStateListener {
     //reference to service
     private MeshIMService meshIMService;
     // keeps track of all the undeliveredMessages
-    private HashMap<Integer, Message> unDeliveredMessages = new HashMap<Integer, Message>();
+    private HashMap<Integer, Integer> unDeliveredMessages = new HashMap<Integer, Integer>();
 
     /**
      * Constructor.
@@ -114,9 +114,10 @@ public class RightMeshController implements MeshStateListener {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
                 int data_id = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
-               Log.d("good","its in the hashmap");
-                unDeliveredMessages.put(data_id,messageObject);
-                dao.insertMessages(messageObject);
+
+               long insertedMessageInfo[] = dao.insertMessages(messageObject);
+               //save the id of the message.
+                unDeliveredMessages.put(data_id, (int) insertedMessageInfo[0]);
                 updateInterface();
             }
         } catch (RightMeshException ignored) {
@@ -131,7 +132,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"RATURI");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**
@@ -376,10 +377,10 @@ public class RightMeshController implements MeshStateListener {
         final int data_id = event.data_id;
         //add the data id to a hashmap along with the message?
         if(unDeliveredMessages.containsKey(data_id)){
-            Log.d("good",data_id+" has been delivered");
             //updating the message delivery status in the database
-            dao.updateMessageIsDelivered(unDeliveredMessages.get(data_id).id,true);
+            dao.updateMessageIsDelivered(unDeliveredMessages.get(data_id));
             unDeliveredMessages.remove(data_id);
+            updateInterface();
         }
     }
 }

@@ -45,14 +45,14 @@ public abstract class MeshIMDao {
     public abstract void updateMessageIsRead(int messageID, boolean val);
 
     @Insert()
-    public abstract void insertMessages(Message... messages);
+    public abstract long[]insertMessages(Message... messages);
 
     @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) AND RecipientID IN (:userIds)"
             + " ORDER BY Timestamp ASC")
     public abstract Message[] fetchMessagesBetweenUsers(int... userIds);
 
-    @Query("UPDATE  Messages SET IsDelivered = :val WHERE MessageID=:messageID ")
-    public abstract void updateMessageIsDelivered(int messageID, boolean val);
+    @Query("UPDATE  Messages SET IsDelivered = 1 WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsDelivered(int messageID);
 
     /**
      * This query is used by {@link ConversationListAdapter}. That adapter
