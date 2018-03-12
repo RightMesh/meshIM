@@ -39,7 +39,7 @@
                     android:elevation="@dimen/elevation_card"/>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/emptyListItem"
+                    android:id="@+id/user_list_loading_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
@@ -49,7 +49,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/emptyListItem1"
+                        android:id="@+id/user_list_loading_animation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/meshim_margin_small"
@@ -62,7 +62,7 @@
                         app:lottie_loop="true" />
 
                     <TextView
-                        android:id="@+id/emptyListItem2"
+                        android:id="@+id/user_list_loading_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/meshim_margin_small"
@@ -72,11 +72,10 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.502"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/emptyListItem1" />
+                        app:layout_constraintTop_toBottomOf="@+id/user_list_loading_animation" />
                 </android.support.constraint.ConstraintLayout>
 
                 </android.support.constraint.ConstraintLayout>
-
 
             <LinearLayout
                 android:id="@+id/tab2"
@@ -96,13 +95,13 @@
                 </ListView>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/emptyMessageView"
+                    android:id="@+id/message_list_loading_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <ImageView
-                        android:id="@+id/emptyMessageImage"
+                        android:id="@+id/message_list_loading_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +112,7 @@
                         app:srcCompat="@mipmap/no_messages" />
 
                     <TextView
-                        android:id="@+id/emptyMessageText"
+                        android:id="@+id/message_list_loading_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/meshim_margin_small"
@@ -121,19 +120,20 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/emptyMessageImage" />
+                        app:layout_constraintTop_toBottomOf="@+id/message_list_loading_image" />
 
                     <TextView
-                        android:id="@+id/emptyMessageText1"
+                        android:id="@+id/message_list_loading_text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/meshim_margin_small"
                         android:layout_marginStart="@dimen/meshim_margin_small"
-                        android:layout_marginTop="@dimen/meshim_margin_small"
+                        android:layout_marginTop="8dp"
                         android:text="@string/empty_message_text2"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.506"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/emptyMessageText" />
+                        app:layout_constraintTop_toBottomOf="@+id/message_list_loading_text" />
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
 
