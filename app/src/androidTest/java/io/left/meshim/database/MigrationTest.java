@@ -98,6 +98,11 @@ public class MigrationTest {
         db = helper.runMigrationsAndValidate(TEST_DB, 4, true, MIGRATION_3_4);
     }
 
+    /**
+     * Addition of IsDelivered column in the Messages table. sets the default values for IsDelivered to true
+     * for messages before the migration.
+     * @throws IOException if the database cant open.
+     */
     @Test
     public void migrate4To5() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 4);

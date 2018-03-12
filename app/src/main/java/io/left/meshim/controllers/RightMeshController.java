@@ -11,7 +11,6 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -64,7 +63,7 @@ public class RightMeshController implements MeshStateListener {
     private IActivity callback = null;
     //reference to service
     private MeshIMService meshIMService;
-    // keeps track of all the undeliveredMessages
+    // keeps track of all the undeliveredMessages.
     private HashMap<Integer, Integer> unDeliveredMessages = new HashMap<Integer, Integer>();
 
     /**
@@ -113,11 +112,10 @@ public class RightMeshController implements MeshStateListener {
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
-                int data_id = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
-
+                int deliveryDataID = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
                long insertedMessageInfo[] = dao.insertMessages(messageObject);
-               //save the id of the message.
-                unDeliveredMessages.put(data_id, (int) insertedMessageInfo[0]);
+               //save the id of the message in the hashmap.
+                unDeliveredMessages.put(deliveryDataID, (int) insertedMessageInfo[0]);
                 updateInterface();
             }
         } catch (RightMeshException ignored) {
@@ -374,12 +372,11 @@ public class RightMeshController implements MeshStateListener {
     }
     void handleDataDelivery(RightMeshEvent e) {
         MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
-        final int data_id = event.data_id;
-        //add the data id to a hashmap along with the message?
-        if(unDeliveredMessages.containsKey(data_id)){
+        final int deliveryDataID = event.data_id;
+        if(unDeliveredMessages.containsKey(deliveryDataID)){
             //updating the message delivery status in the database
-            dao.updateMessageIsDelivered(unDeliveredMessages.get(data_id));
-            unDeliveredMessages.remove(data_id);
+            dao.updateMessageIsDelivered(unDeliveredMessages.get(deliveryDataID));
+            unDeliveredMessages.remove(deliveryDataID);
             updateInterface();
         }
     }

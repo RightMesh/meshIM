@@ -3,8 +3,6 @@ package io.left.meshim.adapters;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +127,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 holder.mMessageBody.setText(message.getMessage());
                 holder.mTime.setText(Message.formateDate(message.getDate()));
-                String x = "\u2713";
                 if(!message.isDelivered()) {
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
                 } else {

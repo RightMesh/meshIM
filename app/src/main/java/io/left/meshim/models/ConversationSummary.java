@@ -110,7 +110,7 @@ public class ConversationSummary implements Parcelable {
         dest.writeInt(peerID);
         dest.writeInt(isRead ? 1 : 0);
         dest.writeInt(unreadMessages);
-        dest.writeInt(isDelivered?1:0);
+        dest.writeInt(isDelivered ? 1 : 0);
 
     }
 }
