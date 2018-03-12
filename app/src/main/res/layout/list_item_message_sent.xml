@@ -35,7 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/meshim_margin_small"
-        android:layout_marginEnd="@dimen/meshim_margin_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/text_message_time_sent"
         app:layout_constraintTop_toTopOf="@+id/text_message_time_sent" />

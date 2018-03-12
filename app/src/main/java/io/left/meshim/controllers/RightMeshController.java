@@ -64,7 +64,7 @@ public class RightMeshController implements MeshStateListener {
     //reference to service
     private MeshIMService meshIMService;
     // keeps track of all the undeliveredMessages.
-    private HashMap<Integer, Integer> unDeliveredMessages = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> unDeliveredMessageIDs = new HashMap<Integer, Integer>();
 
     /**
      * Constructor.
@@ -115,7 +115,7 @@ public class RightMeshController implements MeshStateListener {
                 int deliveryDataID = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
                long insertedMessageInfo[] = dao.insertMessages(messageObject);
                //save the id of the message in the hashmap.
-                unDeliveredMessages.put(deliveryDataID, (int) insertedMessageInfo[0]);
+                unDeliveredMessageIDs.put(deliveryDataID, (int) insertedMessageInfo[0]);
                 updateInterface();
             }
         } catch (RightMeshException ignored) {
@@ -370,13 +370,19 @@ public class RightMeshController implements MeshStateListener {
             // Service failed loading settings - nothing to be done.
         }
     }
+
+    /**
+     * Handles data delivery event from the mesh. Updates the hashmap that stores the message IDs of
+     * undelivered messages.
+     * @param e event object from mesh.
+     */
     void handleDataDelivery(RightMeshEvent e) {
         MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
         final int deliveryDataID = event.data_id;
-        if(unDeliveredMessages.containsKey(deliveryDataID)){
+        if(unDeliveredMessageIDs.containsKey(deliveryDataID)){
             //updating the message delivery status in the database
-            dao.updateMessageIsDelivered(unDeliveredMessages.get(deliveryDataID));
-            unDeliveredMessages.remove(deliveryDataID);
+            dao.updateMessageIsDelivered(unDeliveredMessageIDs.get(deliveryDataID));
+            unDeliveredMessageIDs.remove(deliveryDataID);
             updateInterface();
         }
     }
