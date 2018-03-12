@@ -2,6 +2,7 @@
 
 <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabHost"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -37,17 +38,44 @@
                     android:background="@color/white"
                     android:elevation="@dimen/elevation_card"/>
 
-                <ProgressBar
-                    android:id="@+id/empty_list_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="@dimen/elevation_refresh_indicator"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/user_list_loading_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/user_list_loading_animation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/meshim_margin_small"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="in_range_loading_animation.json"
+                        app:lottie_loop="true" />
+
+                    <TextView
+                        android:id="@+id/user_list_loading_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/meshim_margin_small"
+                        android:layout_marginStart="@dimen/meshim_margin_small"
+                        android:text="@string/empty_inrange_text"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.502"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/user_list_loading_animation" />
+                </android.support.constraint.ConstraintLayout>
+
+                </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/tab2"
@@ -63,7 +91,50 @@
                     android:background="@color/white"
                     android:divider="@null"
                     android:dividerHeight="0dp"
-                    android:elevation="@dimen/elevation_card"/>
+                    android:elevation="@dimen/elevation_card">
+                </ListView>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/message_list_loading_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/message_list_loading_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.326"
+                        app:srcCompat="@mipmap/no_messages" />
+
+                    <TextView
+                        android:id="@+id/message_list_loading_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/meshim_margin_small"
+                        android:text="@string/empty_message_text1"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/message_list_loading_image" />
+
+                    <TextView
+                        android:id="@+id/message_list_loading_text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/meshim_margin_small"
+                        android:layout_marginStart="@dimen/meshim_margin_small"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/empty_message_text2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.506"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/message_list_loading_text" />
+                </android.support.constraint.ConstraintLayout>
             </LinearLayout>
 
             <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

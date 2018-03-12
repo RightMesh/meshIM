@@ -167,7 +167,7 @@ public class MainActivity extends ServiceConnectedActivity
      */
     private void configureUserList() {
         ListView listView = findViewById(R.id.userListView);
-        listView.setEmptyView(findViewById(R.id.empty_list_item));
+        listView.setEmptyView(findViewById(R.id.user_list_loading_view));
         mOnlineUserListAdapter = new OnlineUserListAdapter(this, mUsers);
         listView.setAdapter(mOnlineUserListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -185,6 +185,7 @@ public class MainActivity extends ServiceConnectedActivity
      */
     private void configureMessageList() {
         ListView listView = findViewById(R.id.multiUserMessageListView);
+        listView.setEmptyView(findViewById(R.id.message_list_loading_view));
         mConversationListAdapter = new ConversationListAdapter(this, mConversationSummaries);
         listView.setAdapter(mConversationListAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
