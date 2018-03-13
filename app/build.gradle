@@ -69,9 +69,6 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/src/main/schemas".toString())
         main { assets.srcDirs = ['src/main/assets', 'src/main/assets/2'] }
