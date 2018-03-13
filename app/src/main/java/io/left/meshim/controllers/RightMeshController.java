@@ -113,7 +113,7 @@ public class RightMeshController implements MeshStateListener {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
                 int deliveryDataID = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
-               long insertedMessageInfo[] = dao.insertMessages(messageObject);
+                long insertedMessageInfo[] = dao.insertMessages(messageObject);
                //save the id of the message in the hashmap.
                 unDeliveredMessageIDs.put(deliveryDataID, (int) insertedMessageInfo[0]);
                 updateInterface();
@@ -247,7 +247,7 @@ public class RightMeshController implements MeshStateListener {
 
                 if (sender != null && user != null) {
                     Message message = new Message(sender, user, protoMessage.getMessage(), false);
-                   // message has been delivered
+                    // message has been delivered
                     message.setDelivered(true);
                     dao.insertMessages(message);
                     meshIMService.sendNotification(sender, message);
