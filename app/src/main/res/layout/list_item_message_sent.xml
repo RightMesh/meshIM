@@ -2,6 +2,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="0dp"
@@ -11,14 +12,12 @@
 
     <TextView
         android:id="@+id/text_message_body_sent"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/chat_bubble_send"
+        android:elevation="@dimen/elevation_card"
         android:padding="@dimen/meshim_margin_small"
         android:textColor="@color/black"
-        android:elevation="@dimen/elevation_card"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintWidth_default="wrap" />
 
@@ -30,4 +29,13 @@
         android:textSize="12sp"
         app:layout_constraintRight_toRightOf="@+id/text_message_body_sent"
         app:layout_constraintTop_toBottomOf="@+id/text_message_body_sent" />
+
+    <ImageView
+        android:id="@+id/text_message_delivery_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/meshim_margin_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/text_message_time_sent"
+        app:layout_constraintTop_toTopOf="@+id/text_message_time_sent" />
 </android.support.constraint.ConstraintLayout>

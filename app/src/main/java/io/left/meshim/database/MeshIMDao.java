@@ -40,15 +40,23 @@ public abstract class MeshIMDao {
     @Query("SELECT * FROM Users WHERE MeshID = :meshId")
     public abstract User fetchUserByMeshId(MeshID meshId);
 
-    @Query("UPDATE  Messages SET IsRead = :val WHERE MessageID=:messageID ")
-    public abstract void updateMessageIsRead(int messageID, boolean val);
+    @Query("UPDATE  Messages SET IsRead = 1 WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsRead(int messageID);
 
+    /**
+     * inserts the messages into the database.
+     * @param messages messages needed to be inserted into the database.
+     * @return  the row id that was inserted.
+     */
     @Insert()
-    public abstract void insertMessages(Message... messages);
+    public abstract long[]insertMessages(Message... messages);
 
     @Query("SELECT * FROM Messages WHERE SenderID IN (:userIds) AND RecipientID IN (:userIds)"
             + " ORDER BY Timestamp ASC")
     public abstract Message[] fetchMessagesBetweenUsers(int... userIds);
+
+    @Query("UPDATE  Messages SET IsDelivered = 1 WHERE MessageID=:messageID ")
+    public abstract void updateMessageIsDelivered(int messageID);
 
     /**
      * This query is used by {@link ConversationListAdapter}. That adapter
@@ -82,9 +90,9 @@ public abstract class MeshIMDao {
      * </p>
      * @return a summary of every conversation the device's user has started
      */
-    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, IsRead, UnreadMessages "
+    @Query("SELECT Username, Avatar, Contents, Timestamp, PeerID, IsRead,IsDelivered, UnreadMessages "
             + "FROM ("
-            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,IsRead, "
+            + "SELECT max(RecipientID, SenderID) AS PeerID, Contents,IsRead,IsDelivered, "
             + "SUM(CASE WHEN IsRead =0 THEN 1 ELSE 0 END) AS UnreadMessages  , "
             + "MAX(Timestamp) AS Timestamp FROM Messages GROUP BY PeerID"
             + ") INNER JOIN Users ON PeerID = UserID "
@@ -112,7 +120,7 @@ public abstract class MeshIMDao {
         // Populate messages with actual User classes.
         for (Message m : messages) {
             //marks all the messages loading into chat activity as read.
-            this.updateMessageIsRead(m.id,true);
+            this.updateMessageIsRead(m.id);
             m.setSender(idUserMap.get(m.senderId));
             m.setRecipient(idUserMap.get(m.recipientId));
         }

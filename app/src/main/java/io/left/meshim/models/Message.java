@@ -53,6 +53,9 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "IsRead")
     private boolean isRead;
 
+    @ColumnInfo(name = "IsDelivered")
+    private boolean isDelivered;
+
     public String getMessage() {
         return message;
     }
@@ -101,6 +104,14 @@ public class Message implements Parcelable {
         return isRead;
     }
 
+    public void setDelivered(boolean delivered) {
+        isDelivered = delivered;
+    }
+
+    public boolean isDelivered() {
+        return isDelivered;
+    }
+
     /**
      * Simplest constructor for a new message created on a device to be sent. Starts with sender,
      * recipient, and message, then passes them along
@@ -129,6 +140,7 @@ public class Message implements Parcelable {
     public Message(User sender, User recipient, String message, boolean isMyMessage) {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
         this.isRead = false;
+        this.isDelivered =false;
     }
 
     /**
@@ -144,6 +156,7 @@ public class Message implements Parcelable {
     public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date) {
         this(null, senderId, null, recipientId, message, isMyMessage, date);
         this.isRead = false;
+        this.isDelivered =false;
     }
 
     /**
@@ -168,6 +181,7 @@ public class Message implements Parcelable {
         this.isMyMessage = isMyMessage;
         this.date = date;
         this.isRead = false;
+        this.isDelivered = false;
     }
 
     /**
@@ -196,6 +210,7 @@ public class Message implements Parcelable {
      */
     @Ignore
     protected Message(Parcel in) {
+        id = in.readInt();
         message = in.readString();
         date = new Date(in.readLong());
         sender = in.readParcelable(User.class.getClassLoader());
@@ -204,6 +219,7 @@ public class Message implements Parcelable {
         recipientId = in.readInt();
         isMyMessage = in.readByte() != 0;
         this.isRead = false;
+        this.isDelivered = in.readByte()!=0;
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -244,6 +260,7 @@ public class Message implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(message);
         dest.writeLong(date.getTime());
         dest.writeParcelable(sender, flags);
@@ -251,6 +268,7 @@ public class Message implements Parcelable {
         dest.writeParcelable(recipient, flags);
         dest.writeInt(recipientId);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
+        dest.writeInt((byte)(isDelivered?1:0));
     }
 
     /**

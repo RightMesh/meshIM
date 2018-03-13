@@ -63,6 +63,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         TextView mTime;
         TextView mMessageBody;
         ImageView mUserImage;
+        ImageView mDeliveryStatus;
 
         /**
          * Checks whether the message should be displayed in send or received layout.
@@ -81,6 +82,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
+                mDeliveryStatus = view.findViewById(R.id.text_message_delivery_image);
             }
         }
     }
@@ -125,6 +127,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             } else {
                 holder.mMessageBody.setText(message.getMessage());
                 holder.mTime.setText(Message.formateDate(message.getDate()));
+                if(!message.isDelivered()) {
+                    holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
+                } else {
+                    holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_all_black_24dp);
+                }
             }
         }
     }
