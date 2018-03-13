@@ -11,6 +11,7 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -34,7 +35,11 @@ import io.left.rightmesh.util.RightMeshException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
@@ -66,6 +71,9 @@ public class RightMeshController implements MeshStateListener {
     // keeps track of all the undeliveredMessages.
     private HashMap<Integer, Integer> unDeliveredMessageIDs = new HashMap<Integer, Integer>();
 
+    private HashMap<Integer,MeshID> xyz = new HashMap<>();
+
+    Timer mytimer = new Timer();
     /**
      * Constructor.
      * @param user user info for this device
@@ -87,6 +95,26 @@ public class RightMeshController implements MeshStateListener {
                 this.dao.updateUsers(user);
             }
         }).start();
+        mytimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d("good","resending all the info size: "+xyz.size());
+
+                if(meshManager!=null){
+                    byte[] m = createPeerUpdatePayloadFromUser(user);
+                    for (Map.Entry<Integer, MeshID> entry : xyz.entrySet()) {
+                        MeshID id = entry.getValue();
+                        try {
+                           int dat_id = meshManager.sendDataReliable(id,MESH_PORT,m);
+                            Log.d("good",id.toString());
+                            xyz.put(dat_id,id);
+                        } catch (RightMeshException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        },0,3000);
     }
 
     public void setCallback(IActivity callback) {
@@ -163,6 +191,7 @@ public class RightMeshController implements MeshStateListener {
                 // Binds this app to MESH_PORT.
                 // This app will now receive all events generated on that port.
                 meshManager.bind(MESH_PORT);
+                meshManager.setSuperPeer("18.217.187.196");
             } catch (RightMeshException e) {
                 // @TODO: App can't receive notifications. This needs to be alerted somehow.
             }
@@ -282,7 +311,9 @@ public class RightMeshController implements MeshStateListener {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
-                    meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                    int id = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                    Log.d("good","putting into hashmap");
+                    xyz.put(id,event.peerUuid);
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
@@ -384,6 +415,10 @@ public class RightMeshController implements MeshStateListener {
             dao.updateMessageIsDelivered(unDeliveredMessageIDs.get(deliveryDataID));
             unDeliveredMessageIDs.remove(deliveryDataID);
             updateInterface();
+        }
+        else if (xyz.containsKey(deliveryDataID)){
+            Log.d("good","deleteing ");
+            xyz.remove(deliveryDataID);
         }
     }
 }
