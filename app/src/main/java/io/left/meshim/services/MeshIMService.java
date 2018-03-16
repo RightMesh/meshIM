@@ -60,7 +60,7 @@ public class MeshIMService extends Service {
         PendingIntent pendingIntent
                 = PendingIntent.getService(this,0,stopForegroundIntent,0);
         NotificationCompat.Builder builder;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
