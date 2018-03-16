@@ -242,7 +242,7 @@ public class MeshIMService extends Service {
                     0, intent, PendingIntent.FLAG_ONE_SHOT);
 
             NotificationCompat.Builder builder;
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 builder = new NotificationCompat.Builder(this,
                         NotificationChannel.DEFAULT_CHANNEL_ID);
             } else {
