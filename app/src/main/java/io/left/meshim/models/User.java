@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import io.left.meshim.controllers.RightMeshController;
-import io.left.rightmesh.id.MeshID;
+import io.left.rightmesh.id.MeshId;
 
 import java.lang.reflect.Type;
 
@@ -35,7 +35,7 @@ import java.lang.reflect.Type;
  * </p>
  */
 @Entity(tableName = "Users",
-        indices = {@Index(value = {"UserID", "MeshID"}, unique = true)})
+        indices = {@Index(value = {"UserId", "MeshId"}, unique = true)})
 public class User implements Parcelable {
     // Used in shared preference to save or load data.
     @Ignore
@@ -51,11 +51,11 @@ public class User implements Parcelable {
     public static final int DEVICE_USER_ID = 1;
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "UserID")
+    @ColumnInfo(name = "UserId")
     public int id;
 
-    @ColumnInfo(name = "MeshID")
-    private MeshID meshId = new MeshID();
+    @ColumnInfo(name = "MeshId")
+    private MeshId meshId = new MeshId();
 
     @ColumnInfo(name = "Username")
     private String username;
@@ -68,14 +68,14 @@ public class User implements Parcelable {
     }
 
     /**
-     * Constructor with {@link MeshID} option. Used in
+     * Constructor with {@link MeshId} option. Used in
      * {@link RightMeshController} where we care about mesh logic.
      * @param username displayed username for the user
      * @param avatar avatar chosen by the user
      * @param meshId ID of the user on the mesh
      */
     @Ignore
-    public User(String username, int avatar, MeshID meshId) {
+    public User(String username, int avatar, MeshId meshId) {
         this(username, avatar);
         this.meshId = meshId;
     }
@@ -116,11 +116,11 @@ public class User implements Parcelable {
         return temp;
     }
 
-    public MeshID getMeshId() {
+    public MeshId getMeshId() {
         return meshId;
     }
 
-    public void setMeshId(MeshID meshId) {
+    public void setMeshId(MeshId meshId) {
         this.meshId = meshId;
     }
 
@@ -155,7 +155,7 @@ public class User implements Parcelable {
         this.avatar = in.readInt();
         byte[] uuid = new byte[20];
         in.readByteArray(uuid);
-        this.meshId = new MeshID(uuid);
+        this.meshId = new MeshId(uuid);
     }
 
 
@@ -186,7 +186,7 @@ public class User implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.getUsername());
         dest.writeInt(this.avatar);
-        dest.writeByteArray(this.meshId.getRawUuid());
+        dest.writeByteArray(this.meshId.getRawMeshId());
     }
 
     /**

@@ -27,8 +27,8 @@ public class ConversationSummary implements Parcelable {
     @ColumnInfo(name = "Timestamp")
     public Date messageTime;
 
-    @ColumnInfo(name = "PeerID")
-    public int peerID;
+    @ColumnInfo(name = "PeerId")
+    public int peerId;
 
     @ColumnInfo(name = "IsRead")
     public boolean isRead;
@@ -68,7 +68,7 @@ public class ConversationSummary implements Parcelable {
         avatar = in.readInt();
         messageText = in.readString();
         messageTime = new Date(in.readLong());
-        peerID = in.readInt();
+        peerId = in.readInt();
         this.isRead = (in.readInt() == 1);
         this.unreadMessages = in.readInt();
         this.isDelivered =(in.readInt()==1);
@@ -107,7 +107,7 @@ public class ConversationSummary implements Parcelable {
         dest.writeInt(avatar);
         dest.writeString(messageText);
         dest.writeLong(messageTime.getTime());
-        dest.writeInt(peerID);
+        dest.writeInt(peerId);
         dest.writeInt(isRead ? 1 : 0);
         dest.writeInt(unreadMessages);
         dest.writeInt(isDelivered ? 1 : 0);

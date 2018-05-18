@@ -194,7 +194,7 @@ public class MainActivity extends ServiceConnectedActivity
                 if (selected != null) {
                     User peer = null;
                     try {
-                        peer = mService.fetchUserById(selected.peerID);
+                        peer = mService.fetchUserById(selected.peerId);
                     } catch (RemoteException e) {
                         if (e instanceof DeadObjectException) {
                             reconnectToService();

@@ -16,17 +16,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity(tableName = "Messages",
-        indices = { @Index(value = {"RecipientID"}), @Index(value = {"SenderID"}) },
+        indices = { @Index(value = {"RecipientId"}), @Index(value = {"SenderId"}) },
         foreignKeys =
                 {
-                        @ForeignKey(entity = User.class, parentColumns = "UserID",
-                                childColumns = "SenderID"),
-                        @ForeignKey(entity = User.class, parentColumns = "UserID",
-                                childColumns = "RecipientID")
+                        @ForeignKey(entity = User.class, parentColumns = "UserId",
+                                childColumns = "SenderId"),
+                        @ForeignKey(entity = User.class, parentColumns = "UserId",
+                                childColumns = "RecipientId")
                 })
 public class Message implements Parcelable {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "MessageID")
+    @ColumnInfo(name = "MessageId")
     public int id;
 
     @ColumnInfo(name = "Contents")
@@ -35,13 +35,13 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "Timestamp")
     private Date date;
 
-    @ColumnInfo(name = "SenderID")
+    @ColumnInfo(name = "SenderId")
     public int senderId;
 
     @Ignore
     private User sender;
 
-    @ColumnInfo(name = "RecipientID")
+    @ColumnInfo(name = "RecipientId")
     public int recipientId;
 
     @Ignore
@@ -145,7 +145,7 @@ public class Message implements Parcelable {
 
     /**
      * Room constructor. NOTE: {@link Message#sender} and {@link Message#recipient} will be null
-     * until they can be fetched from the database based on their UserID.
+     * until they can be fetched from the database based on their UserId.
      *
      * @param senderId database id for sender
      * @param recipientId database id for recipient
