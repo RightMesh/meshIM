@@ -17,13 +17,13 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
 import io.left.meshim.database.MeshIMDao;
-import io.left.meshim.models.MeshIDTuple;
+import io.left.meshim.models.MeshIdTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.meshim.services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
-import io.left.rightmesh.id.MeshID;
+import io.left.rightmesh.id.MeshId;
 import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
@@ -52,8 +52,8 @@ public class RightMeshController implements MeshStateListener {
     private AndroidMeshManager meshManager = null;
 
     // Set to keep track of peers connected to the mesh.
-    private HashSet<MeshID> discovered = new HashSet<>();
-    private HashMap<MeshID, User> users = new HashMap<>();
+    private HashSet<MeshId> discovered = new HashSet<>();
+    private HashMap<MeshId, User> users = new HashMap<>();
     private User user = null;
 
     // Database interface.
@@ -64,7 +64,7 @@ public class RightMeshController implements MeshStateListener {
     //reference to service
     private MeshIMService meshIMService;
     // keeps track of all the undeliveredMessages.
-    private HashMap<Integer, Integer> unDeliveredMessageIDs = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> unDeliveredMessageIds = new HashMap<Integer, Integer>();
 
     /**
      * Constructor.
@@ -112,10 +112,10 @@ public class RightMeshController implements MeshStateListener {
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
-                int deliveryDataID = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
+                int deliveryDataId = meshManager.sendDataReliable(recipient.getMeshId(), MESH_PORT, messagePayload);
                 long insertedMessageInfo[] = dao.insertMessages(messageObject);
                 //save the id of the message in the hashmap.
-                unDeliveredMessageIDs.put(deliveryDataID, (int) insertedMessageInfo[0]);
+                unDeliveredMessageIds.put(deliveryDataId, (int) insertedMessageInfo[0]);
                 updateInterface();
             }
         } catch (RightMeshException ignored) {
@@ -154,9 +154,9 @@ public class RightMeshController implements MeshStateListener {
      * @param state state which indicates SUCCESS or an error code
      */
     @Override
-    public void meshStateChanged(MeshID uuid, int state) {
+    public void meshStateChanged(MeshId uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
-            // Update stored user preferences with current MeshID.
+            // Update stored user preferences with current MeshId.
             user.setMeshId(uuid);
             user.save(meshIMService);
             try {
@@ -206,7 +206,7 @@ public class RightMeshController implements MeshStateListener {
 
         try {
             MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
-            MeshID peerId = event.peerUuid;
+            MeshId peerId = event.peerUuid;
 
             if (peerId.equals(meshManager.getUuid())) {
                 return;
@@ -220,7 +220,7 @@ public class RightMeshController implements MeshStateListener {
                 User peer = new User(peerUpdate.getUserName(), peerUpdate.getAvatarId(), peerId);
 
                 // Create or update user in database.
-                MeshIDTuple dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
+                MeshIdTuple dietPeer = dao.fetchMeshIdTupleByMeshId(peerId);
                 if (dietPeer == null) {
                     dao.insertUsers(peer);
 
@@ -276,8 +276,11 @@ public class RightMeshController implements MeshStateListener {
             discovered.add(event.peerUuid);
             // let the user know mesh has discovered a new user, and is getting details.
             User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
-            users.put(event.peerUuid,tempUser);
+            users.put(event.peerUuid, tempUser);
             updateInterface();
+        }
+
+        if (event.state == ADDED) {
             // Send our information to a new or rejoining peer.
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
@@ -348,7 +351,7 @@ public class RightMeshController implements MeshStateListener {
         if (user.load(meshIMService)) {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             if (message != null) {
-                for (MeshID id : users.keySet()) {
+                for (MeshId id : users.keySet()) {
                     try {
                         meshManager.sendDataReliable(id, MESH_PORT, message);
                     } catch (RightMeshException e) {
@@ -372,17 +375,17 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
-     * Handles data delivery event from the mesh. Updates the hashmap that stores the message IDs of
+     * Handles data delivery event from the mesh. Updates the hashmap that stores the message Ids of
      * undelivered messages.
      * @param e event object from mesh.
      */
     void handleDataDelivery(RightMeshEvent e) {
         MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
-        final int deliveryDataID = event.data_id;
-        if(unDeliveredMessageIDs.containsKey(deliveryDataID)){
+        final int deliveryDataId = event.data_id;
+        if(unDeliveredMessageIds.containsKey(deliveryDataId)){
             //updating the message delivery status in the database
-            dao.updateMessageIsDelivered(unDeliveredMessageIDs.get(deliveryDataID));
-            unDeliveredMessageIDs.remove(deliveryDataID);
+            dao.updateMessageIsDelivered(unDeliveredMessageIds.get(deliveryDataId));
+            unDeliveredMessageIds.remove(deliveryDataId);
             updateInterface();
         }
     }
