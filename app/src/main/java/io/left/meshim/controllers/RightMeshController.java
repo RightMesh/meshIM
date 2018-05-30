@@ -11,6 +11,7 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -32,6 +33,7 @@ import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +57,7 @@ public class RightMeshController implements MeshStateListener {
     private HashSet<MeshId> discovered = new HashSet<>();
     private HashMap<MeshId, User> users = new HashMap<>();
     private User user = null;
+
 
     // Database interface.
     private MeshIMDao dao;
@@ -130,7 +133,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"sachin");
     }
 
     /**
@@ -270,14 +273,26 @@ public class RightMeshController implements MeshStateListener {
         if (event.peerUuid.equals(meshManager.getUuid())) {
             return;
         }
+        List<User> usersDatabase = Arrays.asList(dao.fetchAllUsers());
+        User tempuser= dao.fetchUserByMeshId(event.peerUuid);
 
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             // let the user know mesh has discovered a new user, and is getting details.
-            User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
-            users.put(event.peerUuid, tempUser);
-            updateInterface();
+            if(usersDatabase.contains(tempuser)){
+                //user info is already in database
+                Log.d("bugg","user info was already in database");
+                users.put(event.peerUuid,tempuser);
+                updateInterface();
+            }
+            else {
+
+                Log.d("bugg","user info was not in database");
+                User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
+                users.put(event.peerUuid, tempUser);
+                updateInterface();
+            }
         }
 
         if (event.state == ADDED) {
@@ -285,6 +300,7 @@ public class RightMeshController implements MeshStateListener {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
+                    Log.d("bugg","sendin our info");
                     meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
                 }
             } catch (RightMeshException ignored) {
