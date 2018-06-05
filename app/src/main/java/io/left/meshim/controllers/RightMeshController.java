@@ -278,44 +278,46 @@ public class RightMeshController implements MeshStateListener {
         if (event.peerUuid.equals(meshManager.getUuid())) {
             return;
         }
-        List<User> usersDatabase = Arrays.asList(dao.fetchAllUsers());
-        User tempuser= dao.fetchUserByMeshId(event.peerUuid);
+        // checking in the database if we already have the user info
+        User userInfo= dao.fetchUserByMeshId(event.peerUuid);
 
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
-            // let the user know mesh has discovered a new user, and is getting details.
-                Log.d("bugg","user info was not in database");
+            //if database has info about the user, update it
+            if(userInfo!= null && userInfo.getMeshId().equals(event.peerUuid)){
+                Log.d("bugg", event.peerUuid + " info was in database");
+                users.put(event.peerUuid, userInfo);
+                updateInterface();
+            }
+            else {
+                // let the user know mesh has discovered a new user, and is getting details.
+                Log.d("bugg", event.peerUuid + " info was not in database");
                 User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
                 users.put(event.peerUuid, tempUser);
                 updateInterface();
-
+            }
         }
 
         if (event.state == ADDED) {
-            // Send our information to a new or rejoining peer.
+            // Send our updated information to a new or rejoining peer.
 
             byte[] message = createPeerUpdatePayloadFromUser(user);
+            // send our info to the new user in about 3-5 sec after we all discovered each other.
+            //this is a temp fix
             Random random = new Random();
             int randomTime = random.nextInt(4000)+3000;
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Log.d("bugg","timer ran out sending our info to the user");
+                    Log.d("bugg","timer ran out at "+ randomTime+  "ms");
                     try {
                         if (message != null) {
-                            Log.d("bugg","sendin our info");
+                            Log.d("bugg","sendin our info to " + event.peerUuid);
                             meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
-                            Log.d("bugg",Thread.currentThread().getName()+ " is running");
                             timer.cancel();
                             timer.purge();
-
-                            if(Thread.currentThread()!=null){
-                                Log.d("bugg",Thread.currentThread().getName()+ " is running after purge");
-
-                            }
-
                         }
                     } catch (RightMeshException ignored) {
                         // Message sending failed. Other user may have out of date information, but
