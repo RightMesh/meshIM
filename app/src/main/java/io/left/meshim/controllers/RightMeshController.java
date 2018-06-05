@@ -37,6 +37,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
@@ -56,7 +59,7 @@ public class RightMeshController implements MeshStateListener {
     // Set to keep track of peers connected to the mesh.
     private HashSet<MeshId> discovered = new HashSet<>();
     private HashMap<MeshId, User> users = new HashMap<>();
-    private User user = null;
+    private User user;
 
 
     // Database interface.
@@ -68,6 +71,8 @@ public class RightMeshController implements MeshStateListener {
     private MeshIMService meshIMService;
     // keeps track of all the undeliveredMessages.
     private HashMap<Integer, Integer> unDeliveredMessageIds = new HashMap<Integer, Integer>();
+
+    //private HashMap<Integer,I>
 
     /**
      * Constructor.
@@ -280,33 +285,45 @@ public class RightMeshController implements MeshStateListener {
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
             // let the user know mesh has discovered a new user, and is getting details.
-            if(usersDatabase.contains(tempuser)){
-                //user info is already in database
-                Log.d("bugg","user info was already in database");
-                users.put(event.peerUuid,tempuser);
-                updateInterface();
-            }
-            else {
-
                 Log.d("bugg","user info was not in database");
                 User tempUser = new User(meshIMService.getString(R.string.get_user_details), R.mipmap.account_default);
                 users.put(event.peerUuid, tempUser);
                 updateInterface();
-            }
+
         }
 
         if (event.state == ADDED) {
             // Send our information to a new or rejoining peer.
+
             byte[] message = createPeerUpdatePayloadFromUser(user);
-            try {
-                if (message != null) {
-                    Log.d("bugg","sendin our info");
-                    meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+            Random random = new Random();
+            int randomTime = random.nextInt(4000)+3000;
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Log.d("bugg","timer ran out sending our info to the user");
+                    try {
+                        if (message != null) {
+                            Log.d("bugg","sendin our info");
+                            meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                            Log.d("bugg",Thread.currentThread().getName()+ " is running");
+                            timer.cancel();
+                            timer.purge();
+
+                            if(Thread.currentThread()!=null){
+                                Log.d("bugg",Thread.currentThread().getName()+ " is running after purge");
+
+                            }
+
+                        }
+                    } catch (RightMeshException ignored) {
+                        // Message sending failed. Other user may have out of date information, but
+                        // ultimately this isn't deal-breaking.
+                    }
                 }
-            } catch (RightMeshException ignored) {
-                // Message sending failed. Other user may have out of date information, but
-                // ultimately this isn't deal-breaking.
-            }
+            },randomTime);
+
         } else if (event.state == REMOVED) {
             discovered.remove(event.peerUuid);
             users.remove(event.peerUuid);
