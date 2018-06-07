@@ -11,7 +11,9 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.left.meshim.R;
@@ -118,9 +120,11 @@ public class RightMeshController implements MeshStateListener {
      * Sends a simple text message to another user.
      * @param recipient recipient of the message
      * @param message contents of the message
+     * @param fileBytes
+     * @param fileExtention
      */
-    public void sendTextMessage(User recipient, String message) {
-        Message messageObject = new Message(user, recipient, message, true);
+    public void sendTextMessage(User recipient, String message, byte[] fileBytes, String fileExtention) {
+        Message messageObject = new Message(user, recipient, message, true,fileBytes,fileExtention);
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -258,8 +262,15 @@ public class RightMeshController implements MeshStateListener {
                 }
 
                 if (sender != null && user != null) {
-                    Message message = new Message(sender, user, protoMessage.getMessage(), false);
+                    //todo: handle files being recieved
+                    Message message = new Message(sender, user, protoMessage.getMessage(), false,null,null);
                     // message has been delivered
+                    if(!protoMessage.getFile().isEmpty()){
+                        Log.d("bugg",protoMessage.getFile().toString());
+                        Log.d("bugg",protoMessage.getFiletype().toString());
+
+                        Log.d("bugg","FILE IS HERERERERERERERERERERER");
+                    }
                     message.setDelivered(true);
                     dao.insertMessages(message);
                     meshIMService.sendNotification(sender, message);
@@ -351,6 +362,8 @@ public class RightMeshController implements MeshStateListener {
         MeshIMMessages.Message protoMsg = MeshIMMessages.Message.newBuilder()
                 .setMessage(message.getMessage())
                 .setTime(message.getDateAsTimestamp())
+                .setFile(ByteString.copyFrom(message.getFileByte()))
+                .setFiletype(message.getFileExtention())
                 .build();
 
         MeshIMMessage payload = MeshIMMessage.newBuilder()

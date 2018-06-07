@@ -118,4 +118,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'android.arch.persistence.room:testing:1.1.0'
     implementation 'com.airbnb.android:lottie:2.5.0-rc1'
+
+    implementation 'com.vincent.filepicker:MultiTypeFilePicker:1.0.7'
 }

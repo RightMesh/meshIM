@@ -35,13 +35,12 @@
             android:id="@+id/myMessageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/meshim_margin_medium"
-            android:layout_marginRight="@dimen/meshim_margin_medium"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="@string/type_message"
             android:inputType="textCapSentences|textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/sendButton"
+            app:layout_constraintEnd_toStartOf="@+id/fileButton"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
@@ -55,5 +54,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_bias="0.5" />
+
+        <ImageButton
+            android:id="@+id/fileButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sendButton"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

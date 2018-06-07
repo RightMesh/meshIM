@@ -21,4 +21,6 @@ message PeerUpdate{
 message Message{
     string message =1;
     google.protobuf.Timestamp time=2;
+    bytes file =3;
+    string filetype =4;
 }

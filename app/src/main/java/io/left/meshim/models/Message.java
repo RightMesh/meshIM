@@ -56,6 +56,28 @@ public class Message implements Parcelable {
     @ColumnInfo(name = "IsDelivered")
     private boolean isDelivered;
 
+    //file stuff
+    @Ignore
+    private byte[] fileByte;
+    @Ignore
+    private String fileExtention;
+
+    public void setFileExtention(String fileExtention) {
+        this.fileExtention = fileExtention;
+    }
+
+    public byte[] getFileByte() {
+        return fileByte;
+    }
+
+    public String getFileExtention() {
+        return fileExtention;
+    }
+
+    public void setFileByte(byte[] fileByte) {
+        this.fileByte = fileByte;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -123,7 +145,7 @@ public class Message implements Parcelable {
      */
     @Ignore
     public Message(User sender, User recipient, String message) {
-        this(sender, recipient, message, false);
+        this(sender, recipient, message, false,null,null);
     }
 
     /**
@@ -137,10 +159,12 @@ public class Message implements Parcelable {
      * @param isMyMessage if this device's user sent the message
      */
     @Ignore
-    public Message(User sender, User recipient, String message, boolean isMyMessage) {
+    public Message(User sender, User recipient, String message, boolean isMyMessage, byte[] fileByte,String fileExtension) {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
         this.isRead = false;
         this.isDelivered =false;
+        this.fileExtention = fileExtension;
+        this.fileByte = fileByte;
     }
 
     /**

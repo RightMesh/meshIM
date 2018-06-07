@@ -1,5 +1,6 @@
 package io.left.meshim.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.DeadObjectException;
@@ -9,9 +10,20 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import com.vincent.filepicker.Constant;
+import com.vincent.filepicker.activity.NormalFilePickActivity;
+import com.vincent.filepicker.filter.entity.NormalFile;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
@@ -24,7 +36,9 @@ public class ChatActivity extends ServiceConnectedActivity {
     private RecyclerView mMessageListView;
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
-
+    ImageButton pickfiles;
+    byte[] fileBytes = null;
+    String fileExtention;
     /**
      * {@inheritDoc}.
      */
@@ -60,9 +74,15 @@ public class ChatActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 try {
                     String message = messageText.getText().toString();
-                    if (!message.equals("")) {
-                        mService.sendTextMessage(mRecipient, message);
+                    if (!message.equals("") || fileBytes!=null) {
+                        if(fileBytes==null){
+                            mService.sendTextMessage(mRecipient,message,null,null);
+                        }
+                        else {
+                            mService.sendTextMessage(mRecipient, message, fileBytes, fileExtention);
+                        }
                         messageText.setText("");
+                        fileBytes = null;
                     }
                 } catch (RemoteException re) {
                     if (re instanceof DeadObjectException) {
@@ -73,8 +93,52 @@ public class ChatActivity extends ServiceConnectedActivity {
                 }
             }
         });
+        pickfiles = findViewById(R.id.fileButton);
+        pickfiles.setOnClickListener( view ->{
+            Intent intent4 = new Intent(this, NormalFilePickActivity.class);
+            intent4.putExtra(Constant.MAX_NUMBER, 1);
+            intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
+            startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
+        });
         setupActionBar();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constant.REQUEST_CODE_PICK_FILE:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
+                    NormalFile file = list.get(0);
+                    Log.d("bugg",file.getMimeType());
+                    Log.d("bugg",file.toString());
+                    Log.d("bugg",file.getPath());
+                    String extension = "";
+                    int i = file.getPath().lastIndexOf('.');
+                    int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
+                    if (i > p) {
+                        fileExtention = file.getPath().substring(i+1);
+                    }
+                    Log.d("bugg",extension);
+
+                    File file1 = new File(file.getPath());
+                    fileBytes = new byte[(int) file1.length()];
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(file1);
+                        fileInputStream.read(fileBytes);
+
+                    } catch (FileNotFoundException e) {
+                        System.out.println("File Not Found.");
+                        e.printStackTrace();
+                    }
+                    catch (IOException e1) {
+                        System.out.println("Error Reading The File.");
+                        e1.printStackTrace();
+                    }
+                }
+        }
     }
 
     /**
