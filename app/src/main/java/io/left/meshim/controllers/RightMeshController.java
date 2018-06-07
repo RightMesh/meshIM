@@ -146,7 +146,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
     }
 
     /**
