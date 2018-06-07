@@ -358,14 +358,21 @@ public class RightMeshController implements MeshStateListener {
         if (message == null) {
             return null;
         }
-
-        MeshIMMessages.Message protoMsg = MeshIMMessages.Message.newBuilder()
-                .setMessage(message.getMessage())
-                .setTime(message.getDateAsTimestamp())
-                .setFile(ByteString.copyFrom(message.getFileByte()))
-                .setFiletype(message.getFileExtention())
-                .build();
-
+        MeshIMMessages.Message protoMsg;
+        if(message.getFileByte()!=null) {
+             protoMsg = MeshIMMessages.Message.newBuilder()
+                    .setMessage(message.getMessage())
+                    .setTime(message.getDateAsTimestamp())
+                    .setFile(ByteString.copyFrom(message.getFileByte()))
+                    .setFiletype(message.getFileExtention())
+                    .build();
+        }
+        else{
+            protoMsg = MeshIMMessages.Message.newBuilder()
+                    .setMessage(message.getMessage())
+                    .setTime(message.getDateAsTimestamp())
+                    .build();
+        }
         MeshIMMessage payload = MeshIMMessage.newBuilder()
                 .setMessageType(MESSAGE)
                 .setMessage(protoMsg)
