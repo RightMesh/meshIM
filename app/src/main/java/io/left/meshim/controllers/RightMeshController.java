@@ -35,6 +35,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
@@ -63,9 +68,9 @@ public class RightMeshController implements MeshStateListener {
     private IActivity callback = null;
     //reference to service
     private MeshIMService meshIMService;
-    // keeps track of all the undeliveredMessages.
+    // keeps track of all the undeliveredPackages.
     private HashMap<Integer, Integer> unDeliveredMessageIds = new HashMap<Integer, Integer>();
-
+    private ConcurrentMap<Integer,MeshId> undeliveredPeerChangeMessage = new ConcurrentHashMap<>();
     /**
      * Constructor.
      * @param user user info for this device
@@ -87,6 +92,29 @@ public class RightMeshController implements MeshStateListener {
                 this.dao.updateUsers(user);
             }
         }).start();
+        // creating a thread that checks for undelivered packages periodically
+        //resend data every 8 seconds (allow time for multihop?)
+        Timer undeliveredPackageTimer = new Timer();
+        undeliveredPackageTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //check if there are any undelivered packages
+                if(!undeliveredPeerChangeMessage.isEmpty()){
+                    byte[] message = createPeerUpdatePayloadFromUser(user);
+                    for(Map.Entry<Integer,MeshId> meshIdEntry: undeliveredPeerChangeMessage.entrySet()){
+                        MeshId peerId = meshIdEntry.getValue();
+                        try {
+                            //send the packages again if there are undelivered packages
+                            meshManager.sendDataReliable(peerId, MESH_PORT, message);
+                        } catch (RightMeshException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // All undelivered messages were sent again so Map is empty now.
+                    undeliveredPeerChangeMessage.clear();
+                }
+            }
+        },0,8000);
     }
 
     public void setCallback(IActivity callback) {
@@ -285,7 +313,12 @@ public class RightMeshController implements MeshStateListener {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
-                    meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+
+                   int dataId = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                   //making the status of the message undelivered so we can resend the package if delivery
+                    // report is not recieved.
+                   undeliveredPeerChangeMessage.put(dataId,event.peerUuid);
+
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
@@ -295,6 +328,7 @@ public class RightMeshController implements MeshStateListener {
             discovered.remove(event.peerUuid);
             users.remove(event.peerUuid);
             updateInterface();
+            
         }
     }
 
@@ -375,8 +409,8 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
-     * Handles data delivery event from the mesh. Updates the hashmap that stores the message Ids of
-     * undelivered messages.
+     * Handles data delivery event from the mesh. Updates the hashmap that stores the  Ids of
+     * undelivered packages.
      * @param e event object from mesh.
      */
     void handleDataDelivery(RightMeshEvent e) {
@@ -387,6 +421,10 @@ public class RightMeshController implements MeshStateListener {
             dao.updateMessageIsDelivered(unDeliveredMessageIds.get(deliveryDataId));
             unDeliveredMessageIds.remove(deliveryDataId);
             updateInterface();
+        }
+        else if(undeliveredPeerChangeMessage.containsKey(deliveryDataId)){
+            //clearing up un
+            undeliveredPeerChangeMessage.remove(deliveryDataId);
         }
     }
 }
