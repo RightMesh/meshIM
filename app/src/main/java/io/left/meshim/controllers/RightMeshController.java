@@ -10,6 +10,7 @@ import static protobuf.MeshIMMessages.MessageType.MESSAGE;
 import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 import android.content.Context;
+import android.os.Environment;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -33,6 +34,8 @@ import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -263,12 +266,13 @@ public class RightMeshController implements MeshStateListener {
 
                 if (sender != null && user != null) {
                     //todo: handle files being recieved
-                    Message message = new Message(sender, user, protoMessage.getMessage(), false,null,null);
+                    Message message = new Message(sender, user, protoMessage.getMessage(), false,
+                            protoMessage.getFile().toByteArray(),protoMessage.getFiletype());
                     // message has been delivered
                     if(!protoMessage.getFile().isEmpty()){
                         Log.d("bugg",protoMessage.getFile().toString());
-                        Log.d("bugg",protoMessage.getFiletype().toString());
-
+                        Log.d("bugg",protoMessage.getFile().toByteArray()+"");
+                        writeFileExternalStorage(protoMessage.getFiletype(),protoMessage.getFile().toByteArray());
                         Log.d("bugg","FILE IS HERERERERERERERERERERER");
                     }
                     message.setDelivered(true);
@@ -461,5 +465,31 @@ public class RightMeshController implements MeshStateListener {
                 }
             },UNDELIVERED_PACKAGE_TIMEOUT);
         }
+    }
+
+    public void writeFileExternalStorage(String fileExtension, byte[] fileByte) {
+        String state = Environment.getExternalStorageState();
+        //external storage availability check
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            return;
+        }
+        String x ="file";
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), x+"."+fileExtension);
+
+        FileOutputStream outputStream = null;
+        try {
+            file.createNewFile();
+            //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
+            outputStream = new FileOutputStream(file, true);
+
+            outputStream.write(fileByte);
+            outputStream.flush();
+            outputStream.close();
+            Log.d("bugg",file.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
