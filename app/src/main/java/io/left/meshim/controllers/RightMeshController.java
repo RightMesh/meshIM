@@ -313,12 +313,10 @@ public class RightMeshController implements MeshStateListener {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
-
                    int dataId = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
                    //making the status of the message undelivered so we can resend the package if delivery
                     // report is not recieved.
                    undeliveredPeerChangeMessage.put(dataId,event.peerUuid);
-
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
@@ -328,7 +326,6 @@ public class RightMeshController implements MeshStateListener {
             discovered.remove(event.peerUuid);
             users.remove(event.peerUuid);
             updateInterface();
-            
         }
     }
 
