@@ -2,6 +2,7 @@ package io.left.meshim.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
@@ -23,10 +24,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
+import io.left.meshim.controllers.RightMeshController;
 import io.left.meshim.models.User;
 
 /**
@@ -38,7 +41,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     User mRecipient;
     ImageButton pickfiles;
     byte[] fileBytes = null;
-    String fileExtention;
+    String fileExtention ="";
     /**
      * {@inheritDoc}.
      */
@@ -75,12 +78,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 try {
                     String message = messageText.getText().toString();
                     if (!message.equals("") || fileBytes!=null) {
-                        if(fileBytes==null){
-                            mService.sendTextMessage(mRecipient,message,null,null);
-                        }
-                        else {
-                            mService.sendTextMessage(mRecipient, message, fileBytes, fileExtention);
-                        }
+                        mService.sendTextMessage(mRecipient,message,fileBytes,fileExtention);
                         messageText.setText("");
                         fileBytes = null;
                     }
@@ -116,26 +114,18 @@ public class ChatActivity extends ServiceConnectedActivity {
                     Log.d("bugg",file.toString());
                     Log.d("bugg",file.getPath());
                     String extension = "";
+
                     int i = file.getPath().lastIndexOf('.');
                     int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
                     if (i > p) {
                         fileExtention = file.getPath().substring(i+1);
                     }
                     Log.d("bugg",extension);
-
                     File file1 = new File(file.getPath());
-                    fileBytes = new byte[(int) file1.length()];
                     try {
-                        FileInputStream fileInputStream = new FileInputStream(file1);
-                        fileInputStream.read(fileBytes);
-
-                    } catch (FileNotFoundException e) {
-                        System.out.println("File Not Found.");
+                        fileBytes = RightMeshController.getBytesFromFile(file1);
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }
-                    catch (IOException e1) {
-                        System.out.println("Error Reading The File.");
-                        e1.printStackTrace();
                     }
                 }
         }

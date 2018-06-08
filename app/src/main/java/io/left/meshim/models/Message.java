@@ -8,6 +8,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.protobuf.Timestamp;
 
@@ -137,16 +138,12 @@ public class Message implements Parcelable {
     /**
      * Simplest constructor for a new message created on a device to be sent. Starts with sender,
      * recipient, and message, then passes them along
-     * to {@link Message#Message(User, User, String, boolean)}.
+     * to .
      *
      * @param sender user that sent the message
      * @param recipient target recipient of the message
      * @param message message contents
      */
-    @Ignore
-    public Message(User sender, User recipient, String message) {
-        this(sender, recipient, message, false,null,null);
-    }
 
     /**
      * Next simplest constructor, extrapolates data like database ids and the time and sends them
@@ -165,6 +162,7 @@ public class Message implements Parcelable {
         this.isDelivered =false;
         this.fileExtention = fileExtension;
         this.fileByte = fileByte;
+        Log.d("bugg",fileByte.toString()+"in message constructor");
     }
 
     /**
@@ -244,6 +242,7 @@ public class Message implements Parcelable {
         isMyMessage = in.readByte() != 0;
         this.isRead = false;
         this.isDelivered = in.readByte()!=0;
+        in.readByteArray(this.getFileByte());
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -293,6 +292,7 @@ public class Message implements Parcelable {
         dest.writeInt(recipientId);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
         dest.writeInt((byte)(isDelivered?1:0));
+        dest.writeByteArray(fileByte);
     }
 
     /**
