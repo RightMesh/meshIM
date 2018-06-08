@@ -152,7 +152,7 @@ public class MeshIMService extends Service {
         }
 
         @Override
-        public void sendTextMessage(User recipient, String message, byte[] fileBytes, String fileExtention) {
+        public void sendTextMessage(User recipient, String message, String fileBytes, String fileExtention) {
             mMeshConnection.sendTextMessage(recipient, message,fileBytes,fileExtention);
         }
 

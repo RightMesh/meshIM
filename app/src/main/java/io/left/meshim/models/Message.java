@@ -59,7 +59,7 @@ public class Message implements Parcelable {
 
     //file stuff
     @Ignore
-    private byte[] fileByte;
+    private String filePath;
     @Ignore
     private String fileExtention;
 
@@ -67,16 +67,16 @@ public class Message implements Parcelable {
         this.fileExtention = fileExtention;
     }
 
-    public byte[] getFileByte() {
-        return fileByte;
+    public String getFilePath() {
+        return filePath;
     }
 
     public String getFileExtention() {
         return fileExtention;
     }
 
-    public void setFileByte(byte[] fileByte) {
-        this.fileByte = fileByte;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public String getMessage() {
@@ -156,13 +156,13 @@ public class Message implements Parcelable {
      * @param isMyMessage if this device's user sent the message
      */
     @Ignore
-    public Message(User sender, User recipient, String message, boolean isMyMessage, byte[] fileByte,String fileExtension) {
+    public Message(User sender, User recipient, String message, boolean isMyMessage, String filePath, String fileExtension) {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
         this.isRead = false;
         this.isDelivered =false;
         this.fileExtention = fileExtension;
-        this.fileByte = fileByte;
-        Log.d("bugg",fileByte.toString()+"in message constructor");
+        this.filePath = filePath;
+        Log.d("bugg", filePath.toString()+"in message constructor");
     }
 
     /**
@@ -242,7 +242,7 @@ public class Message implements Parcelable {
         isMyMessage = in.readByte() != 0;
         this.isRead = false;
         this.isDelivered = in.readByte()!=0;
-        in.readByteArray(this.getFileByte());
+       this.filePath = in.readString();
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -292,7 +292,7 @@ public class Message implements Parcelable {
         dest.writeInt(recipientId);
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
         dest.writeInt((byte)(isDelivered?1:0));
-        dest.writeByteArray(fileByte);
+        dest.writeString(filePath);
     }
 
     /**

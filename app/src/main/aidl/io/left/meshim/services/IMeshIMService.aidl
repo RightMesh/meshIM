@@ -19,7 +19,7 @@ interface IMeshIMService {
 
     void registerActivityCallback(in IActivity callback);
 
-    void sendTextMessage(in User recipient, in String message, in byte[] file, in String fileExtension);
+    void sendTextMessage(in User recipient, in String message, in String filePath, in String fileExtension);
 
     void showRightMeshSettings();
 

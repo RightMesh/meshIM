@@ -40,7 +40,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
     ImageButton pickfiles;
-    byte[] fileBytes = null;
+    String filePath = null;
     String fileExtention ="";
     /**
      * {@inheritDoc}.
@@ -77,10 +77,10 @@ public class ChatActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 try {
                     String message = messageText.getText().toString();
-                    if (!message.equals("") || fileBytes!=null) {
-                        mService.sendTextMessage(mRecipient,message,fileBytes,fileExtention);
+                    if (!message.equals("") || filePath!=null) {
+                        mService.sendTextMessage(mRecipient,message,filePath,fileExtention);
                         messageText.setText("");
-                        fileBytes = null;
+                        filePath = null;
                     }
                 } catch (RemoteException re) {
                     if (re instanceof DeadObjectException) {
@@ -110,23 +110,13 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
                     NormalFile file = list.get(0);
-                    Log.d("bugg",file.getMimeType());
-                    Log.d("bugg",file.toString());
-                    Log.d("bugg",file.getPath());
-                    String extension = "";
-
+                    //getting the extension of the file
                     int i = file.getPath().lastIndexOf('.');
                     int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
                     if (i > p) {
                         fileExtention = file.getPath().substring(i+1);
                     }
-                    Log.d("bugg",extension);
-                    File file1 = new File(file.getPath());
-                    try {
-                        fileBytes = RightMeshController.getBytesFromFile(file1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    filePath = file.getPath();
                 }
         }
     }

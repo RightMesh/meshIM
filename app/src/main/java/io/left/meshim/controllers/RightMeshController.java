@@ -126,12 +126,12 @@ public class RightMeshController implements MeshStateListener {
      * Sends a simple text message to another user.
      * @param recipient recipient of the message
      * @param message contents of the message
-     * @param fileBytes
+     * @param filePath
      * @param fileExtention
      */
-    public void sendTextMessage(User recipient, String message, byte[] fileBytes, String fileExtention) {
-        Message messageObject = new Message(user, recipient, message, true,fileBytes,fileExtention);
-        Log.d("bugg",fileBytes.toString());
+    public void sendTextMessage(User recipient, String message, String filePath, String fileExtention) {
+        Message messageObject = new Message(user, recipient, message, true,filePath,fileExtention);
+        Log.d("bugg",filePath.toString());
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -270,15 +270,12 @@ public class RightMeshController implements MeshStateListener {
 
                 if (sender != null && user != null) {
                     //todo: handle files being recieved
-                    Message message = new Message(sender, user, protoMessage.getMessage(), false,
-                            protoMessage.getFile().toByteArray(),protoMessage.getFiletype());
-                    // message has been delivered
+                    String filePath = null;
                     if(!protoMessage.getFile().isEmpty()){
-                        Log.d("bugg",protoMessage.getFile().toString());
-                        Log.d("bugg",protoMessage.getFile().toByteArray()+"");
-                        writeFileExternalStorage(protoMessage.getFiletype(),protoMessage.getFile().toByteArray());
-                        Log.d("bugg","FILE IS HERERERERERERERERERERER");
+                        filePath = writeFileExternalStorage(protoMessage.getFiletype(),protoMessage.getFile().toByteArray());
                     }
+                    Message message = new Message(sender, user, protoMessage.getMessage(), false,
+                           filePath,protoMessage.getFiletype());
                     message.setDelivered(true);
                     dao.insertMessages(message);
                     meshIMService.sendNotification(sender, message);
@@ -366,14 +363,19 @@ public class RightMeshController implements MeshStateListener {
         if (message == null) {
             return null;
         }
-        MeshIMMessages.Message protoMsg;
-        if(message.getFileByte()!=null) {
-             protoMsg = MeshIMMessages.Message.newBuilder()
-                    .setMessage(message.getMessage())
-                    .setTime(message.getDateAsTimestamp())
-                    .setFile(ByteString.copyFrom(message.getFileByte()))
-                    .setFiletype(message.getFileExtention())
-                    .build();
+        MeshIMMessages.Message protoMsg = null;
+        if(message.getFilePath()!=null) {
+            try {
+                File file = new File(message.getFilePath());
+                protoMsg = MeshIMMessages.Message.newBuilder()
+                       .setMessage(message.getMessage())
+                       .setTime(message.getDateAsTimestamp())
+                       .setFile(ByteString.copyFrom(RightMeshController.getBytesFromFile(file)))
+                       .setFiletype(message.getFileExtention())
+                       .build();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else{
             protoMsg = MeshIMMessages.Message.newBuilder()
@@ -471,11 +473,11 @@ public class RightMeshController implements MeshStateListener {
         }
     }
 
-    public void writeFileExternalStorage(String fileExtension, byte[] fileByte) {
+    public String writeFileExternalStorage(String fileExtension, byte[] fileByte) {
         String state = Environment.getExternalStorageState();
         //external storage availability check
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            return;
+            return null;
         }
         String x ="file";
         File file = new File(Environment.getExternalStoragePublicDirectory(
@@ -494,7 +496,7 @@ public class RightMeshController implements MeshStateListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return file.getPath();
     }
     // Returns the contents of the file in a byte array.
     public static byte[] getBytesFromFile(File file) throws IOException {
