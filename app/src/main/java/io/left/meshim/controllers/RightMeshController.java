@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -153,7 +154,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"Raturi");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**
@@ -479,7 +480,9 @@ public class RightMeshController implements MeshStateListener {
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
             return null;
         }
-        String x ="file";
+        Random random = new Random();
+        int randomNumb= random.nextInt(500)+1;
+        String x ="file"+randomNumb;
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS), x+"."+fileExtension);
 
