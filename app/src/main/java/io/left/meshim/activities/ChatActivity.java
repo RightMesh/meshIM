@@ -69,7 +69,7 @@ public class ChatActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 try {
                     String message = messageText.getText().toString();
-                    if (!message.equals("") || !filePath.equals("")) {
+                    if (!message.equals("")) {
                         mService.sendTextMessage(mRecipient,message,filePath, fileExtension);
                         messageText.setText("");
                         filePath = null;

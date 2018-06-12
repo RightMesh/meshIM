@@ -60,7 +60,16 @@ public class Migrations {
             database.execSQL("DROP TABLE OldMessages");
         }
     };
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN FilePath TEXT  NOT NULL DEFAULT ''  ");
+            database.execSQL("ALTER TABLE Messages "
+                    + " ADD COLUMN FileExtension TEXT  NOT NULL DEFAULT ''");
+        }
+    };
     public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
-            MIGRATION_4_5, MIGRATION_5_6 };
+            MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7 };
 }
 //CHECKSTYLE END IGNORE LineLengthCheck

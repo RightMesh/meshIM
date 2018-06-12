@@ -5,6 +5,7 @@ import static io.left.meshim.database.Migrations.MIGRATION_2_3;
 import static io.left.meshim.database.Migrations.MIGRATION_3_4;
 import static io.left.meshim.database.Migrations.MIGRATION_4_5;
 import static io.left.meshim.database.Migrations.MIGRATION_5_6;
+import static io.left.meshim.database.Migrations.MIGRATION_6_7;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
@@ -153,5 +154,16 @@ public class MigrationTest {
         Assert.assertEquals("MessageId is preserved", id, cursor.getInt(0));
         Assert.assertEquals("SenderId is preserved", senderId, cursor.getInt(1));
         Assert.assertEquals("RecipientId is preserved", recipientId, cursor.getInt(2));
+    }
+
+    /**
+     * Addition of IsDelivered column in the Messages table. sets the default values for IsDelivered
+     * to true for messages before the migration.
+     * @throws IOException if the database cant open.
+     */
+    @Test
+    public void migrate6To7() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 6);
+        db = helper.runMigrationsAndValidate(TEST_DB, 7, true, MIGRATION_6_7);
     }
 }

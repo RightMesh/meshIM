@@ -272,11 +272,12 @@ public class RightMeshController implements MeshStateListener {
                 if (sender != null && user != null) {
                     //todo: handle files being recieved
                     String filePath = null;
-                    if(!protoMessage.getFile().isEmpty()){
-                        filePath = writeFileExternalStorage(protoMessage.getFiletype(),protoMessage.getFile().toByteArray());
+                    if(!protoMessage.getFileByte().isEmpty()){
+                        filePath = writeFileExternalStorage(protoMessage.getFileExtension(),
+                                protoMessage.getFileByte().toByteArray());
                     }
                     Message message = new Message(sender, user, protoMessage.getMessage(), false,
-                           filePath,protoMessage.getFiletype());
+                           filePath,protoMessage.getFileExtension());
                     message.setDelivered(true);
                     dao.insertMessages(message);
                     meshIMService.sendNotification(sender, message);
@@ -371,8 +372,8 @@ public class RightMeshController implements MeshStateListener {
                 protoMsg = MeshIMMessages.Message.newBuilder()
                        .setMessage(message.getMessage())
                        .setTime(message.getDateAsTimestamp())
-                       .setFile(ByteString.copyFrom(RightMeshController.getBytesFromFile(file)))
-                       .setFiletype(message.getFileExtension())
+                       .setFileByte(ByteString.copyFrom(RightMeshController.getBytesFromFile(file)))
+                       .setFileExtension(message.getFileExtension())
                        .build();
             } catch (IOException e) {
                 e.printStackTrace();

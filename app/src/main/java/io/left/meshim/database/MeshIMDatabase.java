@@ -10,7 +10,7 @@ import io.left.meshim.models.User;
 /**
  * Manages versioning and exposed queries for the database for meshIM.
  */
-@Database(entities = {User.class, Message.class}, version = 6)
+@Database(entities = {User.class, Message.class}, version = 7)
 @TypeConverters({Converters.class})
 public abstract class MeshIMDatabase extends RoomDatabase {
     public abstract MeshIMDao meshIMDao();

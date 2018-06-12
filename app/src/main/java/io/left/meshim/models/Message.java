@@ -58,9 +58,9 @@ public class Message implements Parcelable {
     private boolean isDelivered;
 
     //file stuff
-    @Ignore
+    @ColumnInfo(name="FilePath")
     private String filePath;
-    @Ignore
+    @ColumnInfo(name = "FileExtension")
     private String fileExtension;
 
     public void setFileExtension(String fileExtension) {
@@ -243,6 +243,7 @@ public class Message implements Parcelable {
         this.isRead = false;
         this.isDelivered = in.readByte()!=0;
        this.filePath = in.readString();
+       this.fileExtension = in.readString();
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -293,6 +294,7 @@ public class Message implements Parcelable {
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
         dest.writeInt((byte)(isDelivered?1:0));
         dest.writeString(filePath);
+        dest.writeString(fileExtension);
     }
 
     /**
