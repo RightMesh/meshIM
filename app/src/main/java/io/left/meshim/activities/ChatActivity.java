@@ -2,7 +2,6 @@ package io.left.meshim.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,16 +18,10 @@ import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.filter.entity.NormalFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
-import io.left.meshim.controllers.RightMeshController;
 import io.left.meshim.models.User;
 
 /**
@@ -40,8 +32,8 @@ public class ChatActivity extends ServiceConnectedActivity {
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
     ImageButton pickfiles;
-    String filePath = null;
-    String fileExtention ="";
+    String filePath = "";
+    String fileExtension ="";
     /**
      * {@inheritDoc}.
      */
@@ -77,8 +69,8 @@ public class ChatActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 try {
                     String message = messageText.getText().toString();
-                    if (!message.equals("") || filePath!=null) {
-                        mService.sendTextMessage(mRecipient,message,filePath,fileExtention);
+                    if (!message.equals("") || !filePath.equals("")) {
+                        mService.sendTextMessage(mRecipient,message,filePath, fileExtension);
                         messageText.setText("");
                         filePath = null;
                     }
@@ -114,7 +106,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                     int i = file.getPath().lastIndexOf('.');
                     int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
                     if (i > p) {
-                        fileExtention = file.getPath().substring(i+1);
+                        fileExtension = file.getPath().substring(i+1);
                     }
                     filePath = file.getPath();
                 }

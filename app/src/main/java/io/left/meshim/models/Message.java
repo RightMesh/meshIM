@@ -61,18 +61,18 @@ public class Message implements Parcelable {
     @Ignore
     private String filePath;
     @Ignore
-    private String fileExtention;
+    private String fileExtension;
 
-    public void setFileExtention(String fileExtention) {
-        this.fileExtention = fileExtention;
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
     public String getFilePath() {
         return filePath;
     }
 
-    public String getFileExtention() {
-        return fileExtention;
+    public String getFileExtension() {
+        return fileExtension;
     }
 
     public void setFilePath(String filePath) {
@@ -160,7 +160,7 @@ public class Message implements Parcelable {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
         this.isRead = false;
         this.isDelivered =false;
-        this.fileExtention = fileExtension;
+        this.fileExtension = fileExtension;
         this.filePath = filePath;
         Log.d("bugg", filePath.toString()+"in message constructor");
     }

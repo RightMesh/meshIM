@@ -128,10 +128,10 @@ public class RightMeshController implements MeshStateListener {
      * @param recipient recipient of the message
      * @param message contents of the message
      * @param filePath
-     * @param fileExtention
+     * @param fileExtension
      */
-    public void sendTextMessage(User recipient, String message, String filePath, String fileExtention) {
-        Message messageObject = new Message(user, recipient, message, true,filePath,fileExtention);
+    public void sendTextMessage(User recipient, String message, String filePath, String fileExtension) {
+        Message messageObject = new Message(user, recipient, message, true,filePath,fileExtension);
         Log.d("bugg",filePath.toString());
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
@@ -372,7 +372,7 @@ public class RightMeshController implements MeshStateListener {
                        .setMessage(message.getMessage())
                        .setTime(message.getDateAsTimestamp())
                        .setFile(ByteString.copyFrom(RightMeshController.getBytesFromFile(file)))
-                       .setFiletype(message.getFileExtention())
+                       .setFiletype(message.getFileExtension())
                        .build();
             } catch (IOException e) {
                 e.printStackTrace();
