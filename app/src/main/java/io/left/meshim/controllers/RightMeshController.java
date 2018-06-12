@@ -35,6 +35,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
@@ -63,9 +68,15 @@ public class RightMeshController implements MeshStateListener {
     private IActivity callback = null;
     //reference to service
     private MeshIMService meshIMService;
-    // keeps track of all the undeliveredMessages.
+    // keeps track of all the undeliveredPackages.
     private HashMap<Integer, Integer> unDeliveredMessageIds = new HashMap<Integer, Integer>();
+    private ConcurrentMap<Integer,MeshId> undeliveredPeerUpdateMessages = new ConcurrentHashMap<>();
 
+    // a timer and a boolean to make sure there is only ever one timer running at a time
+    // for undelivered packages.
+    private Timer undeliveredPackageTimer;
+    private boolean isTimerRunning = false;
+    private final int UNDELIVERED_PACKAGE_TIMEOUT = 8000;
     /**
      * Constructor.
      * @param user user info for this device
@@ -87,6 +98,7 @@ public class RightMeshController implements MeshStateListener {
                 this.dao.updateUsers(user);
             }
         }).start();
+        undeliveredPackageTimer = new Timer();
     }
 
     public void setCallback(IActivity callback) {
@@ -285,7 +297,12 @@ public class RightMeshController implements MeshStateListener {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             try {
                 if (message != null) {
-                    meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                   int dataId = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
+                   //making the status of the message undelivered so we can resend the package if delivery
+                    // report is not recieved.
+                   undeliveredPeerUpdateMessages.put(dataId,event.peerUuid);
+                   // schedule a task to resend undelivered peer updates.
+                   resendUndeliveredPackages();
                 }
             } catch (RightMeshException ignored) {
                 // Message sending failed. Other user may have out of date information, but
@@ -375,8 +392,8 @@ public class RightMeshController implements MeshStateListener {
     }
 
     /**
-     * Handles data delivery event from the mesh. Updates the hashmap that stores the message Ids of
-     * undelivered messages.
+     * Handles data delivery event from the mesh. Updates the hashmap that stores the  Ids of
+     * undelivered packages.
      * @param e event object from mesh.
      */
     void handleDataDelivery(RightMeshEvent e) {
@@ -387,6 +404,42 @@ public class RightMeshController implements MeshStateListener {
             dao.updateMessageIsDelivered(unDeliveredMessageIds.get(deliveryDataId));
             unDeliveredMessageIds.remove(deliveryDataId);
             updateInterface();
+        }
+        else if(undeliveredPeerUpdateMessages.containsKey(deliveryDataId)){
+            // removing the message from undeliveredPeerUpdate map since we dont need to send it again.
+            undeliveredPeerUpdateMessages.remove(deliveryDataId);
+        }
+    }
+
+    /**
+     * Runs a timer task when there are undelivered peer updates in the que
+     */
+    void resendUndeliveredPackages(){
+        if(!isTimerRunning && !undeliveredPeerUpdateMessages.isEmpty()){
+            isTimerRunning = true;
+            undeliveredPackageTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    //check if there are any undelivered packages
+                    if(!undeliveredPeerUpdateMessages.isEmpty()){
+                        byte[] message = createPeerUpdatePayloadFromUser(user);
+                        for(Map.Entry<Integer,MeshId> meshIdEntry: undeliveredPeerUpdateMessages.entrySet()){
+                            MeshId peerId = meshIdEntry.getValue();
+                            try {
+                                //send the packages again if there are undelivered packages
+                                meshManager.sendDataReliable(peerId, MESH_PORT, message);
+                            } catch (RightMeshException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // All undelivered messages were sent again so Map is empty now.
+                        undeliveredPeerUpdateMessages.clear();
+
+                    }
+                    // so that another schedule task runs if it needs to
+                    isTimerRunning = false;
+                }
+            },UNDELIVERED_PACKAGE_TIMEOUT);
         }
     }
 }
