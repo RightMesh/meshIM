@@ -484,9 +484,8 @@ public class RightMeshController implements MeshStateListener {
         }
         Random random = new Random();
         int randomNumb= random.nextInt(500)+1;
-        String filename ="file"+randomNumb+"."+fileExtension;
         File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), filename);
+                Environment.DIRECTORY_DOWNLOADS), fileExtension);
 
         FileOutputStream outputStream = null;
         try {

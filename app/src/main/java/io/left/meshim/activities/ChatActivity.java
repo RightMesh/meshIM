@@ -34,7 +34,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     User mRecipient;
     ImageButton pickfiles;
     String filePath = "";
-    String fileExtension ="";
+    String fileName ="";
     /**
      * {@inheritDoc}.
      */
@@ -72,11 +72,11 @@ public class ChatActivity extends ServiceConnectedActivity {
                     String message = messageText.getText().toString();
                     if (!message.equals("") ) {
                         Log.d("bugg","filepath: "+filePath);
-                        Log.d("bugg","extenstion: "+fileExtension);
-                        mService.sendTextMessage(mRecipient,message,filePath, fileExtension);
+                        Log.d("bugg","extenstion: "+ fileName);
+                        mService.sendTextMessage(mRecipient,message,filePath, fileName);
                         messageText.setText("");
                         filePath = "";
-                        fileExtension = "";
+                        fileName = "";
                     }
                 } catch (RemoteException re) {
                     if (re instanceof DeadObjectException) {
@@ -107,11 +107,12 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
                     NormalFile file = list.get(0);
-                    //getting the extension of the file
+                    //getting the filname and extension of the file
                     int i = file.getPath().lastIndexOf('.');
                     int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
                     if (i > p) {
-                        fileExtension = file.getPath().substring(i+1);
+                        fileName =file.getName()+"."+ file.getPath().substring(i+1);
+                        Log.d("bugg",fileName);
                     }
                     filePath = file.getPath();
                 }
