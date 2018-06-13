@@ -132,7 +132,7 @@ public class RightMeshController implements MeshStateListener {
      */
     public void sendTextMessage(User recipient, String message, String filePath, String fileExtension) {
         Message messageObject = new Message(user, recipient, message, true,filePath,fileExtension);
-        Log.d("bugg",filePath.toString());
+        Log.d("bugg",filePath);
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -271,7 +271,7 @@ public class RightMeshController implements MeshStateListener {
 
                 if (sender != null && user != null) {
                     //todo: handle files being recieved
-                    String filePath = null;
+                    String filePath = "";
                     if(!protoMessage.getFileByte().isEmpty()){
                         filePath = writeFileExternalStorage(protoMessage.getFileExtension(),
                                 protoMessage.getFileByte().toByteArray());
@@ -366,7 +366,8 @@ public class RightMeshController implements MeshStateListener {
             return null;
         }
         MeshIMMessages.Message protoMsg = null;
-        if(message.getFilePath()!=null) {
+        //if there is a filebyte to write in protobuf we write it.
+        if(!message.getFilePath().equals("")) {
             try {
                 File file = new File(message.getFilePath());
                 protoMsg = MeshIMMessages.Message.newBuilder()

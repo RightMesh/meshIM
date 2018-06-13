@@ -64,9 +64,9 @@ public class Migrations {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE Messages "
-                    + " ADD COLUMN FilePath TEXT  NOT NULL DEFAULT ''  ");
+                    + " ADD COLUMN FilePath TEXT DEFAULT ''");
             database.execSQL("ALTER TABLE Messages "
-                    + " ADD COLUMN FileExtension TEXT  NOT NULL DEFAULT ''");
+                    + " ADD COLUMN FileExtension TEXT DEFAULT ''");
         }
     };
     public static final Migration[] ALL_MIGRATIONS = {MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,

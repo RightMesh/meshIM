@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -69,10 +70,13 @@ public class ChatActivity extends ServiceConnectedActivity {
             if (mService != null) {
                 try {
                     String message = messageText.getText().toString();
-                    if (!message.equals("")) {
+                    if (!message.equals("") ) {
+                        Log.d("bugg","filepath: "+filePath);
+                        Log.d("bugg","extenstion: "+fileExtension);
                         mService.sendTextMessage(mRecipient,message,filePath, fileExtension);
                         messageText.setText("");
-                        filePath = null;
+                        filePath = "";
+                        fileExtension = "";
                     }
                 } catch (RemoteException re) {
                     if (re instanceof DeadObjectException) {
@@ -83,6 +87,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 }
             }
         });
+
         pickfiles = findViewById(R.id.fileButton);
         pickfiles.setOnClickListener( view ->{
             Intent intent4 = new Intent(this, NormalFilePickActivity.class);

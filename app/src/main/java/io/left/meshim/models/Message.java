@@ -135,15 +135,6 @@ public class Message implements Parcelable {
         return isDelivered;
     }
 
-    /**
-     * Simplest constructor for a new message created on a device to be sent. Starts with sender,
-     * recipient, and message, then passes them along
-     * to .
-     *
-     * @param sender user that sent the message
-     * @param recipient target recipient of the message
-     * @param message message contents
-     */
 
     /**
      * Next simplest constructor, extrapolates data like database ids and the time and sends them
@@ -162,7 +153,6 @@ public class Message implements Parcelable {
         this.isDelivered =false;
         this.fileExtension = fileExtension;
         this.filePath = filePath;
-        Log.d("bugg", filePath.toString()+"in message constructor");
     }
 
     /**
@@ -175,10 +165,13 @@ public class Message implements Parcelable {
      * @param isMyMessage if this device's user sent the message
      * @param date date message was sent
      */
-    public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date) {
+    public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date,String filePath,String fileExtension) {
         this(null, senderId, null, recipientId, message, isMyMessage, date);
         this.isRead = false;
         this.isDelivered =false;
+        this.fileExtension=fileExtension;
+        this.filePath = filePath;
+
     }
 
     /**
@@ -204,6 +197,8 @@ public class Message implements Parcelable {
         this.date = date;
         this.isRead = false;
         this.isDelivered = false;
+        this.filePath ="";
+        this.fileExtension="";
     }
 
     /**
