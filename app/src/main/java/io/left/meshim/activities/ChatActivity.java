@@ -1,5 +1,6 @@
 package io.left.meshim.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,12 +12,17 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 
 import com.vincent.filepicker.Constant;
+import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
+import com.vincent.filepicker.activity.VideoPickActivity;
 import com.vincent.filepicker.filter.entity.NormalFile;
 
 import java.util.ArrayList;
@@ -24,6 +30,8 @@ import java.util.ArrayList;
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
 import io.left.meshim.models.User;
+
+import static com.vincent.filepicker.activity.VideoPickActivity.IS_NEED_CAMERA;
 
 /**
  * An activity that displays a conversation between two users, and enables sending messages.
@@ -33,8 +41,9 @@ public class ChatActivity extends ServiceConnectedActivity {
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
     ImageButton pickfiles;
-    String filePath = "";
-    String fileName ="";
+    private String filePath = "";
+    private String fileName ="";
+    private final int MAX_FILES = 1;
     /**
      * {@inheritDoc}.
      */
@@ -90,10 +99,7 @@ public class ChatActivity extends ServiceConnectedActivity {
 
         pickfiles = findViewById(R.id.fileButton);
         pickfiles.setOnClickListener( view ->{
-            Intent intent4 = new Intent(this, NormalFilePickActivity.class);
-            intent4.putExtra(Constant.MAX_NUMBER, 1);
-            intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
-            startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
+            alertDialogForFileType();
         });
         setupActionBar();
 
@@ -161,5 +167,50 @@ public class ChatActivity extends ServiceConnectedActivity {
             this.finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * creates an alert dialog box to choose files.
+     */
+    private void alertDialogForFileType() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select File Type");
+
+        // Set view of dialog.
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_choose_file_type, null);
+        builder.setView(view);
+        RadioGroup radioGroup = view.findViewById(R.id.fileTypesRadioButtons);
+        // start an activityForResult based on the user choice
+        builder.setPositiveButton(R.string.save, (dialog, which) -> {
+        int checkedButton = radioGroup.getCheckedRadioButtonId();
+        Intent intent = null;
+        switch (checkedButton){
+            case R.id.ImagesRadioButton:
+                intent = new Intent(this, ImagePickActivity.class);
+                intent.putExtra(IS_NEED_CAMERA, true);
+                intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
+                startActivityForResult(intent, Constant.REQUEST_CODE_PICK_IMAGE);
+                break;
+            case R.id.videoRadioButton:
+                intent = new Intent(this, VideoPickActivity.class);
+                intent.putExtra(IS_NEED_CAMERA, true);
+                intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
+                startActivityForResult(intent, Constant.REQUEST_CODE_PICK_VIDEO);
+                break;
+            case R.id.filesRadioButton:
+                intent = new Intent(this, NormalFilePickActivity.class);
+                intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
+                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
+                startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FILE);
+                break;
+        }
+
+        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
+
+        final  AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
