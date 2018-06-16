@@ -1,0 +1,175 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "8cbc77bc23ff2fc6228580cc59aa15d2",
+    "entities": [
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`UserId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `MeshId` BLOB, `Username` TEXT, `Avatar` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "UserId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meshId",
+            "columnName": "MeshId",
+            "affinity": "BLOB",
+            "notNull": false
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "Username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "avatar",
+            "columnName": "Avatar",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "UserId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Users_UserId_MeshId",
+            "unique": true,
+            "columnNames": [
+              "UserId",
+              "MeshId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_Users_UserId_MeshId` ON `${TABLE_NAME}` (`UserId`, `MeshId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Messages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`MessageId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Contents` TEXT, `Timestamp` INTEGER, `SenderId` INTEGER NOT NULL, `RecipientId` INTEGER NOT NULL, `SentFromDevice` INTEGER NOT NULL, `IsRead` INTEGER NOT NULL, `IsDelivered` INTEGER NOT NULL, `FilePath` TEXT, `FileExtension` TEXT, FOREIGN KEY(`SenderId`) REFERENCES `Users`(`UserId`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`RecipientId`) REFERENCES `Users`(`UserId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "MessageId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "Contents",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "Timestamp",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "senderId",
+            "columnName": "SenderId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipientId",
+            "columnName": "RecipientId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMyMessage",
+            "columnName": "SentFromDevice",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRead",
+            "columnName": "IsRead",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDelivered",
+            "columnName": "IsDelivered",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "filePath",
+            "columnName": "FilePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileExtension",
+            "columnName": "FileExtension",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "MessageId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Messages_RecipientId",
+            "unique": false,
+            "columnNames": [
+              "RecipientId"
+            ],
+            "createSql": "CREATE  INDEX `index_Messages_RecipientId` ON `${TABLE_NAME}` (`RecipientId`)"
+          },
+          {
+            "name": "index_Messages_SenderId",
+            "unique": false,
+            "columnNames": [
+              "SenderId"
+            ],
+            "createSql": "CREATE  INDEX `index_Messages_SenderId` ON `${TABLE_NAME}` (`SenderId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Users",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "SenderId"
+            ],
+            "referencedColumns": [
+              "UserId"
+            ]
+          },
+          {
+            "table": "Users",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "RecipientId"
+            ],
+            "referencedColumns": [
+              "UserId"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8cbc77bc23ff2fc6228580cc59aa15d2\")"
+    ]
+  }
+}
