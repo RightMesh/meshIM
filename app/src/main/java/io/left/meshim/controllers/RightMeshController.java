@@ -374,7 +374,7 @@ public class RightMeshController implements MeshStateListener {
                        .setMessage(message.getMessage())
                        .setTime(message.getDateAsTimestamp())
                        .setFileByte(ByteString.copyFrom(RightMeshController.getBytesFromFile(file)))
-                       .setFileExtension(message.getFileExtension())
+                       .setFileExtension(message.getFileName())
                        .build();
             } catch (IOException e) {
                 e.printStackTrace();

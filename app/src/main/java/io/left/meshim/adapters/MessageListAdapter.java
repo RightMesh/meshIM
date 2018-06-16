@@ -64,6 +64,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         TextView mMessageBody;
         ImageView mUserImage;
         ImageView mDeliveryStatus;
+        TextView mFileName;
 
         /**
          * Checks whether the message should be displayed in send or received layout.
@@ -79,10 +80,13 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 mUserImage = view.findViewById(R.id.image_message_profile);
                 mMessageBody = view.findViewById(R.id.text_message_body);
                 mTime = view.findViewById(R.id.text_message_time_recieved);
+                mFileName = view.findViewById(R.id.text_file_recieved);
+
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
                 mDeliveryStatus = view.findViewById(R.id.text_message_delivery_image);
+                mFileName = view.findViewById(R.id.text_message_file);
             }
         }
     }
@@ -124,6 +128,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if (sender != null) {
                     holder.mUserImage.setImageResource(sender.getAvatar());
                 }
+                if(message.getFilePath()!= null){
+                    holder.mFileName.setText(message.getFileName());
+                }
             } else {
                 holder.mMessageBody.setText(message.getMessage());
                 holder.mTime.setText(Message.formateDate(message.getDate()));
@@ -131,6 +138,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
                 } else {
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_all_black_24dp);
+                }
+
+                if(message.getFilePath()!= null){
+                    holder.mFileName.setText(message.getFileName());
                 }
             }
         }

@@ -2,6 +2,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="0dp"
@@ -25,15 +26,12 @@
         android:layout_marginLeft="@dimen/meshim_margin_small"
         android:layout_marginStart="@dimen/meshim_margin_small"
         android:background="@drawable/chat_bubble_rec"
-        android:padding="@dimen/meshim_margin_small"
         android:elevation="@dimen/elevation_card"
+        android:padding="@dimen/meshim_margin_small"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/image_message_profile"
         app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_default="wrap"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintStart_toEndOf="@id/image_message_profile"
+        app:layout_constraintWidth_default="wrap" />
 
     <TextView
         android:id="@+id/text_message_time_recieved"
@@ -43,4 +41,14 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@+id/text_message_body"
         app:layout_constraintTop_toBottomOf="@+id/text_message_body" />
+
+    <TextView
+        android:id="@+id/text_file_recieved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:autoLink=""
+        app:layout_constraintStart_toEndOf="@+id/text_message_body"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

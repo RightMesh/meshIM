@@ -8,7 +8,6 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.protobuf.Timestamp;
 
@@ -61,18 +60,18 @@ public class Message implements Parcelable {
     @ColumnInfo(name="FilePath")
     private String filePath;
     @ColumnInfo(name = "FileExtension")
-    private String fileExtension;
+    private String fileName;
 
-    public void setFileExtension(String fileExtension) {
-        this.fileExtension = fileExtension;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getFilePath() {
         return filePath;
     }
 
-    public String getFileExtension() {
-        return fileExtension;
+    public String getFileName() {
+        return fileName;
     }
 
     public void setFilePath(String filePath) {
@@ -147,11 +146,11 @@ public class Message implements Parcelable {
      * @param isMyMessage if this device's user sent the message
      */
     @Ignore
-    public Message(User sender, User recipient, String message, boolean isMyMessage, String filePath, String fileExtension) {
+    public Message(User sender, User recipient, String message, boolean isMyMessage, String filePath, String fileName) {
         this(sender, sender.id, recipient, recipient.id, message, isMyMessage, new Date());
         this.isRead = false;
         this.isDelivered =false;
-        this.fileExtension = fileExtension;
+        this.fileName = fileName;
         this.filePath = filePath;
     }
 
@@ -165,11 +164,11 @@ public class Message implements Parcelable {
      * @param isMyMessage if this device's user sent the message
      * @param date date message was sent
      */
-    public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date,String filePath,String fileExtension) {
+    public Message(int senderId, int recipientId, String message, boolean isMyMessage, Date date,String filePath,String fileName) {
         this(null, senderId, null, recipientId, message, isMyMessage, date);
         this.isRead = false;
         this.isDelivered =false;
-        this.fileExtension=fileExtension;
+        this.fileName = fileName;
         this.filePath = filePath;
 
     }
@@ -198,7 +197,7 @@ public class Message implements Parcelable {
         this.isRead = false;
         this.isDelivered = false;
         this.filePath ="";
-        this.fileExtension="";
+        this.fileName ="";
     }
 
     /**
@@ -238,7 +237,7 @@ public class Message implements Parcelable {
         this.isRead = false;
         this.isDelivered = in.readByte()!=0;
        this.filePath = in.readString();
-       this.fileExtension = in.readString();
+       this.fileName = in.readString();
     }
 
     // Required by Parcelable, created by Android Studio.
@@ -289,7 +288,7 @@ public class Message implements Parcelable {
         dest.writeByte((byte) (isMyMessage ? 1 : 0));
         dest.writeInt((byte)(isDelivered?1:0));
         dest.writeString(filePath);
-        dest.writeString(fileExtension);
+        dest.writeString(fileName);
     }
 
     /**
