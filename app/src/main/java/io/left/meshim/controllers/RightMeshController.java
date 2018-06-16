@@ -476,7 +476,13 @@ public class RightMeshController implements MeshStateListener {
         }
     }
 
-    public String writeFileExternalStorage(String fileExtension, byte[] fileByte) {
+    /**
+     * this functions converts a byte array into a file
+     * @param fileName name of the file with extension
+     * @param fileByte file bytes to convert
+     * @return a path to the newly written file
+     */
+    public String writeFileExternalStorage(String fileName, byte[] fileByte) {
         String state = Environment.getExternalStorageState();
         //external storage availability check
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
@@ -485,14 +491,13 @@ public class RightMeshController implements MeshStateListener {
         Random random = new Random();
         int randomNumb= random.nextInt(500)+1;
         File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), fileExtension);
+                Environment.DIRECTORY_DOWNLOADS), fileName);
 
         FileOutputStream outputStream = null;
         try {
             file.createNewFile();
             //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
             outputStream = new FileOutputStream(file, true);
-
             outputStream.write(fileByte);
             outputStream.flush();
             outputStream.close();
@@ -502,7 +507,13 @@ public class RightMeshController implements MeshStateListener {
         }
         return file.getPath();
     }
-    // Returns the contents of the file in a byte array.
+
+    /**
+     * this function turns any file into byte arrays
+     * @param file the file to turn byte arrays into
+     * @return  byte arrays
+     * @throws IOException
+     */
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 

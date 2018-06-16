@@ -60,8 +60,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
+            android:background="@color/common_google_signin_btn_text_dark_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sendButton"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+            android:src="@drawable/ic_attach_file_black_24dp"
+            />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

@@ -5,13 +5,12 @@
     android:orientation="vertical">
 
     <RadioGroup
-        android:id="@+id/fileTypesRadioButtons"
+        android:id="@+id/filetype_radio_buttons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@">
+        android:layout_height="match_parent">
 
         <RadioButton
-            android:id="@+id/ImagesRadioButton"
+            android:id="@+id/image_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -19,14 +18,14 @@
             android:text="Images" />
 
         <RadioButton
-            android:id="@+id/videoRadioButton"
+            android:id="@+id/video_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Video" />
 
         <RadioButton
-            android:id="@+id/filesRadioButton"
+            android:id="@+id/file_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

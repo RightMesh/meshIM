@@ -23,7 +23,9 @@ import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
+import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.NormalFile;
+import com.vincent.filepicker.filter.entity.VideoFile;
 
 import java.util.ArrayList;
 
@@ -43,6 +45,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     ImageButton pickfiles;
     private String filePath = "";
     private String fileName ="";
+    //we can only send one file at a time
     private final int MAX_FILES = 1;
     /**
      * {@inheritDoc}.
@@ -112,16 +115,32 @@ public class ChatActivity extends ServiceConnectedActivity {
             case Constant.REQUEST_CODE_PICK_FILE:
                 if (resultCode == RESULT_OK) {
                     ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
+                    // always get the first file
                     NormalFile file = list.get(0);
                     //getting the filname and extension of the file
-                    int i = file.getPath().lastIndexOf('.');
-                    int p = Math.max(file.getPath().lastIndexOf('/'), file.getPath().lastIndexOf('\\'));
-                    if (i > p) {
-                        fileName =file.getName()+"."+ file.getPath().substring(i+1);
-                        Log.d("bugg",fileName);
-                    }
+                    fileName =getFileNameWithExtension(file.getPath(),file.getName());
+                    Log.d("bugg",fileName);
                     filePath = file.getPath();
                 }
+                break;
+            case Constant.REQUEST_CODE_PICK_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<ImageFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
+                    ImageFile imageFile= list.get(0);
+                    fileName =getFileNameWithExtension(imageFile.getPath(),imageFile.getName());
+                    Log.d("bugg",fileName);
+                    filePath = imageFile.getPath();
+                }
+                break;
+            case Constant.REQUEST_CODE_PICK_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
+                    VideoFile videoFile = list.get(0);
+                    fileName =getFileNameWithExtension(videoFile.getPath(),videoFile.getName());
+                    Log.d("bugg",fileName);
+                    filePath = videoFile.getPath();
+                }
+                break;
         }
     }
 
@@ -176,41 +195,53 @@ public class ChatActivity extends ServiceConnectedActivity {
     private void alertDialogForFileType() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select File Type");
-
         // Set view of dialog.
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_choose_file_type, null);
         builder.setView(view);
-        RadioGroup radioGroup = view.findViewById(R.id.fileTypesRadioButtons);
+        RadioGroup radioGroup = view.findViewById(R.id.filetype_radio_buttons);
         // start an activityForResult based on the user choice
         builder.setPositiveButton(R.string.save, (dialog, which) -> {
         int checkedButton = radioGroup.getCheckedRadioButtonId();
         Intent intent = null;
         switch (checkedButton){
-            case R.id.ImagesRadioButton:
+            case R.id.image_radio_button:
                 intent = new Intent(this, ImagePickActivity.class);
                 intent.putExtra(IS_NEED_CAMERA, true);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_IMAGE);
                 break;
-            case R.id.videoRadioButton:
+            case R.id.video_radio_button:
                 intent = new Intent(this, VideoPickActivity.class);
                 intent.putExtra(IS_NEED_CAMERA, true);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_VIDEO);
                 break;
-            case R.id.filesRadioButton:
+            case R.id.file_radio_button:
                 intent = new Intent(this, NormalFilePickActivity.class);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
                 intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FILE);
                 break;
         }
-
         });
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
-
         final  AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    /**
+     * simple function to return a filename with extension
+     * @param filePath path of the file
+     * @param fileName name of the file
+     * @return a string
+     */
+    public String getFileNameWithExtension(String filePath,String fileName){
+        int i = filePath.lastIndexOf('.');
+        int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+        if (i > p) {
+            return fileName+"."+ filePath.substring(i+1);
+        }
+        return null;
     }
 }
