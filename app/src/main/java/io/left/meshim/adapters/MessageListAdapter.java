@@ -128,7 +128,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if (sender != null) {
                     holder.mUserImage.setImageResource(sender.getAvatar());
                 }
-                if(message.getFilePath()!= null){
+                if(message.getFilePath()!= ""){
                     holder.mFileName.setText(message.getFileName());
                 }
             } else {
@@ -140,7 +140,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_all_black_24dp);
                 }
 
-                if(message.getFilePath()!= null){
+                if(message.getFilePath()!= ""){
                     holder.mFileName.setText(message.getFileName());
                 }
             }
