@@ -99,11 +99,6 @@ public class ChatActivity extends ServiceConnectedActivity {
                 }
             }
         });
-
-        pickfiles = findViewById(R.id.fileButton);
-        pickfiles.setOnClickListener( view ->{
-            alertDialogToChooseFile();
-        });
         setupActionBar();
 
     }
@@ -197,14 +192,14 @@ public class ChatActivity extends ServiceConnectedActivity {
     /**
      * creates an alert dialog box to choose files.
      */
-    private void alertDialogToChooseFile() {
+    public void alertDialogToChooseFile(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select File Type");
         // Set view of dialog.
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_choose_file_type, null);
-        builder.setView(view);
-        RadioGroup radioGroup = view.findViewById(R.id.filetype_radio_buttons);
+        View view1 = inflater.inflate(R.layout.dialog_choose_file_type, null);
+        builder.setView(view1);
+        RadioGroup radioGroup = view1.findViewById(R.id.filetype_radio_buttons);
         // start an activityForResult based on the user choice
         builder.setPositiveButton("OK", (dialog, which) -> {
         int checkedButton = radioGroup.getCheckedRadioButtonId();
