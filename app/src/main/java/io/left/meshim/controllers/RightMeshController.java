@@ -12,7 +12,6 @@ import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 import android.content.Context;
 import android.os.Environment;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -132,7 +131,6 @@ public class RightMeshController implements MeshStateListener {
      */
     public void sendTextMessage(User recipient, String message, String filePath, String fileExtension) {
         Message messageObject = new Message(user, recipient, message, true,filePath,fileExtension);
-        Log.d("bugg",filePath);
         try {
             byte[] messagePayload = createMessagePayloadFromMessage(messageObject);
             if (messagePayload != null) {
@@ -501,7 +499,6 @@ public class RightMeshController implements MeshStateListener {
             outputStream.write(fileByte);
             outputStream.flush();
             outputStream.close();
-            Log.d("bugg",file.getPath());
         } catch (Exception e) {
             e.printStackTrace();
         }

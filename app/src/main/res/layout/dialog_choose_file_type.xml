@@ -23,7 +23,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Video" />
-
+        <RadioButton
+            android:id="@+id/audio_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Audio" />
         <RadioButton
             android:id="@+id/file_radio_button"
             android:layout_width="wrap_content"

@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +19,11 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 
 import com.vincent.filepicker.Constant;
+import com.vincent.filepicker.activity.AudioPickActivity;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
+import com.vincent.filepicker.filter.entity.AudioFile;
 import com.vincent.filepicker.filter.entity.ImageFile;
 import com.vincent.filepicker.filter.entity.NormalFile;
 import com.vincent.filepicker.filter.entity.VideoFile;
@@ -33,6 +34,7 @@ import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
 import io.left.meshim.models.User;
 
+import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER;
 import static com.vincent.filepicker.activity.VideoPickActivity.IS_NEED_CAMERA;
 
 /**
@@ -83,8 +85,6 @@ public class ChatActivity extends ServiceConnectedActivity {
                 try {
                     String message = messageText.getText().toString();
                     if (!message.equals("") || !filePath.equals("")) {
-                        Log.d("bugg","filepath: "+filePath);
-                        Log.d("bugg","extenstion: "+ fileName);
                         mService.sendTextMessage(mRecipient,message,filePath, fileName);
                         messageText.setText("");
                         filePath = "";
@@ -102,7 +102,7 @@ public class ChatActivity extends ServiceConnectedActivity {
 
         pickfiles = findViewById(R.id.fileButton);
         pickfiles.setOnClickListener( view ->{
-            alertDialogForFileType();
+            alertDialogToChooseFile();
         });
         setupActionBar();
 
@@ -117,9 +117,8 @@ public class ChatActivity extends ServiceConnectedActivity {
                     ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
                     // always get the first file
                     NormalFile file = list.get(0);
-                    //getting the filname and extension of the file
+                    //getting the file name and extension of the file
                     fileName =getFileNameWithExtension(file.getPath(),file.getName());
-                    Log.d("bugg",fileName);
                     filePath = file.getPath();
                 }
                 break;
@@ -128,7 +127,6 @@ public class ChatActivity extends ServiceConnectedActivity {
                     ArrayList<ImageFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
                     ImageFile imageFile= list.get(0);
                     fileName =getFileNameWithExtension(imageFile.getPath(),imageFile.getName());
-                    Log.d("bugg",fileName);
                     filePath = imageFile.getPath();
                 }
                 break;
@@ -137,8 +135,15 @@ public class ChatActivity extends ServiceConnectedActivity {
                     ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                     VideoFile videoFile = list.get(0);
                     fileName =getFileNameWithExtension(videoFile.getPath(),videoFile.getName());
-                    Log.d("bugg",fileName);
                     filePath = videoFile.getPath();
+                }
+                break;
+            case Constant.REQUEST_CODE_PICK_AUDIO:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<AudioFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_AUDIO);
+                    AudioFile audioFile = list.get(0);
+                    fileName =getFileNameWithExtension(audioFile.getPath(),audioFile.getName());
+                    filePath = audioFile.getPath();
                 }
                 break;
         }
@@ -192,7 +197,7 @@ public class ChatActivity extends ServiceConnectedActivity {
     /**
      * creates an alert dialog box to choose files.
      */
-    private void alertDialogForFileType() {
+    private void alertDialogToChooseFile() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select File Type");
         // Set view of dialog.
@@ -201,7 +206,7 @@ public class ChatActivity extends ServiceConnectedActivity {
         builder.setView(view);
         RadioGroup radioGroup = view.findViewById(R.id.filetype_radio_buttons);
         // start an activityForResult based on the user choice
-        builder.setPositiveButton(R.string.save, (dialog, which) -> {
+        builder.setPositiveButton("OK", (dialog, which) -> {
         int checkedButton = radioGroup.getCheckedRadioButtonId();
         Intent intent = null;
         switch (checkedButton){
@@ -220,8 +225,15 @@ public class ChatActivity extends ServiceConnectedActivity {
             case R.id.file_radio_button:
                 intent = new Intent(this, NormalFilePickActivity.class);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
-                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
+                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc",
+                        "docx", "ppt", "pptx", "pdf","zip","gif"});
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FILE);
+                break;
+            case R.id.audio_radio_button:
+                intent = new Intent(this, AudioPickActivity.class);
+                intent.putExtra(IS_NEED_RECORDER, true);
+                intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
+                startActivityForResult(intent, Constant.REQUEST_CODE_PICK_AUDIO);
                 break;
         }
         });
