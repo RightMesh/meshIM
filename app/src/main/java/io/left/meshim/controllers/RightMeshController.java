@@ -1,7 +1,6 @@
 package io.left.meshim.controllers;
 
 import static io.left.rightmesh.mesh.MeshManager.ADDED;
-import static io.left.rightmesh.mesh.MeshManager.DATA_DELIVERED;
 import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
 import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
 import static io.left.rightmesh.mesh.MeshManager.REMOVED;
@@ -25,7 +24,7 @@ import io.left.meshim.models.User;
 import io.left.meshim.services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
 import io.left.rightmesh.android.MeshService;
-import io.left.rightmesh.id.MeshId;
+import io.left.rightmesh.id.MeshID;
 import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
@@ -65,8 +64,8 @@ public class RightMeshController implements MeshStateListener {
     private AndroidMeshManager meshManager = null;
 
     // Set to keep track of peers connected to the mesh.
-    private HashSet<MeshId> discovered = new HashSet<>();
-    private HashMap<MeshId, User> users = new HashMap<>();
+    private HashSet<MeshID> discovered = new HashSet<>();
+    private HashMap<MeshID, User> users = new HashMap<>();
     private User user = null;
 
     // Database interface.
@@ -78,7 +77,7 @@ public class RightMeshController implements MeshStateListener {
     private MeshIMService meshIMService;
     // keeps track of all the undeliveredPackages.
     private HashMap<Integer, Integer> unDeliveredMessageIds = new HashMap<Integer, Integer>();
-    private ConcurrentMap<Integer,MeshId> undeliveredPeerUpdateMessages = new ConcurrentHashMap<>();
+    private ConcurrentMap<Integer,MeshID> undeliveredPeerUpdateMessages = new ConcurrentHashMap<>();
 
     // a timer and a boolean to make sure there is only ever one timer running at a time
     // for undelivered packages.
@@ -176,9 +175,9 @@ public class RightMeshController implements MeshStateListener {
      * @param state state which indicates SUCCESS or an error code
      */
     @Override
-    public void meshStateChanged(MeshId uuid, int state) {
+    public void meshStateChanged(MeshID uuid, int state) {
         if (state == MeshStateListener.SUCCESS) {
-            // Update stored user preferences with current MeshId.
+            // Update stored user preferences with current MeshID.
             user.setMeshId(uuid);
             user.save(meshIMService);
             try {
@@ -192,7 +191,6 @@ public class RightMeshController implements MeshStateListener {
             // Subscribes handlers to receive events from the mesh.
             meshManager.on(DATA_RECEIVED, this::handleDataReceived);
             meshManager.on(PEER_CHANGED, this::handlePeerChanged);
-            meshManager.on(DATA_DELIVERED, this::handleDataDelivery);
 
             // Update the UI for the first time.
             updateInterface();
@@ -228,7 +226,7 @@ public class RightMeshController implements MeshStateListener {
 
         try {
             MeshIMMessage messageWrapper = MeshIMMessage.parseFrom(event.data);
-            MeshId peerId = event.peerUuid;
+            MeshID peerId = event.peerUuid;
 
             if (peerId.equals(meshManager.getUuid())) {
                 return;
@@ -399,7 +397,7 @@ public class RightMeshController implements MeshStateListener {
         if (user.load(meshIMService)) {
             byte[] message = createPeerUpdatePayloadFromUser(user);
             if (message != null) {
-                for (MeshId id : users.keySet()) {
+                for (MeshID id : users.keySet()) {
                     try {
                         meshManager.sendDataReliable(id, MESH_PORT, message);
                     } catch (RightMeshException e) {
@@ -422,25 +420,6 @@ public class RightMeshController implements MeshStateListener {
         }
     }
 
-    /**
-     * Handles data delivery event from the mesh. Updates the hashmap that stores the  Ids of
-     * undelivered packages.
-     * @param e event object from mesh.
-     */
-    void handleDataDelivery(RightMeshEvent e) {
-        MeshManager.DataDeliveredEvent event = (MeshManager.DataDeliveredEvent) e;
-        final int deliveryDataId = event.data_id;
-        if(unDeliveredMessageIds.containsKey(deliveryDataId)){
-            //updating the message delivery status in the database
-            dao.updateMessageIsDelivered(unDeliveredMessageIds.get(deliveryDataId));
-            unDeliveredMessageIds.remove(deliveryDataId);
-            updateInterface();
-        }
-        else if(undeliveredPeerUpdateMessages.containsKey(deliveryDataId)){
-            // removing the message from undeliveredPeerUpdate map since we dont need to send it again.
-            undeliveredPeerUpdateMessages.remove(deliveryDataId);
-        }
-    }
 
     /**
      * Runs a timer task when there are undelivered peer updates in the que
@@ -454,8 +433,8 @@ public class RightMeshController implements MeshStateListener {
                     //check if there are any undelivered packages
                     if(!undeliveredPeerUpdateMessages.isEmpty()){
                         byte[] message = createPeerUpdatePayloadFromUser(user);
-                        for(Map.Entry<Integer,MeshId> meshIdEntry: undeliveredPeerUpdateMessages.entrySet()){
-                            MeshId peerId = meshIdEntry.getValue();
+                        for(Map.Entry<Integer,MeshID> meshIdEntry: undeliveredPeerUpdateMessages.entrySet()){
+                            MeshID peerId = meshIdEntry.getValue();
                             try {
                                 //send the packages again if there are undelivered packages
                                 meshManager.sendDataReliable(peerId, MESH_PORT, message);

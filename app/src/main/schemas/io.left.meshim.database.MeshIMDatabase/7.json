@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "8cbc77bc23ff2fc6228580cc59aa15d2",
+    "identityHash": "6f38192d59e9d339c9deee1848aea3c2",
     "entities": [
       {
         "tableName": "Users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`UserId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `MeshId` BLOB, `Username` TEXT, `Avatar` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`UserId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `MeshID` BLOB, `Username` TEXT, `Avatar` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -16,7 +16,7 @@
           },
           {
             "fieldPath": "meshId",
-            "columnName": "MeshId",
+            "columnName": "MeshID",
             "affinity": "BLOB",
             "notNull": false
           },
@@ -41,13 +41,13 @@
         },
         "indices": [
           {
-            "name": "index_Users_UserId_MeshId",
+            "name": "index_Users_UserId_MeshID",
             "unique": true,
             "columnNames": [
               "UserId",
-              "MeshId"
+              "MeshID"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_Users_UserId_MeshId` ON `${TABLE_NAME}` (`UserId`, `MeshId`)"
+            "createSql": "CREATE UNIQUE INDEX `index_Users_UserId_MeshID` ON `${TABLE_NAME}` (`UserId`, `MeshID`)"
           }
         ],
         "foreignKeys": []
@@ -111,7 +111,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "fileExtension",
+            "fieldPath": "fileName",
             "columnName": "FileExtension",
             "affinity": "TEXT",
             "notNull": false
@@ -169,7 +169,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8cbc77bc23ff2fc6228580cc59aa15d2\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6f38192d59e9d339c9deee1848aea3c2\")"
     ]
   }
 }

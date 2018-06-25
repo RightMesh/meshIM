@@ -77,7 +77,7 @@
         android:layout_marginEnd="@dimen/meshim_margin_small"
         android:layout_marginTop="@dimen/meshim_margin_small"
         android:layout_marginRight="@dimen/meshim_margin_mini"
-        android:background="@color/grey"
+        android:background="@color/inactiveGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/conversation_username"
         app:layout_constraintRight_toRightOf="parent"

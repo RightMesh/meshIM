@@ -12,7 +12,7 @@ import io.left.meshim.models.ConversationSummary;
 import io.left.meshim.models.MeshIdTuple;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
-import io.left.rightmesh.id.MeshId;
+import io.left.rightmesh.id.MeshID;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,13 +32,13 @@ public abstract class MeshIMDao {
     public abstract User[] fetchAllUsers();
 
     @Query("SELECT UserId, MeshId FROM Users WHERE MeshId = :meshId")
-    public abstract MeshIdTuple fetchMeshIdTupleByMeshId(MeshId meshId);
+    public abstract MeshIdTuple fetchMeshIdTupleByMeshId(MeshID meshId);
 
     @Query("SELECT * FROM Users WHERE UserId = :id")
     public abstract User fetchUserById(int id);
 
     @Query("SELECT * FROM Users WHERE MeshId = :meshId")
-    public abstract User fetchUserByMeshId(MeshId meshId);
+    public abstract User fetchUserByMeshId(MeshID meshId);
 
     @Query("UPDATE  Messages SET IsRead = 1 WHERE MessageId=:messageId ")
     public abstract void updateMessageIsRead(int messageId);

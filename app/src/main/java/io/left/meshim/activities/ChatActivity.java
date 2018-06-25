@@ -122,7 +122,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<ImageFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
                     ImageFile imageFile= list.get(0);
-                    fileName = imageFile.getName()+"."+getFileExtension(imageFile.getName());
+                    fileName = imageFile.getName()+"."+getFileExtension(imageFile.getPath());
                     filePath = imageFile.getPath();
                 }
                 break;
@@ -130,7 +130,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                     VideoFile videoFile = list.get(0);
-                    fileName = videoFile.getName()+"."+getFileExtension(videoFile.getName());
+                    fileName = videoFile.getName()+"."+getFileExtension(videoFile.getPath());
                     filePath = videoFile.getPath();
                 }
                 break;
@@ -138,7 +138,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<AudioFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_AUDIO);
                     AudioFile audioFile = list.get(0);
-                    fileName = audioFile.getName()+"."+getFileExtension(audioFile.getName());
+                    fileName = audioFile.getName()+"."+getFileExtension(audioFile.getPath());
                     filePath = audioFile.getPath();
                 }
                 break;

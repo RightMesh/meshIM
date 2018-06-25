@@ -2,32 +2,33 @@ package io.left.meshim.database;
 
 import android.arch.persistence.room.TypeConverter;
 
-import io.left.rightmesh.id.MeshId;
 
 import java.util.Date;
+
+import io.left.rightmesh.id.MeshID;
 
 /**
  * A collection of {@link TypeConverter}s for use in {@link MeshIMDatabase}.
  */
 public class Converters {
     /**
-     * Initializes a {@link MeshId} from bytes stored in SQLite.
+     * Initializes a {@link MeshID} from bytes stored in SQLite.
      * @param bytes representing a UUID
-     * @return MeshId with UUID specified in parameters
+     * @return MeshID with UUID specified in parameters
      */
     @TypeConverter
-    public MeshId meshIdFromBytes(byte[] bytes) {
-        return new MeshId(bytes);
+    public MeshID meshIdFromBytes(byte[] bytes) {
+        return new MeshID(bytes);
     }
 
     /**
-     * Converts a {@link MeshId} to a byte array for storage in SQLite.
-     * @param id MeshId to be converted
-     * @return converted UUID of provided MeshId
+     * Converts a {@link MeshID} to a byte array for storage in SQLite.
+     * @param id MeshID to be converted
+     * @return converted UUID of provided MeshID
      */
     @TypeConverter
-    public byte[] bytesFromMeshId(MeshId id) {
-        return id.getRawMeshId();
+    public byte[] bytesFromMeshId(MeshID id) {
+        return id.getRawUuid();
     }
 
     /**
