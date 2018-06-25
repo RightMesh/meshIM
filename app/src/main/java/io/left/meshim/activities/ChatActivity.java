@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import io.left.meshim.models.User;
 
 import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER;
 import static com.vincent.filepicker.activity.VideoPickActivity.IS_NEED_CAMERA;
+import static io.left.meshim.controllers.RightMeshController.getFileExtension;
 
 /**
  * An activity that displays a conversation between two users, and enables sending messages.
@@ -44,7 +46,6 @@ public class ChatActivity extends ServiceConnectedActivity {
     private RecyclerView mMessageListView;
     private MessageListAdapter mMessageListAdapter;
     User mRecipient;
-    ImageButton pickfiles;
     private String filePath = "";
     private String fileName ="";
     //we can only send one file at a time
@@ -113,7 +114,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                     // always get the first file
                     NormalFile file = list.get(0);
                     //getting the file name and extension of the file
-                    fileName =getFileNameWithExtension(file.getPath(),file.getName());
+                    fileName = file.getName()+"."+getFileExtension(file.getName());
                     filePath = file.getPath();
                 }
                 break;
@@ -121,7 +122,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<ImageFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_IMAGE);
                     ImageFile imageFile= list.get(0);
-                    fileName =getFileNameWithExtension(imageFile.getPath(),imageFile.getName());
+                    fileName = imageFile.getName()+"."+getFileExtension(imageFile.getName());
                     filePath = imageFile.getPath();
                 }
                 break;
@@ -129,7 +130,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<VideoFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_VIDEO);
                     VideoFile videoFile = list.get(0);
-                    fileName =getFileNameWithExtension(videoFile.getPath(),videoFile.getName());
+                    fileName = videoFile.getName()+"."+getFileExtension(videoFile.getName());
                     filePath = videoFile.getPath();
                 }
                 break;
@@ -137,7 +138,7 @@ public class ChatActivity extends ServiceConnectedActivity {
                 if (resultCode == RESULT_OK) {
                     ArrayList<AudioFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_AUDIO);
                     AudioFile audioFile = list.get(0);
-                    fileName =getFileNameWithExtension(audioFile.getPath(),audioFile.getName());
+                    fileName = audioFile.getName()+"."+getFileExtension(audioFile.getName());
                     filePath = audioFile.getPath();
                 }
                 break;
@@ -235,20 +236,5 @@ public class ChatActivity extends ServiceConnectedActivity {
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> { /* Exit. */ });
         final  AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    /**
-     * simple function to return a filename with extension
-     * @param filePath path of the file
-     * @param fileName name of the file
-     * @return a string
-     */
-    public String getFileNameWithExtension(String filePath,String fileName){
-        int i = filePath.lastIndexOf('.');
-        int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
-        if (i > p) {
-            return fileName+"."+ filePath.substring(i+1);
-        }
-        return null;
     }
 }

@@ -1,8 +1,10 @@
 package io.left.meshim.adapters;
 
+import android.net.Uri;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
+import io.left.meshim.activities.ChatActivity;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.meshim.services.IMeshIMService;
 import io.left.meshim.services.MeshIMService;
+import io.left.meshim.utilities.FileTypes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.left.meshim.controllers.RightMeshController.getFileExtension;
 
 /**
  * Adapter that fetches a conversation between the devices's user and a recipient, rendering
@@ -65,7 +72,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         ImageView mUserImage;
         ImageView mDeliveryStatus;
         TextView mFileName;
-
+        ImageView mImage;
         /**
          * Checks whether the message should be displayed in send or received layout.
          * Finds all the required layout fields.
@@ -81,12 +88,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 mMessageBody = view.findViewById(R.id.text_message_body);
                 mTime = view.findViewById(R.id.text_message_time_recieved);
                 mFileName = view.findViewById(R.id.text_file_recieved);
+                mImage = view.findViewById(R.id.text_recieve_image);
 
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
                 mDeliveryStatus = view.findViewById(R.id.text_message_delivery_image);
                 mFileName = view.findViewById(R.id.text_message_file);
+                mImage = view.findViewById(R.id.text_sent_imageview);
             }
         }
     }
@@ -128,11 +137,23 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if (sender != null) {
                     holder.mUserImage.setImageResource(sender.getAvatar());
                 }
-                if(message.getFilePath()!= ""){
+                if(message.getFilePath()!= "") {
                     holder.mFileName.setText(message.getFileName());
+                    if (!message.getFilePath().equals("")) {
+                        holder.mFileName.setText(message.getFileName());
+                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFileName()))) {
+                            Log.d("bugg", message.getMessage() + " " + message.getFileName()+ "   "+message.getFilePath());
+                            File file = new File(message.getFilePath());
+                            if(file.exists()) {
+                                holder.mImage.setImageURI(Uri.parse(String.valueOf(new File(message.getFilePath()))));
+                                holder.mImage.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
                 }
             } else {
                 holder.mMessageBody.setText(message.getMessage());
+                Log.d("bugg","setting the message here ");
                 holder.mTime.setText(Message.formateDate(message.getDate()));
                 if(!message.isDelivered()) {
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
@@ -140,8 +161,15 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_all_black_24dp);
                 }
 
-                if(message.getFilePath()!= ""){
+                if(!message.getFilePath().equals("")){
                     holder.mFileName.setText(message.getFileName());
+                    if(!message.getFileName().equals("")) {
+                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFileName()))) {
+                            Log.d("bugg", message.getMessage() + " " + message.getFileName());
+                            holder.mImage.setImageURI(Uri.parse(new File(message.getFilePath()).toString()));
+                            holder.mImage.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
             }
         }

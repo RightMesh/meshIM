@@ -486,10 +486,9 @@ public class RightMeshController implements MeshStateListener {
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
             return null;
         }
-        Random random = new Random();
-        int randomNumb= random.nextInt(500)+1;
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS), fileName);
+
 
         FileOutputStream outputStream = null;
         try {
@@ -544,5 +543,14 @@ public class RightMeshController implements MeshStateListener {
         // Close the input stream and return bytes
         is.close();
         return bytes;
+    }
+
+    public static String getFileExtension(String fileName) {
+        String extension = null;
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 }
