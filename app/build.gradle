@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.protobuf'
 buildscript {
-    ext {
-        artifactory_app_username = "$RightMeshUsername"
-        artifactory_app_password = "$RightMeshPassword"
-        artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
-    }
+    // ext {
+    //     artifactory_app_username = "$RightMeshUsername"
+    //     artifactory_app_password = "$RightMeshPassword"
+    //     artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
+    // }
     repositories {
         maven {
             url "http://research.rightmesh.io/artifactory/libs-local"
@@ -99,23 +99,23 @@ protobuf {
 }
 
 dependencies {
-    implementation 'android.arch.persistence.room:runtime:1.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-annotations:27.1.1'
     implementation 'com.android.support:support-v13:27.1.1'
 
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'io.left.rightmesh:rightmesh-library:0.5.0'
+    implementation 'io.left.rightmesh:rightmesh-library:0.7.1-KEEFER-SNAPSHOT'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     androidTestImplementation 'com.android.support:support-annotations:27.1.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'android.arch.persistence.room:testing:1.1.0'
+    androidTestImplementation 'android.arch.persistence.room:testing:1.1.1'
     implementation 'com.airbnb.android:lottie:2.5.0-rc1'
 }

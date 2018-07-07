@@ -1,18 +1,19 @@
 package io.left.meshim.controllers;
 
-import static io.left.rightmesh.mesh.MeshManager.ADDED;
-import static io.left.rightmesh.mesh.MeshManager.DATA_DELIVERED;
-import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
-import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
-import static io.left.rightmesh.mesh.MeshManager.REMOVED;
-import static io.left.rightmesh.mesh.MeshManager.UPDATED;
-import static protobuf.MeshIMMessages.MessageType.MESSAGE;
-import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
-
 import android.content.Context;
 import android.os.RemoteException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import io.left.meshim.R;
 import io.left.meshim.activities.IActivity;
@@ -30,21 +31,19 @@ import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
 import io.left.rightmesh.util.RightMeshException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import protobuf.MeshIMMessages;
 import protobuf.MeshIMMessages.MeshIMMessage;
 import protobuf.MeshIMMessages.MessageType;
 import protobuf.MeshIMMessages.PeerUpdate;
+
+import static io.left.rightmesh.mesh.MeshManager.ADDED;
+import static io.left.rightmesh.mesh.MeshManager.DATA_DELIVERED;
+import static io.left.rightmesh.mesh.MeshManager.DATA_RECEIVED;
+import static io.left.rightmesh.mesh.MeshManager.PEER_CHANGED;
+import static io.left.rightmesh.mesh.MeshManager.REMOVED;
+import static io.left.rightmesh.mesh.MeshManager.UPDATED;
+import static protobuf.MeshIMMessages.MessageType.MESSAGE;
+import static protobuf.MeshIMMessages.MessageType.PEER_UPDATE;
 
 /**
  * All RightMesh logic abstracted into one class to keep it separate from Android logic.
@@ -153,7 +152,7 @@ public class RightMeshController implements MeshStateListener {
             if (meshManager != null) {
                 meshManager.stop();
             }
-        } catch (MeshService.ServiceDisconnectedException ignored) {
+        } catch (RightMeshException.RightMeshServiceDisconnectedException ignored) {
             // Error encountered shutting down service - nothing we can do from here.
         }
     }
