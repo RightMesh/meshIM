@@ -141,7 +141,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.mFileName.setText(message.getFileName());
                     if (!message.getFilePath().equals("")) {
                         holder.mFileName.setText(message.getFileName());
-                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFileName()))) {
+                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFilePath()))) {
                             Log.d("bugg", message.getMessage() + " " + message.getFileName()+ "   "+message.getFilePath());
                             File file = new File(message.getFilePath());
                             if(file.exists()) {
@@ -164,7 +164,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if(!message.getFilePath().equals("")){
                     holder.mFileName.setText(message.getFileName());
                     if(!message.getFileName().equals("")) {
-                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFileName()))) {
+                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFilePath()))) {
                             Log.d("bugg", message.getMessage() + " " + message.getFileName());
                             holder.mImage.setImageURI(Uri.parse(new File(message.getFilePath()).toString()));
                             holder.mImage.setVisibility(View.VISIBLE);
