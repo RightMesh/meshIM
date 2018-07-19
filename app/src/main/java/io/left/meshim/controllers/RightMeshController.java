@@ -31,6 +31,7 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
+import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.io.File;
@@ -163,8 +164,8 @@ public class RightMeshController implements MeshStateListener {
             if (meshManager != null) {
                 meshManager.stop();
             }
-        } catch (RightMeshException.d d) {
-            d.printStackTrace();
+        } catch (RightMeshException.RightMeshServiceDisconnectedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -307,10 +308,13 @@ public class RightMeshController implements MeshStateListener {
             users.put(event.peerUuid, tempUser);
             updateInterface();
         }
-
-        if (event.state == ADDED) {
+            // long if statement to get around ADDED event not being fired. otherwise should just be if event.state is added.
+        if (event.state == ADDED || users.get(event.peerUuid).getUsername().equals(meshIMService.getString(R.string.get_user_details)) ) {
             // Send our information to a new or rejoining peer.
+            MeshUtility.Log("bugg","sending our info");
+
             byte[] message = createPeerUpdatePayloadFromUser(user);
+
             try {
                 if (message != null) {
                    int dataId = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);

@@ -221,7 +221,7 @@ public class ChatActivity extends ServiceConnectedActivity {
             case R.id.file_radio_button:
                 intent = new Intent(this, NormalFilePickActivity.class);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
-                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc",
+                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"txt","xlsx", "xls", "doc",
                         "docx", "ppt", "pptx", "pdf","zip","gif"});
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FILE);
                 break;
