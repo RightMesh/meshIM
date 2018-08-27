@@ -61,7 +61,7 @@ import protobuf.MeshIMMessages.PeerUpdate;
  */
 public class RightMeshController implements MeshStateListener {
     // Port to bind app to.
-    private static final int MESH_PORT = 54321;
+    private static final int MESH_PORT = 14441;
 
     // MeshManager instance - interface to the mesh network.
     private AndroidMeshManager meshManager = null;
