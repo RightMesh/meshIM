@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.protobuf'
 buildscript {
     ext {
-        artifactory_app_username = "$RightMeshUsername"
-        artifactory_app_password = "$RightMeshPassword"
-        artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
+        artifactory_app_username = "$rightmesh_artifactory_username"
+        artifactory_app_password = "$rightmesh_artifactory_password"
+        artifactory_app_key = "0xdd90c4135bf278a672c7440bc4b63173812665aa"
     }
     repositories {
         maven {

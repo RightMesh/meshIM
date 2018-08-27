@@ -154,7 +154,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"unicef", "superpeer1.rightmesh.io");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"unicef", "172.16.16.115");
     }
 
     /**
