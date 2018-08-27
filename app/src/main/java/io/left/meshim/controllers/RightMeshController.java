@@ -31,6 +31,7 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
+import io.left.rightmesh.util.Logger;
 import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
@@ -153,7 +154,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"sachin");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"unicef", "superpeer1.rightmesh.io");
     }
 
     /**
@@ -311,7 +312,7 @@ public class RightMeshController implements MeshStateListener {
             // long if statement to get around ADDED event not being fired. otherwise should just be if event.state is added.
         if (event.state == ADDED || users.get(event.peerUuid).getUsername().equals(meshIMService.getString(R.string.get_user_details)) ) {
             // Send our information to a new or rejoining peer.
-            MeshUtility.Log("bugg","sending our info");
+            Logger.log("bugg","sending our info");
 
             byte[] message = createPeerUpdatePayloadFromUser(user);
 
