@@ -86,7 +86,7 @@ public class RightMeshController implements MeshStateListener {
     // for undelivered packages.
     private Timer undeliveredPackageTimer;
     private boolean isTimerRunning = false;
-    private final int UNDELIVERED_PACKAGE_TIMEOUT = 8000;
+    private final int UNDELIVERED_PACKAGE_TIMEOUT = 60000;
     /**
      * Constructor.
      * @param user user info for this device
