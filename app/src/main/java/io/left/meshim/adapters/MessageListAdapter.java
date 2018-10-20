@@ -12,12 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.left.meshim.R;
-import io.left.meshim.activities.ChatActivity;
 import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.meshim.services.IMeshIMService;
 import io.left.meshim.services.MeshIMService;
-import io.left.meshim.utilities.FileTypes;
+import io.left.meshim.utilities.FileExtensions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         if (service == null) {
             return;
         }
-
         try {
             List<Message> query = service.fetchMessagesForUser(this.mRecipient);
             this.mMessageList.clear();
@@ -89,7 +87,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 mTime = view.findViewById(R.id.text_message_time_recieved);
                 mFileName = view.findViewById(R.id.text_file_recieved);
                 mImage = view.findViewById(R.id.text_recieve_image);
-
             } else {
                 mMessageBody = view.findViewById(R.id.text_message_body_sent);
                 mTime = view.findViewById(R.id.text_message_time_sent);
@@ -141,8 +138,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.mFileName.setText(message.getFileName());
                     if (!message.getFilePath().equals("")) {
                         holder.mFileName.setText(message.getFileName());
-                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFilePath()))) {
-                            Log.d("bugg", message.getMessage() + " " + message.getFileName()+ "   "+message.getFilePath());
+                        if(FileExtensions.IMAGE.contains(getFileExtension(message.getFilePath()))) {
                             File file = new File(message.getFilePath());
                             if(file.exists()) {
                                 holder.mImage.setImageURI(Uri.parse(String.valueOf(new File(message.getFilePath()))));
@@ -153,7 +149,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 }
             } else {
                 holder.mMessageBody.setText(message.getMessage());
-                Log.d("bugg","setting the message here ");
                 holder.mTime.setText(Message.formateDate(message.getDate()));
                 if(!message.isDelivered()) {
                     holder.mDeliveryStatus.setImageResource(R.drawable.ic_done_black_24dp);
@@ -164,7 +159,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if(!message.getFilePath().equals("")){
                     holder.mFileName.setText(message.getFileName());
                     if(!message.getFileName().equals("")) {
-                        if(FileTypes.ImageExtension.contains(getFileExtension(message.getFilePath()))) {
+                        if(FileExtensions.IMAGE.contains(getFileExtension(message.getFilePath()))) {
                             Log.d("bugg", message.getMessage() + " " + message.getFileName());
                             holder.mImage.setImageURI(Uri.parse(new File(message.getFilePath()).toString()));
                             holder.mImage.setVisibility(View.VISIBLE);

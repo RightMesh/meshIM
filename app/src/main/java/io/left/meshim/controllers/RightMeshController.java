@@ -31,7 +31,6 @@ import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
 import io.left.rightmesh.mesh.MeshManager.PeerChangedEvent;
 import io.left.rightmesh.mesh.MeshManager.RightMeshEvent;
 import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.MeshUtility;
 import io.left.rightmesh.util.RightMeshException;
 
 import java.io.File;
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -153,7 +151,7 @@ public class RightMeshController implements MeshStateListener {
      * @param context service context to bind to
      */
     public void connect(Context context) {
-        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this,"sachin");
+        meshManager = AndroidMeshManager.getInstance(context, RightMeshController.this);
     }
 
     /**
@@ -299,7 +297,6 @@ public class RightMeshController implements MeshStateListener {
         if (event.peerUuid.equals(meshManager.getUuid())) {
             return;
         }
-
         if (!discovered.contains(event.peerUuid)
                 && (event.state == ADDED || event.state == UPDATED)) {
             discovered.add(event.peerUuid);
@@ -308,13 +305,10 @@ public class RightMeshController implements MeshStateListener {
             users.put(event.peerUuid, tempUser);
             updateInterface();
         }
-            // long if statement to get around ADDED event not being fired. otherwise should just be if event.state is added.
-        if (event.state == ADDED || users.get(event.peerUuid).getUsername().equals(meshIMService.getString(R.string.get_user_details)) ) {
+
+        if (event.state == ADDED) {
             // Send our information to a new or rejoining peer.
-            MeshUtility.Log("bugg","sending our info");
-
             byte[] message = createPeerUpdatePayloadFromUser(user);
-
             try {
                 if (message != null) {
                    int dataId = meshManager.sendDataReliable(event.peerUuid, MESH_PORT, message);
@@ -344,17 +338,14 @@ public class RightMeshController implements MeshStateListener {
         if (user == null) {
             return null;
         }
-
         PeerUpdate peerUpdate = PeerUpdate.newBuilder()
                 .setUserName(user.getUsername())
                 .setAvatarId(user.getAvatar())
                 .build();
-
         MeshIMMessage message = MeshIMMessage.newBuilder()
                 .setMessageType(PEER_UPDATE)
                 .setPeerUpdate(peerUpdate)
                 .build();
-
         return message.toByteArray();
     }
 
@@ -492,13 +483,11 @@ public class RightMeshController implements MeshStateListener {
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS), fileName);
-
-
         FileOutputStream outputStream = null;
         try {
             file.createNewFile();
             //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
-            outputStream = new FileOutputStream(file, true);
+            outputStream = new FileOutputStream(file, false);
             outputStream.write(fileByte);
             outputStream.flush();
             outputStream.close();
@@ -515,13 +504,11 @@ public class RightMeshController implements MeshStateListener {
      * @throws IOException
      */
     public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
+        InputStream fileInputStream = new FileInputStream(file);
 
         // Get the size of the file
         long length = file.length();
 
-        // You cannot create an array using a long type.
-        // It needs to be an int type.
         // Before converting to an int type, check
         // to ensure that file is not larger than Integer.MAX_VALUE.
         if (length > Integer.MAX_VALUE) {
@@ -530,22 +517,19 @@ public class RightMeshController implements MeshStateListener {
 
         // Create the byte array to hold the data
         byte[] bytes = new byte[(int)length];
-
         // Read in the bytes
         int offset = 0;
         int numRead = 0;
         while (offset < bytes.length
-                && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+                && (numRead=fileInputStream.read(bytes, offset, bytes.length-offset)) >= 0) {
             offset += numRead;
         }
-
         // Ensure all the bytes have been read in
         if (offset < bytes.length) {
             throw new IOException("Could not completely read file "+file.getName());
         }
-
         // Close the input stream and return bytes
-        is.close();
+        fileInputStream.close();
         return bytes;
     }
 

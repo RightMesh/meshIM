@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +33,7 @@ import java.util.ArrayList;
 import io.left.meshim.R;
 import io.left.meshim.adapters.MessageListAdapter;
 import io.left.meshim.models.User;
+import io.left.meshim.utilities.FileExtensions;
 
 import static com.vincent.filepicker.activity.AudioPickActivity.IS_NEED_RECORDER;
 import static com.vincent.filepicker.activity.VideoPickActivity.IS_NEED_CAMERA;
@@ -221,8 +221,7 @@ public class ChatActivity extends ServiceConnectedActivity {
             case R.id.file_radio_button:
                 intent = new Intent(this, NormalFilePickActivity.class);
                 intent.putExtra(Constant.MAX_NUMBER, MAX_FILES);
-                intent.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"txt","xlsx", "xls", "doc",
-                        "docx", "ppt", "pptx", "pdf","zip","gif"});
+                intent.putExtra(NormalFilePickActivity.SUFFIX, FileExtensions.DOCUMENTS);
                 startActivityForResult(intent, Constant.REQUEST_CODE_PICK_FILE);
                 break;
             case R.id.audio_radio_button:
