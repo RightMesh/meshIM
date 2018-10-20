@@ -35,7 +35,7 @@
             android:id="@+id/myMessageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/meshim_margin_small"
             android:ems="10"
             android:hint="@string/type_message"
             android:inputType="textCapSentences|textMultiLine"
@@ -57,9 +57,9 @@
 
         <ImageButton
             android:id="@+id/fileButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/chat_square_send_button"
+            android:layout_height="@dimen/chat_square_send_button"
+            android:layout_marginEnd="@dimen/meshim_margin_small"
             android:onClick="alertDialogToChooseFile"
             android:background="@color/common_google_signin_btn_text_dark_default"
             app:layout_constraintBottom_toBottomOf="parent"
