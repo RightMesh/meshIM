@@ -116,7 +116,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation ('io.left.rightmesh:rightmesh-library-dev:0.8.0'){
+
+    implementation ('io.left.rightmesh:rightmesh-library-dev:0.9.0'){
         changing = true
     }
     implementation fileTree(include: ['*.jar'], dir: 'libs')
