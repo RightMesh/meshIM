@@ -18,8 +18,8 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username artifactory_app_username
-            password artifactory_app_password
+            username rightmesh_devportal_username
+            password rightmesh_devportal_password
         }
     }
     maven{

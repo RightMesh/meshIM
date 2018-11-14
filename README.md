@@ -12,8 +12,10 @@ RightMesh is a software-based, mobile mesh networking platform and protocol usin
 
 You can clone this repository and build meshIM in Android Studio. You will need your own RightMesh developer credentials, license key, and mesh port to build and run the application. Check out the [RightMesh DeveloperPortal](https://developer.rightmesh.io) to sign up and find instructions.
 
-The meshIM key is as follows and may be put in the global properties folder located in $HOME/.gradle/gradle.properties
->> rightmesh_meshim_key="0x4282c537813c21fcfb59860a89c94546564635f5"
+The official meshIM key is as follows
+>> rightmesh_meshim_key="0x4282c537813c21fcfb59860a89c94546564635f5" 
+
+This key may only be used by approved developers in order to use the library. Alternatively you may swap the key out for your own.
 
 ## Dependencies
 
