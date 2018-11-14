@@ -1,51 +1,42 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.protobuf'
-buildscript {
-    ext {
-        artifactory_app_username = "$RightMeshUsername"
-        artifactory_app_password = "$RightMeshPassword"
-        artifactory_app_key = "0x4282c537813c21fcfb59860a89c94546564635f5"
-    }
-    repositories {
-        maven {
-            url "http://research.rightmesh.io/artifactory/libs-local"
-            credentials {
-                username artifactory_app_username
-                password artifactory_app_password
-            }
-        }
-        google()
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'io.left.rightmesh:rightmesh-plugin:1.6'
-    }
-
+plugins {
+    id 'com.android.application'
+    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.1'
+    id 'com.google.protobuf'
 }
-apply plugin: 'io.left.rightmesh.rightmesh-plugin'
-preBuild.dependsOn("rightmesh")
 
+rightmesh {
+    appKey = rightmesh_meshim_key
+    username = rightmesh_devportal_username
+    password = rightmesh_devportal_password
+}
+
+preBuild.dependsOn("rightmesh")
 repositories {
     mavenCentral()
     jcenter()
     google()
     maven {
-        url "http://research.rightmesh.io/artifactory/libs-local"
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
             username artifactory_app_username
             password artifactory_app_password
         }
     }
+    maven{
+        url "https://dl.bintray.com/ethereum/maven"
+    }
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId 'io.left.meshim'
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 3
         versionName "0.2.1"
         multiDexEnabled true
@@ -55,19 +46,16 @@ android {
             }
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    dexOptions {
-        javaMaxHeapSize "4g"
+        buildConfigField "String", "artifactory_app_username", "\"" + rightmesh_devportal_username + "\""
     }
     buildTypes {
         release {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/src/main/schemas".toString())
@@ -99,23 +87,23 @@ protobuf {
 }
 
 dependencies {
-    implementation 'android.arch.persistence.room:runtime:1.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
-    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.android.support:support-v13:28.0.0'
 
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'io.left.rightmesh:rightmesh-library:0.5.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'io.left.rightmesh:lib-rightmesh-android:0.10.0'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
+    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'android.arch.persistence.room:testing:1.1.0'
+    androidTestImplementation 'android.arch.persistence.room:testing:1.1.1'
     implementation 'com.airbnb.android:lottie:2.5.0-rc1'
 }

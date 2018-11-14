@@ -22,7 +22,6 @@ import io.left.meshim.models.Message;
 import io.left.meshim.models.User;
 import io.left.meshim.services.MeshIMService;
 import io.left.rightmesh.android.AndroidMeshManager;
-import io.left.rightmesh.android.MeshService;
 import io.left.rightmesh.id.MeshId;
 import io.left.rightmesh.mesh.MeshManager;
 import io.left.rightmesh.mesh.MeshManager.DataReceivedEvent;
@@ -153,7 +152,7 @@ public class RightMeshController implements MeshStateListener {
             if (meshManager != null) {
                 meshManager.stop();
             }
-        } catch (MeshService.ServiceDisconnectedException ignored) {
+        } catch (RightMeshException.RightMeshServiceDisconnectedException ignored) {
             // Error encountered shutting down service - nothing we can do from here.
         }
     }
