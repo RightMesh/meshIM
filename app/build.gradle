@@ -16,9 +16,6 @@ repositories {
     jcenter()
     google()
     maven {
-        url 'https://jitpack.io'
-    }
-    maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
             username artifactory_app_username
@@ -46,7 +43,6 @@ android {
             }
         }
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "artifactory_app_username", "\"" + rightmesh_devportal_username + "\""
     }
     buildTypes {
         release {
