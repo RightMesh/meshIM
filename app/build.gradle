@@ -6,8 +6,8 @@ plugins {
 
 rightmesh {
     appKey = rightmesh_meshim_key
-    username = rightmesh_devportal_username
-    password = rightmesh_devportal_password
+    username = rightmesh_build_username
+    password = rightmesh_build_password
 }
 
 preBuild.dependsOn("rightmesh")
@@ -18,8 +18,8 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username rightmesh_devportal_username
-            password rightmesh_devportal_password
+            username rightmesh_build_username
+            password rightmesh_build_password
         }
     }
     maven{
