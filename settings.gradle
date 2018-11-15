@@ -10,8 +10,8 @@ pluginManagement.repositories {
     maven {
         url 'https://artifactory.rightmesh.io/artifactory/maven'
         credentials {
-            username rightmesh_artifactory_username
-            password rightmesh_artifactory_password
+            username rightmesh_build_username
+            password rightmesh_build_password
         }
     }
 }
