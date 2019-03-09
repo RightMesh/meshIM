@@ -2,7 +2,7 @@
 
 meshIM is an on- or off-line Android messaging application built on [the RightMesh library](https://rightmesh.io).
 
-You can send messages to other meshIM users over the internet, or form automatically form a local network to send messages to devices nearby!
+You can send messages to other meshIM users over the internet, or automatically form a local network to send messages to nearby devices!
 
 ## RightMesh
 
@@ -19,4 +19,4 @@ This key makes use of the official meshIM Mesh Ports and can only be used by app
 
 ## Dependencies
 
-Aside from RightMesh, meshIM uses [Gson](https://github.com/google/gson) for JSON serialization and Room for database abstraction, as well as some other Google support libraries for backwards compatibility.
+Aside from RightMesh, meshIM uses [Gson](https://github.com/google/gson) for JSON serialization, Room for database abstraction, and some other Google support libraries for backwards compatibility.
